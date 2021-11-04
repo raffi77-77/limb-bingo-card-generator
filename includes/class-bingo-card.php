@@ -18,11 +18,11 @@ class BingoCard
      *
      * @return BingoCard
      */
-    public static function get_instance()
+    public static function get_instance($plugin_dir, $plugin_url)
     {
         if (null == self::$instance) {
             // Create new instance
-            self::$instance = new BingoCard();
+            self::$instance = new BingoCard($plugin_dir, $plugin_url);
         }
         return self::$instance;
     }
@@ -30,11 +30,11 @@ class BingoCard
     /**
      * Construct
      */
-    private function __construct()
+    private function __construct($plugin_dir, $plugin_url)
     {
         // Set plugin path and url params
-        self::$plugin_path = plugin_dir_path(__FILE__);
-        self::$plugin_url = plugin_dir_url(__FILE__);
+        self::$plugin_path = $plugin_dir;
+        self::$plugin_url = $plugin_url;
         self::$logs_path = self::$plugin_path . 'logs';
         self::$admin_path = self::$plugin_path . 'admin';
         self::$admin_templates_path = self::$plugin_path . 'admin/templates';

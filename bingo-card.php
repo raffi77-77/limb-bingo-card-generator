@@ -9,8 +9,10 @@
  */
 
 function run_bingo_card() {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-bingo-card.php';
-    BingoCard::get_instance();
+    $plugin_dir = plugin_dir_path(__FILE__);
+    $plugin_url = plugin_dir_url(__FILE__);
+    require_once $plugin_dir . 'includes/class-bingo-card.php';
+    BingoCard::get_instance($plugin_dir, $plugin_url);
 }
 
 add_action('init', 'run_bingo_card');
