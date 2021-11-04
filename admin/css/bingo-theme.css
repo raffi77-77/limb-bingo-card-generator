@@ -1,0 +1,16 @@
+#bingo-theme-custom-fields table, tbody {
+    width: 100%;
+}
+
+#bingo-theme-custom-fields tr {
+    margin-bottom: 5px;
+}
+
+#bingo-theme-custom-fields td {
+    width: 25%;
+    padding: 0 5px;
+}
+
+#bingo-theme-custom-fields td select, td input {
+    width: 100%;
+}

@@ -1,0 +1,11 @@
+{
+  "name": "bingo-card",
+  "version": "1.0.0",
+  "description": "Bingo card",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Me",
+  "license": "ISC"
+}
