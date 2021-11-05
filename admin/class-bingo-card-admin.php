@@ -40,7 +40,7 @@ class BingoCardAdmin
     {
         add_meta_box(
             'bingo-theme-custom-fields',
-            'Custom Fields',
+            'Custom Fields (set default values)',
             array($this, 'get_bingo_theme_custom_fields_template'),
             'bingo_theme'
         );
@@ -63,13 +63,36 @@ class BingoCardAdmin
     {
         global $post_type;
         if ($post_type === 'bingo_theme') {
-            if (array_key_exists('bingo_card_type', $_POST)) {
-                update_post_meta($post_id, 'bingo_card_type', $_POST['bingo_card_type']);
-            }
-            if (array_key_exists('bingo_grid_size', $_POST)) {
-                update_post_meta($post_id, 'bingo_grid_size', $_POST['bingo_grid_size']);
-            }
+            $this->save_theme_custom_fields($post_id);
         }
+    }
+
+    /**
+     * Save bingo theme custom fields
+     *
+     * @param $post_id
+     */
+    private function save_theme_custom_fields($post_id) {
+        // Type and size
+        if (empty($_POST['bingo_card_type']) || empty($_POST['bingo_grid_size'])) {
+            // TODO bingo card type and size aren't defined
+            return;
+        }
+        update_post_meta($post_id, 'bingo_card_type', $_POST['bingo_card_type']);
+        update_post_meta($post_id, 'bingo_grid_size', $_POST['bingo_grid_size']);
+        // Title
+        if (!empty($_POST['bingo_card_title'])) {
+            // $title = trim(str_replace("\r\n", '<br>', wp_strip_all_tags($_POST['bingo_card_title'])));
+            $title = trim(wp_strip_all_tags($_POST['bingo_card_title']));
+            update_post_meta($post_id, 'bingo_card_title', $title);
+        }
+        // 1-75 special title
+        if ($_POST['bingo_card_type'] === '1-75' && !empty($_POST['bingo_card_spec_title']) && count($_POST['bingo_card_spec_title']) === 5) {
+            update_post_meta($post_id, 'bingo_card_spec_title', implode('|', $_POST['bingo_card_spec_title']));
+        } else {
+            delete_post_meta($post_id, 'bingo_card_spec_title');
+        }
+        // Words or numbers
     }
 
     /**
@@ -79,7 +102,7 @@ class BingoCardAdmin
     {
         global $post_type;
         if ('bingo_theme' === $post_type) {
-            wp_enqueue_script('jquery-3.6.0', $this->attributes['plugin_url'] . '/admin/js/jquery-3.6.0.min.js');
+            wp_enqueue_script('jquery');
             wp_enqueue_script('bingo-theme-admin-script', $this->attributes['plugin_url'] . '/admin/js/bingo-theme.js?ver=' . BingoCard::VERSION);
             wp_enqueue_style('bingo-theme-admin-style', $this->attributes['plugin_url'] . '/admin/css/bingo-theme.css?ver=' . BingoCard::VERSION);
         }

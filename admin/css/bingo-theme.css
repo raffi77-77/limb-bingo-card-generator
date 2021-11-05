@@ -11,6 +11,29 @@
     padding: 0 5px;
 }
 
-#bingo-theme-custom-fields td select, td input {
+#bingo-theme-custom-fields tr.white-space {
+    height: 10px;
+}
+
+#bingo-theme-custom-fields td select, td input, td textarea {
     width: 100%;
+    margin: 0;
+}
+
+#bingo-theme-custom-fields td textarea {
+    min-height: 45px;
+}
+
+#bingo-theme-custom-fields input.letter-title {
+    text-align: center;
+    margin: 0 3px;
+    width: 30px;
+}
+
+#bingo-theme-custom-fields input.letter-title:first-child {
+    margin-left: 0;
+}
+
+#bingo-theme-custom-fields input.letter-title:last-child {
+    margin-right: 0;
 }
