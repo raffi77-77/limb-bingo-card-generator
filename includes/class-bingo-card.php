@@ -1,17 +1,13 @@
 <?php
 
+/**
+ * The core plugin class
+ */
 class BingoCard
 {
     const VERSION = '1.0.0';
     private static $instance = null;
-    public static $plugin_path = null;
-    public static $plugin_url = null;
-    public static $logs_path = null;
-    public static $admin_path = null;
-    public static $admin_templates_path = null;
-    public static $ajax_path = null;
-    public static $includes_path = null;
-    public static $templates_path = null;
+    protected $attributes = [];
 
     /**
      * Get instance
@@ -28,46 +24,55 @@ class BingoCard
     }
 
     /**
-     * Construct
+     * Construct Bingo Card object
      */
     private function __construct($plugin_dir, $plugin_url)
     {
         // Set plugin path and url params
-        self::$plugin_path = $plugin_dir;
-        self::$plugin_url = $plugin_url;
-        self::$logs_path = self::$plugin_path . 'logs';
-        self::$admin_path = self::$plugin_path . 'admin';
-        self::$admin_templates_path = self::$plugin_path . 'admin/templates';
-        self::$ajax_path = self::$plugin_path . 'ajax';
-        self::$includes_path = self::$plugin_path . 'includes';
-        self::$templates_path = self::$plugin_path . 'public/templates';
+        $this->attributes = [
+            'plugin_path' => $plugin_dir,
+            'plugin_url' => $plugin_url,
+            'logs_path' => $plugin_dir . 'logs',
+            'admin_path' => $plugin_dir . 'admin',
+            'admin_templates_path' => $plugin_dir . 'admin/templates',
+            'ajax_path' => $plugin_dir . 'ajax',
+            'includes_path' => $plugin_dir . 'includes',
+            'public_path' => $plugin_dir . 'public',
+            'templates_path' => $plugin_dir . 'public/templates'
+        ];
 
+        // Start
         $this->load_dependencies();
         $this->init();
     }
 
+    /**
+     * Load classes
+     */
     private function load_dependencies()
     {
-        require_once self::$includes_path . '/class-bingo-card-helper.php';
-        require_once self::$admin_path . '/class-bingo-card-admin.php';
-        require_once self::$ajax_path . '/class-bingo-card-ajax.php';
+        require_once $this->attributes['admin_path'] . '/class-bingo-card-admin.php';
+        require_once $this->attributes['ajax_path'] . '/class-bingo-card-ajax.php';
+        require_once $this->attributes['includes_path'] . '/class-bingo-card-helper.php';
+        require_once $this->attributes['public_path'] . '/class-bingo-card-public.php';
     }
 
+    /**
+     * Register dependencies
+     */
     private function init()
     {
         $this->register_custom_post_types();
 
         if (BingoCardHelper::is_request('admin')) {
-            add_action('add_meta_boxes', array($this, 'add_custom_meta_boxes'));
-            add_action('save_post', array($this, 'save_custom_fields'));
-            add_action('admin_print_scripts-post-new.php', array($this, 'enqueue_admin_script'), 11);
-            add_action('admin_print_scripts-post.php', array($this, 'enqueue_admin_script'), 11);
+            $admin_obj = new BingoCardAdmin($this->attributes);
+            $admin_obj->register_dependencies();
         } elseif (BingoCardHelper::is_request('ajax')) {
-//            $ajax_obj = new BingoCardAjax();
-//            add_action('wp_ajax_nopriv_{$action}', array($ajax_obj, '{action}'));
-//            add_action('wp_ajax_{$action}', array($ajax_obj, '{action}'));
+            $ajax_obj = new BingoCardAjax($this->attributes);
+            $ajax_obj->register_dependencies();
         } elseif (BingoCardHelper::is_request('public')) {
-            add_filter('single_template', array($this, 'get_custom_post_type_template'));
+            $public_obj = new BingoCardPublic($this->attributes);
+            $public_obj->register_dependencies();
         }
     }
 
@@ -79,19 +84,6 @@ class BingoCard
     {
         $this->register_bingo_theme_post_type();
         $this->register_bingo_card_post_type();
-    }
-
-    /**
-     * Add meta boxes
-     */
-    public function add_custom_meta_boxes()
-    {
-        add_meta_box(
-            'bingo-theme-custom-fields',
-            'Custom Fields',
-            array($this, 'get_bingo_theme_custom_fields_template'),
-            'bingo_theme'
-        );
     }
 
     /**
@@ -138,12 +130,12 @@ class BingoCard
                 'hierarchical' => false,
                 'rewrite' => array('slug' => 'bingo-card'),
                 'supports' => $supports,
-                'taxonomies' => array('category', 'post_tag'),
+//                'taxonomies' => array('category', 'post_tag'),
             )
         );
         if ($result instanceof WP_Error) {
             // Log
-            file_put_contents(self::$logs_path . '/error.log', '[' . date('Y-m-d H:i:s') . ']' . PHP_EOL . $result->get_error_message(), FILE_APPEND);
+            file_put_contents($this->attributes['logs_path'] . '/error.log', '[' . date('Y-m-d H:i:s') . ']' . PHP_EOL . $result->get_error_message() . PHP_EOL, FILE_APPEND);
         }
     }
 
@@ -191,63 +183,12 @@ class BingoCard
                 'hierarchical' => false,
                 'rewrite' => array('slug' => 'bingo-theme'),
                 'supports' => $supports,
-                'taxonomies' => array('category', 'post_tag'),
+//                'taxonomies' => array('category', 'post_tag'),
             )
         );
         if ($result instanceof WP_Error) {
             // Log
-            file_put_contents(self::$logs_path . '/error.log', '[' . date('Y-m-d H:i:s') . ']' . PHP_EOL . $result->get_error_message(), FILE_APPEND);
-        }
-    }
-
-    public function enqueue_admin_script()
-    {
-        global $post_type;
-        if ('bingo_theme' === $post_type) {
-            wp_enqueue_script('jquery-3.6.0', self::$plugin_url . '/admin/js/jquery-3.6.0.min.js');
-            wp_enqueue_script('bingo-theme-admin-script', self::$plugin_url . '/admin/js/bingo-theme.js?ver=' . self::VERSION);
-            wp_enqueue_style('bingo-theme-admin-style', self::$plugin_url . '/admin/css/bingo-theme.css?ver=' . self::VERSION);
-        }
-    }
-
-    /**
-     * Get custom post type template
-     *
-     * @param $single_template
-     * @return mixed|string
-     */
-    public function get_custom_post_type_template($single_template)
-    {
-        global $post;
-        if ('bingo_theme' === $post->post_type) {
-            $single_template = self::$templates_path . '/bingo-theme-template.php';
-        }
-        return $single_template;
-    }
-
-    /**
-     * Get bingo theme custom fields template
-     */
-    public function get_bingo_theme_custom_fields_template()
-    {
-        include(self::$admin_templates_path . '/bingo-theme-custom-fields-template.php');
-    }
-
-    /**
-     * Save custom fields
-     *
-     * @param $post_id
-     */
-    public function save_custom_fields($post_id)
-    {
-        global $post_type;
-        if ($post_type === 'bingo_theme') {
-            if (array_key_exists('bingo_card_type', $_POST)) {
-                update_post_meta($post_id, 'bingo_card_type', $_POST['bingo_card_type']);
-            }
-            if (array_key_exists('bingo_grid_size', $_POST)) {
-                update_post_meta($post_id, 'bingo_grid_size', $_POST['bingo_grid_size']);
-            }
+            file_put_contents($this->attributes['logs_path'] . '/error.log', '[' . date('Y-m-d H:i:s') . ']' . PHP_EOL . $result->get_error_message() . PHP_EOL, FILE_APPEND);
         }
     }
 }

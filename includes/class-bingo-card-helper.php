@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * The class the helps with different static methods
+ */
 class BingoCardHelper
 {
     /**
@@ -23,25 +26,5 @@ class BingoCardHelper
         }
 
         return false;
-    }
-
-    public static function init()
-    {
-
-    }
-
-    public static function register_admin_dependencies()
-    {
-
-    }
-
-    public static function register_public_dependencies()
-    {
-
-    }
-
-    public static function register_ajax_dependencies()
-    {
-
     }
 }
