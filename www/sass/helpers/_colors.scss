@@ -1,0 +1,11 @@
+$color-body-bg: transparent;
+
+$color-input: #5f5060;
+$color-input-bg: #ebebeb;
+
+$color-btn-primary: #5f5060;
+$color-btn-primary-bg: #ebebeb;
+$color-btn-primary-border: $color-btn-primary;
+$color-btn-primary-hover: $color-btn-primary;
+$color-btn-primary-hover-bg: darken($color-btn-primary-bg, 10%);
+$color-btn-primary-hover-border: $color-btn-primary;

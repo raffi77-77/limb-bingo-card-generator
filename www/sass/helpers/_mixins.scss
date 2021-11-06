@@ -1,0 +1,21 @@
+@mixin user-select($userSelect) {
+  user-select: $userSelect;
+  -webkit-user-select: $userSelect;
+  -moz-user-select: $userSelect;
+  -ms-user-select: $userSelect;
+}
+
+@function aspect($w, $h) {
+  @return unquote(#{($h * 100 / $w)} + "%");
+}
+
+@mixin aspectR($w, $h) {
+  &:before {
+    content: "";
+    display: block;
+    height: 0;
+    padding-bottom: aspect($w, $h);
+    pointer-events: none;
+    @include user-select(none);
+  }
+}

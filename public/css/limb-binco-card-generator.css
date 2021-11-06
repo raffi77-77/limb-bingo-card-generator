@@ -1,0 +1,38 @@
+.lbcg-parent div, .lbcg-parent span, .lbcg-parent object, .lbcg-parent iframe, .lbcg-parent img, .lbcg-parent table, .lbcg-parent caption, .lbcg-parent thead, .lbcg-parent tbody,
+.lbcg-parent tfoot, .lbcg-parent tr, .lbcg-parent tr, .lbcg-parent td, .lbcg-parent article, .lbcg-parent aside, .lbcg-parent canvas, .lbcg-parent details, .lbcg-parent figure, .lbcg-parent hgroup, .lbcg-parent menu,
+.lbcg-parent nav, .lbcg-parent footer, .lbcg-parent header, .lbcg-parent section, .lbcg-parent summary, .lbcg-parent mark, .lbcg-parent audio, .lbcg-parent video {
+  border: 0;
+  margin: 0;
+  padding: 0; }
+.lbcg-parent h1, .lbcg-parent h2, .lbcg-parent h3, .lbcg-parent h4, .lbcg-parent h5, .lbcg-parent h6, .lbcg-parent p, .lbcg-parent blockquote, .lbcg-parent pre, .lbcg-parent a, .lbcg-parent abbr, .lbcg-parent address, .lbcg-parent cit, .lbcg-parent code,
+.lbcg-parent del, .lbcg-parent dfn, .lbcg-parent em, .lbcg-parent ins, .lbcg-parent q, .lbcg-parent samp, .lbcg-parent small, .lbcg-parent strong, .lbcg-parent sub, .lbcg-parent sup, .lbcg-parent b, .lbcg-parent i, .lbcg-parent hr, .lbcg-parent dl, .lbcg-parent dt, .lbcg-parent dd,
+.lbcg-parent ol, .lbcg-parent ul, .lbcg-parent li, .lbcg-parent fieldset, .lbcg-parent legend, .lbcg-parent label {
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  margin: 0;
+  padding: 0; }
+.lbcg-parent article, .lbcg-parent aside, .lbcg-parent canvas, .lbcg-parent figure, .lbcg-parent figure img, .lbcg-parent figcaption, .lbcg-parent hgroup,
+.lbcg-parent footer, .lbcg-parent header, .lbcg-parent nav, .lbcg-parent section, .lbcg-parent audio, .lbcg-parent video {
+  display: block; }
+.lbcg-parent table {
+  border-collapse: separate;
+  border-spacing: 0; }
+  .lbcg-parent table caption, .lbcg-parent table th, .lbcg-parent table td {
+    text-align: left;
+    vertical-align: middle; }
+.lbcg-parent a img {
+  border: 0; }
+.lbcg-parent :focus {
+  outline: 0; }
+.lbcg-parent *, .lbcg-parent *:before, .lbcg-parent *:after {
+  box-sizing: border-box; }
+.lbcg-parent button {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  padding: 0; }
