@@ -37,7 +37,7 @@ class BingoCardPublic
     public function enqueue_scripts_and_styles() {
 //        global $post_type;
 //        if ('bingo_theme' === $post_type) {
-        wp_enqueue_style('limb-bingo-card-generator', $this->attributes['plugin_url'] . '/public/css/limb-binco-card-generator.css?ver=' . BingoCard::VERSION);
+        wp_enqueue_style('limb-bingo-card-generator', $this->attributes['plugin_url'] . '/public/css/limb-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
 //        }
     }
 
