@@ -15,8 +15,7 @@ get_header(); ?>
 //endwhile;
 
 global $post;
-$bingo_card_type = get_post_meta($post->ID, 'bingo_card_type', true);
-$bingo_grid_size = get_post_meta($post->ID, 'bingo_grid_size', true);
+$data = get_post_meta($post->ID);
 ?>
 
 <div class="custom-container" style="width: 900px; margin: 0 auto">
@@ -58,11 +57,11 @@ $bingo_grid_size = get_post_meta($post->ID, 'bingo_grid_size', true);
                 <div class="lbcg-content-form">
                     <div class="lbcg-input-wrap">
                         <label for="lbcg-title" class="lbcg-label">Enter a Title</label>
-                        <input class="lbcg-input" id="lbcg-title" type="text" />
+                        <input class="lbcg-input" id="lbcg-title" type="text" value="<?php echo !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : ''; ?>" />
                     </div>
                     <div class="lbcg-input-wrap">
                         <label for="lbcg-body-content" class="lbcg-label">Enter word or numbers</label>
-                        <textarea class="lbcg-input" id="lbcg-body-content" name="lbcg-body-content" cols="" rows="11"></textarea>
+                        <textarea class="lbcg-input" id="lbcg-body-content" name="lbcg-body-content" cols="" rows="11"><?php echo !empty($data['bingo_card_content'][0]) ? $data['bingo_card_content'][0] : ''; ?></textarea>
                     </div>
                 </div>
             </div>
@@ -132,8 +131,6 @@ $bingo_grid_size = get_post_meta($post->ID, 'bingo_grid_size', true);
                     </div>
                 </div>
             </div>
-            Bingo card type: <?php echo $bingo_card_type; ?>
-            Bingo grid size: <?php echo $bingo_grid_size; ?>
         </section>
     </main>
 </div>

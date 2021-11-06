@@ -62,9 +62,7 @@ class BingoCard
      */
     private function init()
     {
-        BingoCardHelper::register_bingo_theme_post_type();
-        BingoCardHelper::register_bingo_card_post_type();
-//        BingoCardHelper::register_bingo_theme_link();
+        BingoCardHelper::register_custom_post_types();
 
         if (BingoCardHelper::is_request('admin')) {
             $admin_obj = new BingoCardAdmin($this->attributes);

@@ -28,17 +28,19 @@ class BingoCardPublic
     public function register_dependencies()
     {
         add_filter('single_template', array($this, 'get_custom_post_type_template'));
-        $this->enqueue_scripts_and_styles();
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts_and_styles'), 10);
     }
 
     /**
      * Enqueue public scripts and styles
      */
-    public function enqueue_scripts_and_styles() {
-//        global $post_type;
-//        if ('bingo_theme' === $post_type) {
-        wp_enqueue_style('limb-bingo-card-generator', $this->attributes['plugin_url'] . '/public/css/limb-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
-//        }
+    public function enqueue_scripts_and_styles()
+    {
+        if (is_singular('bingo_theme')) {
+            wp_enqueue_script('jquery');
+            wp_enqueue_script('limb-bingo-card-generator-js', $this->attributes['plugin_url'] . '/public/js/limb-bingo-card-generator.js?ver=' . BingoCard::VERSION);
+            wp_enqueue_style('limb-bingo-card-generator-css', $this->attributes['plugin_url'] . '/public/css/limb-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
+        }
     }
 
     /**

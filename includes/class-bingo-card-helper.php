@@ -6,6 +6,18 @@
 class BingoCardHelper
 {
     /**
+     * Register custom post types and hooks
+     */
+    public static function register_custom_post_types()
+    {
+        self::register_bingo_theme_post_type();
+        self::register_bingo_card_post_type();
+
+        add_filter('post_type_link', array('BingoCardHelper', 'check_post_link'), 10, 2);
+        add_filter('query_vars', array('BingoCardHelper', 'query_vars'));
+    }
+
+    /**
      * Register custom post types for Bingo Theme
      */
     public static function register_bingo_theme_post_type()
@@ -25,17 +37,9 @@ class BingoCardHelper
             'search_items' => __('Search Bingo themes', 'textdomain'),
             'not_found' => __('No themes found.', 'textdomain')
         );
-        $supports = array('title',
-            'editor',
-            'author',
-//            'excerpt',
-//            'custom-fields',
-//            'comments',
-//            'revisions',
-//            'post-formats'
-        );
+        $supports = array('title', 'editor', 'author');
         // Register bingo_card custom post type
-        $result = register_post_type('bingo_theme',
+        register_post_type('bingo_theme',
             array(
                 'labels' => $labels,
                 'description' => 'Bingo theme ...',
@@ -46,16 +50,17 @@ class BingoCardHelper
                 'show_in_menu' => true,
                 'capability_type' => 'post',
                 'has_archive' => true,
-                'hierarchical' => false,
-                'rewrite' => array('slug' => 'bingo-theme', 'with_front' => false),
+                'hierarchical' => true,
+                'rewrite' => array('slug' => '/category/%bt-cat%/bingo-theme'),
                 'supports' => $supports,
                 'taxonomies' => array('category'),
             )
         );
-        /*if ($result instanceof WP_Error) {
-            // Log
-            file_put_contents($this->attributes['logs_path'] . '/error.log', '[' . date('Y-m-d H:i:s') . ']' . PHP_EOL . $result->get_error_message() . PHP_EOL, FILE_APPEND);
-        }*/
+        add_rewrite_rule(
+            'category/([^/]+)/bingo-theme/([^/]+)/?$',
+            'index.php?post_type=bingo_theme&name=$matches[2]',
+            'top'
+        );
     }
 
     /**
@@ -78,17 +83,9 @@ class BingoCardHelper
             'search_items' => __('Search Bingo cards', 'textdomain'),
             'not_found' => __('No cards found.', 'textdomain')
         );
-        $supports = array('title',
-            'editor',
-            'author',
-//            'excerpt',
-//            'custom-fields',
-//            'comments',
-//            'revisions',
-//            'post-formats'
-        );
+        $supports = array('title', 'editor', 'author');
         // Register bingo_card custom post type
-        $result = register_post_type('bingo_card',
+        register_post_type('bingo_card',
             array(
                 'labels' => $labels,
                 'description' => 'Bingo card ...',
@@ -104,28 +101,6 @@ class BingoCardHelper
                 'supports' => $supports,
 //                'taxonomies' => array('category', 'post_tag'),
             )
-        );
-        /*if ($result instanceof WP_Error) {
-            // Log
-            file_put_contents($this->attributes['logs_path'] . '/error.log', '[' . date('Y-m-d H:i:s') . ']' . PHP_EOL . $result->get_error_message() . PHP_EOL, FILE_APPEND);
-        }*/
-    }
-
-    public static function register_bingo_theme_link()
-    {
-        add_action('init', array('BingoCardHelper', 'add_rewrite_rules'));
-        add_filter('query_vars', array('BingoCardHelper', 'query_vars'));
-        add_filter('post_type_link', array('BingoCardHelper', 'check_post_link'), 1, 2);
-    }
-
-    /**
-     * Add rewrite rules
-     */
-    public static function add_rewrite_rules() {
-        add_rewrite_rule(
-            '([^/]+)/bingo-theme/([^/]+)/?$',
-            'index.php?bingo_theme=$matches[1]',
-            'top'
         );
     }
 
@@ -145,12 +120,12 @@ class BingoCardHelper
      * Check post link
      *
      * @param $post_link
-     * @param int $post_id
-     * @return string
+     * @param object $post
+     * @return mixed|void
      */
-    public static function check_post_link($post_link, $post_id = 0)
+    public static function check_post_link($post_link, $post = null)
     {
-        $post = get_post($post_id);
+        $post = get_post($post);
         if ($post instanceof WP_Post && $post->post_type == 'bingo_theme') {
             $terms = wp_get_object_terms($post->ID, 'category');
             if ($terms) {
