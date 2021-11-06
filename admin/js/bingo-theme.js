@@ -1,7 +1,29 @@
 jQuery(document).ready(function() {
     const $ = jQuery;
 
-    // Check custom fields before save the post
+    /**
+     * Check words count in container
+     */
+    function checkWordsCount() {
+        const $this = $('#bc-content'),
+            words = $this.val().split("\n"),
+            bingoGridSize = $('#bc-size').val();
+        let needWordsCount = 100;
+        if (bingoGridSize === '3x3') {
+            needWordsCount = 36;
+        } else if (bingoGridSize === '4x4') {
+            needWordsCount = 64;
+        }
+        if (words.length !== needWordsCount) {
+            $this.css('border', '2px solid #b32d2e');
+        } else {
+            $this.css('border', '1px solid #8c8f94');
+        }
+    }
+
+    /**
+     * Check custom fields before save the post
+     */
     $('#submitdiv').on('click', 'input[name="publish"]', function () {
         const cardType = $('select[name="bingo_card_type"]').val();
         if (!cardType.length) {
@@ -11,46 +33,72 @@ jQuery(document).ready(function() {
         return true;
     })
 
-    // Change grid size value
-    $('#bg-size').on('change', function() {
+    /**
+     * Change grid size value
+     */
+    $('#bc-size').on('change', function() {
         const value = $(this).val();
         if (value !== null) {
             $('input[name="bingo_grid_size"]').val(value);
+            // Change words/emojis or numbers count information
+            const countEl = $('#content-items-count');
+            if (value === '3x3') {
+                countEl.html(36);
+            } else if (value === '4x4') {
+                countEl.html(64);
+            } else {
+                countEl.html(100);
+            }
+            checkWordsCount();
         }
     });
 
-    // Change grid size related by card type
+    /**
+     * Change grid size related by card type
+     */
     $('#bingo-theme-custom-fields').on('change', 'select[name="bingo_card_type"]', function () {
         const $this = $(this),
             thisValue = $this.val(),
-            gridSize = $('#bg-size'),
+            gridSize = $('#bc-size'),
             gridSizeInput = $('input[name="bingo_grid_size"]'),
-            specTitleElements = $('td.bg-title-1-75');
+            specTitleElements = $('td.bc-title-1-75'),
+            contentElements = $('td.bc-content'),
+            contentItemsCount = $('#content-items-count');
         switch (thisValue) {
             case '1-9':
                 // Only 3x3
-                gridSize.val('3x3');
+                gridSize.val('3x3').change();
                 gridSizeInput.val('3x3');
                 gridSize.prop('disabled', 'disabled');
                 specTitleElements.each(function () {
                     $(this).hide();
                 });
+                contentElements.each(function () {
+                    $(this).show();
+                });
+                contentItemsCount.html(36);
                 break;
             case '1-75':
                 // Only 5x5
-                gridSize.val('5x5');
+                gridSize.val('5x5').change();
                 gridSizeInput.val('5x5');
                 gridSize.prop('disabled', 'disabled');
                 specTitleElements.each(function () {
                     $(this).show();
                 });
+                contentElements.each(function () {
+                    $(this).hide();
+                });
                 break;
             case '1-90':
                 // Only 9x3
-                gridSize.val('9x3');
+                gridSize.val('9x3').change();
                 gridSizeInput.val('9x3');
                 gridSize.prop('disabled', 'disabled');
                 specTitleElements.each(function () {
+                    $(this).hide();
+                });
+                contentElements.each(function () {
                     $(this).hide();
                 });
                 break;
@@ -63,9 +111,15 @@ jQuery(document).ready(function() {
                 specTitleElements.each(function () {
                     $(this).hide();
                 });
-                break;
-            default:
+                contentElements.each(function () {
+                    $(this).show();
+                });
                 break;
         }
     });
+
+    /**
+     * Checking words count when content changed
+     */
+    $('#bc-content').bind('input propertychange', checkWordsCount);
 });

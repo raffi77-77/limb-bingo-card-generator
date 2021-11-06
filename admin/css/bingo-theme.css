@@ -1,3 +1,7 @@
+#bingo-theme-custom-fields td label {
+    font-weight: 600;
+}
+
 #bingo-theme-custom-fields table, tbody {
     width: 100%;
 }
@@ -20,8 +24,16 @@
     margin: 0;
 }
 
+#bingo-theme-custom-fields td.bc-content textarea {
+    min-height: 115px;
+}
+
 #bingo-theme-custom-fields td textarea {
     min-height: 45px;
+}
+
+#content-items-count {
+    font-weight: bold;
 }
 
 #bingo-theme-custom-fields input.letter-title {

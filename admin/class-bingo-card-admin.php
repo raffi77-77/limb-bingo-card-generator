@@ -78,6 +78,7 @@ class BingoCardAdmin
             // TODO bingo card type and size aren't defined
             return;
         }
+        $special_cards = array('1-75', '1-90');
         update_post_meta($post_id, 'bingo_card_type', $_POST['bingo_card_type']);
         update_post_meta($post_id, 'bingo_grid_size', $_POST['bingo_grid_size']);
         // Title
@@ -92,7 +93,12 @@ class BingoCardAdmin
         } else {
             delete_post_meta($post_id, 'bingo_card_spec_title');
         }
-        // Words or numbers
+        // Words/emojis or numbers
+        if (!in_array($_POST['bingo_card_type'], $special_cards) && !empty($_POST['bingo_card_content'])) {
+            update_post_meta($post_id, 'bingo_card_content', trim(wp_strip_all_tags($_POST['bingo_card_content'])));
+        } else {
+            delete_post_meta($post_id, 'bingo_card_content');
+        }
     }
 
     /**

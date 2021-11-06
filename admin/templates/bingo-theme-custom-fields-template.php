@@ -9,7 +9,13 @@ if (!empty($data['bingo_card_spec_title'][0])) {
 } else {
     $bingo_card_spec_title = ['B', 'I', 'N', 'G', 'O'];
 }
-$bingo_card_content = !empty($data['bingo_card_content'][0]) ? $data['bingo_card_content'][0] : BingoCardHelper::get_bg_default_content($bingo_card_type, $bingo_card_type);
+$result = BingoCardHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
+$words_count = $result['words_count'];
+if (!empty($data['bingo_card_content'][0])) {
+    $bingo_card_content = $data['bingo_card_content'][0];
+} else {
+    $bingo_card_content = $result['words'];
+}
 
 $special_types = array('1-9', '1-75', '1-90');
 ?>
@@ -17,10 +23,10 @@ $special_types = array('1-9', '1-75', '1-90');
     <tbody>
         <tr>
             <td>
-                <label for="bg-type">Select bingo card type:</label>
+                <label for="bc-type">Select bingo card type:</label>
             </td>
             <td>
-                <select id="bg-type" name="bingo_card_type">
+                <select id="bc-type" name="bingo_card_type">
                     <option value="1-9" <?php echo $bingo_card_type === '1-9' ? 'selected="selected"' : ''; ?>>1-9</option>
                     <option value="1-25" <?php echo $bingo_card_type === '1-25' ? 'selected="selected"' : ''; ?>>1-25</option>
                     <option value="1-75" <?php echo $bingo_card_type === '1-75' ? 'selected="selected"' : ''; ?>>1-75</option>
@@ -31,10 +37,10 @@ $special_types = array('1-9', '1-75', '1-90');
                 </select>
             </td>
             <td>
-                <label for="bg-size">Grid size:</label>
+                <label for="bc-size">Grid size:</label>
             </td>
             <td>
-                <select id="bg-size" <?php echo in_array($bingo_card_type, $special_types) ? 'disabled' : ''; ?>>
+                <select id="bc-size" <?php echo in_array($bingo_card_type, $special_types) ? 'disabled' : ''; ?>>
                     <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected="selected"' : ''; ?>>3x3</option>
                     <option value="4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected="selected"' : ''; ?>>4x4</option>
                     <option value="5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected="selected"' : ''; ?>>5x5</option>
@@ -45,15 +51,22 @@ $special_types = array('1-9', '1-75', '1-90');
         <tr class="white-space">&nbsp;</tr>
         <tr>
             <td>
-                <label for="bg-title">Bingo card title:</label>
+                <label for="bc-title">Bingo card title:</label>
             </td>
             <td>
-                <textarea id="bg-title" name="bingo_card_title"><?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?></textarea>
+                <textarea id="bc-title" name="bingo_card_title"><?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?></textarea>
             </td>
-            <td class="bg-title-1-75" <?php echo $bingo_card_type !== '1-75' ? 'style="display: none;"' : ''; ?>>
+            <td class="bc-content" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;"' : ''; ?>>
+                <label for="bc-content">Enter words/emojis or numbers:</label>
+                <p>Note: Please fill <span id="content-items-count"><?php echo $words_count; ?></span> words/emojis or numbers, each in new line.</p>
+            </td>
+            <td class="bc-content" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;"' : ''; ?>>
+                <textarea id="bc-content" name="bingo_card_content"><?php echo $bingo_card_content; ?></textarea>
+            </td>
+            <td class="bc-title-1-75" <?php echo $bingo_card_type !== '1-75' ? 'style="display: none;"' : ''; ?>>
                 <label>Bingo card title for 1-75:</label>
             </td>
-            <td class="bg-title-1-75" <?php echo $bingo_card_type !== '1-75' ? 'style="display: none;"' : ''; ?>>
+            <td class="bc-title-1-75" <?php echo $bingo_card_type !== '1-75' ? 'style="display: none;"' : ''; ?>>
                 <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1" value="<?php echo $bingo_card_spec_title[0]; ?>">
                 <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1" value="<?php echo $bingo_card_spec_title[1]; ?>">
                 <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1" value="<?php echo $bingo_card_spec_title[2]; ?>">
@@ -62,12 +75,8 @@ $special_types = array('1-9', '1-75', '1-90');
             </td>
         </tr>
         <tr>
-            <td>
-                <label for="bg-content">Enter words/emojis or numbers:</label>
-            </td>
-            <td>
-                <textarea id="bg-content" name="bingo_card_content"><?php echo $bingo_card_content; ?></textarea>
-            </td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
         </tr>
