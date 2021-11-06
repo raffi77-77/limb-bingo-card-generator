@@ -1,0 +1,91 @@
+.lbcg-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  background-color: var(--lbcg-card-bg-color);
+  background-image: var(--lbcg-card-bg-image);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  padding: 20px 0;
+
+  &-wrap {
+
+  }
+
+  &-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding: 0 20px;
+    font-size: var(--lbcg-card-header-font-size);
+    line-height: calc(var(--lbcg-card-header-font-size) * 1.1);
+    height: var(--lbcg-card-header-height);
+    color: var(--lbcg-card-header-text-color);
+    font-family: var(--lbcg-card-header-font-family);
+    background-color: var(--lbcg-card-header-bg-color);
+    background-image: var(--lbcg-card-header-bg-image);
+
+    &-text {
+      display: block;
+      text-align: center;
+      line-height: inherit; 
+    }
+  }
+
+  &-col {
+    position: relative;
+    border-top: 1px solid var(--lbcg-card-col-border-color);
+    border-left: 1px solid var(--lbcg-card-col-border-color);
+    overflow: hidden;
+    color: var(--lbcg-card-col-text-color);
+    background-color: var(--lbcg-card-col-bg-color);
+  }
+
+  &-text {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 3px;
+    text-align: center;
+    z-index: 1;
+    font-size: var(--lbcg-card-col-font-size);
+    line-height: var(--lbcg-card-col-line-height);
+    color: inherit;
+  }
+
+  &-body {
+    margin-top: 20px;
+    padding: 0 20px;
+    &-grid {
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-column-gap: 0;
+      grid-row-gap: 0;
+      border-right: 1px solid var(--lbcg-card-col-border-color);
+      border-bottom: 1px solid var(--lbcg-card-col-border-color);
+
+      &.lbcg-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      &.lbcg-grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      &.lbcg-grid-5 {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      &.lbcg-grid-3, &.lbcg-grid-4, &.lbcg-grid-5 {
+        .lbcg-card-col {
+          @include aspectR(1, 1);
+        }
+      }
+    }
+  }
+}

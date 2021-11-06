@@ -6,7 +6,7 @@
 }
 
 @function aspect($w, $h) {
-  @return unquote(#{($h * 100 / $w)} + "%");
+  @return unquote($h * 100 / $w + "%");
 }
 
 @mixin aspectR($w, $h) {

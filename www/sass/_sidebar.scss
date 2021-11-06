@@ -1,0 +1,75 @@
+.lbcg-sidebar {
+  $self: &;
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  &-in {
+    display: flex;
+    flex-direction: column;
+
+    &.collapsed {
+      .lbcg-sidebar-body {
+        max-height: 300px;
+      }
+
+      .lbcg-sidebar-btn {
+        background-color: #007ea5;
+
+        &:hover, &:focus {
+          background-color: #0090be;
+        }
+      }
+
+      .lbcg-sidebar-arrow {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &-header {
+    position: relative;
+  }
+
+  &-btn {
+    display: block;
+    height: 38px;
+    line-height: 38px;
+    font-size: 16px;
+    padding: 0 26px 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: #0090be;
+    color: #FFF;
+    text-decoration: none;
+    transition: background-color .3s;
+
+    &:hover, &:focus {
+      background-color: #007ea5;
+      text-decoration: none;
+    }
+  }
+
+  &-arrow {
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 5px;
+    width: 16px;
+    height: 100%;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24px' height='24px' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M14.8285 12.0259L16.2427 13.4402L12 17.6828L7.7574 13.4402L9.17161 12.0259L11 13.8544V6.31724H13V13.8544L14.8285 12.0259Z' fill='white'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M19.7782 19.7782C15.4824 24.0739 8.51759 24.0739 4.22183 19.7782C-0.0739417 15.4824 -0.0739417 8.51759 4.22183 4.22183C8.51759 -0.0739419 15.4824 -0.0739419 19.7782 4.22183C24.0739 8.51759 24.0739 15.4824 19.7782 19.7782ZM18.364 18.364C14.8492 21.8787 9.15076 21.8787 5.63604 18.364C2.12132 14.8492 2.12132 9.15076 5.63604 5.63604C9.15076 2.12132 14.8492 2.12132 18.364 5.63604C21.8787 9.15076 21.8787 14.8492 18.364 18.364Z' fill='white'/%3E%3C/svg%3E");
+    background-size: 16px auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1;
+    transition: all .3s;
+  }
+
+  &-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .3s;
+  }
+}

@@ -2,6 +2,30 @@
 @import "helpers/helpers";
 
 .lbcg-parent {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 0;
+  position: relative;
   @import "helpers/reset";
-}
 
+  .lbcg-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+
+    &-left {
+
+    }
+
+    &-right {
+      min-width: 350px;
+    }
+  }
+
+  @import "sidebar";
+
+  @import "card";
+}
