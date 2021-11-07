@@ -216,8 +216,13 @@ if (!empty($data['bc_card'][0])) {
                                 --lbcg-card-col-bg-opacity: .5;
                             }
                         </style>
-                        <div class="lbcg-card-header">
-                            <span class="lbcg-card-header-text"><?php echo !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : ''; ?></span>
+                        <div class="lbcg-card-header-holder">
+                            <div class="lbcg-card-header">
+                                <span class="lbcg-card-header-text"><?php echo !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : ''; ?></span>
+                            </div>
+                            <div class="lbcg-card-subtitle">
+                                <span class="lbcg-card-subtitle-text"><?php echo !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : ''; ?></span>
+                            </div>
                         </div>
                         <div class="lbcg-card-body">
                             <div class="lbcg-card-body-grid lbcg-grid-5"><!-- lbcg-grid-3/lbcg-grid-4 -->
