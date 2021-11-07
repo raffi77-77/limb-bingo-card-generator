@@ -264,7 +264,9 @@
       .lbcg-parent .lbcg-card-subtitle-text {
         position: relative;
         display: block;
-        text-align: center;
+        text-align: justify;
+        text-align-all: justify;
+        text-align-last: justify;
         line-height: inherit;
         z-index: 2; }
         .lbcg-parent .lbcg-card-subtitle-text:not(:empty) {

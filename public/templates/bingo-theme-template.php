@@ -129,14 +129,9 @@ if (!empty($data['bc_card'][0])) {
                         </select>
                     </div>
                     <div class="lbcg-input-wrap">
-                        <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-free-space-check" hidden />
+                        <input type="checkbox" class="lbcg-checkbox" id="lbcg-free-space-check" hidden />
                         <label for="lbcg-free-space-check" class="lbcg-checkbox-holder"></label>
                         <label for="lbcg-free-space-check" class="lbcg-label">Include free space?</label>
-                        <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
-                            <label class="lbcg-label">
-                                <input type="text" class="lbcg-input" id="lbcg-free-space" />
-                            </label>
-                        </div>
                     </div>
                     <div class="lbcg-input-wrap">
                         <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-bg-image-check" hidden />
