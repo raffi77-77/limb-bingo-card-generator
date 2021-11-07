@@ -95,7 +95,8 @@ jQuery(document).ready(function () {
                 contentElements.each(function () {
                     $(this).hide();
                 });
-                freeSquareEl.show();
+                freeSquareEl.hide();
+                $('#bc-free-square').prop('checked', 'checked')
                 break;
             case '1-90':
                 // Only 9x3

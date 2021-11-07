@@ -30,6 +30,10 @@
     float: right;
 }
 
+#bingo-theme-custom-fields td input[type="color"] {
+    max-width: 27px;
+}
+
 #bingo-theme-custom-fields td.bc-content textarea {
     min-height: 115px;
 }

@@ -199,9 +199,9 @@ $special_types = array('1-9', '1-75', '1-90');
                     <option value="righteous" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === 'righteous' ? 'selected="selected"' : ''; ?>>Righteous</option>
                 </select>
             </td>
-            <td id="free-square">
+            <td id="free-square" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' || $bingo_grid_size === '4x4' ? 'style="display: none;"' : ''; ?>>
                 <label for="bc-free-square">Free square:</label>
-                <input type="checkbox" id="bc-free-square" name="bingo_card_free_square" <?php echo !empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'][0] === 'on' ? 'checked' : ''; ?>>
+                <input type="checkbox" id="bc-free-square" name="bingo_card_free_square" <?php echo !empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'][0] === 'on' || $bingo_card_type === '1-75' ? 'checked' : ''; ?>>
             </td>
             <td>&nbsp;</td>
         </tr>

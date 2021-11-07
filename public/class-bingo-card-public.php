@@ -65,7 +65,7 @@ class BingoCardPublic
     public function add_custom_css()
     {
         global $post;
-        if ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card') {
+        if ($post instanceof WP_Post && ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card')) {
             $custom_css = get_post_meta($post->ID, 'bingo_card_custom_css', true);
             ?>
             <style type="text/css">
