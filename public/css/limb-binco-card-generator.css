@@ -263,12 +263,21 @@
       z-index: 2; }
       .lbcg-parent .lbcg-card-subtitle-text {
         position: relative;
-        display: block;
-        text-align: justify;
-        text-align-all: justify;
-        text-align-last: justify;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: row;
+            flex-direction: row;
+        -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
         line-height: inherit;
         z-index: 2; }
+        .lbcg-parent .lbcg-card-subtitle-text > span {
+          display: block;
+          width: 20%;
+          text-align: center;
+          line-height: inherit; }
         .lbcg-parent .lbcg-card-subtitle-text:not(:empty) {
           padding: 10px 0; }
     .lbcg-parent .lbcg-card-header {

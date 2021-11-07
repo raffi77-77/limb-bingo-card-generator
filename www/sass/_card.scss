@@ -44,12 +44,20 @@
 
     &-text {
       position: relative;
-      display: block;
-      text-align: justify;
-      text-align-all: justify;
-      text-align-last: justify;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
       line-height: inherit;
       z-index: 2;
+
+      > span {
+        display: block;
+        width: 20%;
+        text-align: center;
+        line-height: inherit;
+      }
+
       &:not(:empty) {
         padding: 10px 0;
       }
@@ -72,6 +80,7 @@
     &-holder {
       position: relative;
       padding: 0 20px;
+
       &:before {
         content: "";
         position: absolute;
@@ -109,6 +118,7 @@
     overflow: hidden;
     color: var(--lbcg-card-col-text-color);
     z-index: 2;
+
     &:after {
       content: "";
       position: absolute;
@@ -144,6 +154,7 @@
     margin-top: 20px;
     padding: 0 20px;
     z-index: 2;
+
     &-grid {
       display: grid;
       grid-template-rows: 1fr;
