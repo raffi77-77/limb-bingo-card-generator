@@ -15,6 +15,18 @@ class BingoCardHelper
 
         add_filter('post_type_link', array('BingoCardHelper', 'check_post_link'), 10, 2);
         add_filter('query_vars', array('BingoCardHelper', 'query_vars'));
+        add_action('post_edit_form_tag', array('BingoCardHelper', 'update_admin_edit_form'));
+    }
+
+    /**
+     * Make post save form as multipart
+     */
+    public static function update_admin_edit_form()
+    {
+        global $post_type;
+        if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
+            echo ' enctype="multipart/form-data"';
+        }
     }
 
     /**
@@ -188,5 +200,39 @@ class BingoCardHelper
             'words_count' => $to,
             'words' => implode("\n", range(1, $to))
         ];
+    }
+
+    /**
+     * Upload file
+     *
+     * @param $file
+     * @param $post_id
+     * @return int|WP_Error
+     */
+    public static function upload_attachment($file, $post_id)
+    {
+        $upload_id = 0;
+        $wp_upload_dir = wp_upload_dir();
+        $new_file_path = $wp_upload_dir['path'] . '/' . $file['name']['image'];
+        $new_file_mime = mime_content_type($file['tmp_name']['image']);
+        $i = 1;
+        while (file_exists($new_file_path)) {
+            $i++;
+            $new_file_path = $wp_upload_dir['path'] . '/' . $i . '_' . $file['name']['image'];
+        }
+        if (move_uploaded_file($file['tmp_name']['image'], $new_file_path)) {
+            $upload_id = wp_insert_attachment(array(
+                'guid' => $new_file_path,
+                'post_mime_type' => $new_file_mime,
+                'post_title' => preg_replace('/\.[^.]+$/', '', $file['name']['image']),
+                'post_content' => '',
+                'post_status' => 'inherit'
+            ), $new_file_path);
+            wp_update_attachment_metadata($upload_id, wp_generate_attachment_metadata($upload_id, $new_file_path));
+        }
+        if ($upload_id instanceof WP_Error) {
+            $upload_id = 0;
+        }
+        return $upload_id;
     }
 }

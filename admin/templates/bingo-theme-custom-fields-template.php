@@ -16,6 +16,36 @@ if (!empty($data['bingo_card_content'][0])) {
 } else {
     $bingo_card_content = $result['words'];
 }
+if (!empty($data['bc_header'][0])) {
+    $bc_header = unserialize($data['bc_header'][0]);
+} else {
+    $bc_header = [
+        'color' => '#d6be89',
+        'image' => '',
+        'opacity' => 0,
+        'repeat' => 'off'
+    ];
+}
+if (!empty($data['bc_grid'][0])) {
+    $bc_grid = unserialize($data['bc_grid'][0]);
+} else {
+    $bc_grid = [
+        'color' => '#997d3c',
+        'image' => '',
+        'opacity' => 0,
+        'repeat' => 'off'
+    ];
+}
+if (!empty($data['bc_card'][0])) {
+    $bc_card = unserialize($data['bc_card'][0]);
+} else {
+    $bc_card = [
+        'color' => '#d6be89',
+        'image' => '',
+        'opacity' => 0,
+        'repeat' => 'off'
+    ];
+}
 
 $special_types = array('1-9', '1-75', '1-90');
 ?>
@@ -74,11 +104,115 @@ $special_types = array('1-9', '1-75', '1-90');
                 <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1" value="<?php echo $bingo_card_spec_title[4]; ?>">
             </td>
         </tr>
+        <tr class="white-space">&nbsp;</tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td rowspan="2">
+                <label>Header background color:</label>
+            </td>
+            <td rowspan="2">
+                <input type="color" name="bc_header[color]" value="<?php echo $bc_header['color']; ?>">
+            </td>
+            <td>
+                <label>Header background image:</label>
+            </td>
+            <td>
+                <?php if (!empty($bc_header['image'])): ?>
+                <img src="<?php echo wp_get_attachment_image_url($bc_header['image']); ?>" style="width: 90px;">
+                <?php endif; ?>
+                <input type="file" accept="image/*" name="bc_header[image]">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="bci-header-repeat">Image repeat:</label>
+                <input type="checkbox" id="bci-header-repeat" name="bc_header[repeat]" <?php echo $bc_header['repeat'] === 'on' ? 'checked' : ''; ?>>
+            </td>
+            <td>
+                <label for="bci-header-opacity">Image opacity (%):</label>
+                <input type="number" id="bci-header-opacity" name="bc_header[opacity]" min="0" max="100" value="<?php echo $bc_header['opacity']; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2">
+                <label>Grid background color:</label>
+            </td>
+            <td rowspan="2">
+                <input type="color" name="bc_grid[color]" value="<?php echo $bc_grid['color']; ?>">
+            </td>
+            <td>
+                <label>Grid background image:</label>
+            </td>
+            <td>
+                <?php if (!empty($bc_grid['image'])): ?>
+                    <img src="<?php echo wp_get_attachment_image_url($bc_grid['image']); ?>" style="width: 90px;">
+                <?php endif; ?>
+                <input type="file" accept="image/*" name="bc_grid[image]">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="bci-grid-repeat">Image repeat:</label>
+                <input type="checkbox" id="bci-grid-repeat" name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'on' ? 'checked' : ''; ?>>
+            </td>
+            <td>
+                <label for="bci-grid-opacity">Image opacity (%):</label>
+                <input type="number" id="bci-grid-opacity" name="bc_grid[opacity]" min="0" max="100" value="<?php echo $bc_grid['opacity']; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2">
+                <label>Card background color:</label>
+            </td>
+            <td rowspan="2">
+                <input type="color" name="bc_card[color]" value="<?php echo $bc_card['color']; ?>">
+            </td>
+            <td>
+                <label>Card background image:</label>
+            </td>
+            <td>
+                <?php if (!empty($bc_card['image'])): ?>
+                    <img src="<?php echo wp_get_attachment_image_url($bc_card['image']); ?>" style="width: 90px;">
+                <?php endif; ?>
+                <input type="file" accept="image/*" name="bc_card[image]">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="bci-card-repeat">Image repeat:</label>
+                <input type="checkbox" id="bci-card-repeat" name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'on' ? 'checked' : ''; ?>>
+            </td>
+            <td>
+                <label for="bci-card-opacity">Image opacity (%):</label>
+                <input type="number" id="bci-card-opacity" name="bc_card[opacity]" min="0" max="100" value="<?php echo $bc_card['opacity']; ?>">
+            </td>
+        </tr>
+        <tr class="white-space">&nbsp;</tr>
+        <tr>
+            <td>
+                <label for="bc-font">Font:</label>
+            </td>
+            <td>
+                <select id="bc-font" name="bingo_card_font">
+                    <option value="mochiy-pop-p-one" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === 'mochiy-pop-p-one' ? 'selected="selected"' : ''; ?>>Mochiy Pop P One</option>
+                    <option value="dancing-script" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === 'dancing-script' ? 'selected="selected"' : ''; ?>>Dancing Script</option>
+                    <option value="saira-condensed" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === 'saira-condensed' ? 'selected="selected"' : ''; ?>>Saira Condensed</option>
+                    <option value="righteous" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === 'righteous' ? 'selected="selected"' : ''; ?>>Righteous</option>
+                </select>
+            </td>
+            <td id="free-square">
+                <label for="bc-free-square">Free square:</label>
+                <input type="checkbox" id="bc-free-square" name="bingo_card_free_square" <?php echo !empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'][0] === 'on' ? 'checked' : ''; ?>>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr class="white-space">&nbsp;</tr>
+        <tr>
+            <td>
+                <label for="bc-custom-css">Custom CSS:</label>
+            </td>
+            <td>
+                <textarea id="bc-custom-css" name="bingo_card_custom_css"><?php echo !empty($data['bingo_card_custom_css'][0]) ? $data['bingo_card_custom_css'][0] : ''; ?></textarea>
+            </td>
         </tr>
     </tbody>
 </table>

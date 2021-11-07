@@ -29,6 +29,7 @@ class BingoCardPublic
     {
         add_filter('single_template', array($this, 'get_custom_post_type_template'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts_and_styles'), 10);
+        add_action('wp_head', array($this, 'add_custom_css'));
     }
 
     /**
@@ -36,7 +37,7 @@ class BingoCardPublic
      */
     public function enqueue_scripts_and_styles()
     {
-        if (is_singular('bingo_theme')) {
+        if (is_singular('bingo_theme') || is_singular('bingo_card')) {
             wp_enqueue_script('jquery');
             wp_enqueue_script('limb-bingo-card-generator-js', $this->attributes['plugin_url'] . '/public/js/limb-bingo-card-generator.js?ver=' . BingoCard::VERSION);
             wp_enqueue_style('limb-bingo-card-generator-css', $this->attributes['plugin_url'] . '/public/css/limb-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
@@ -51,10 +52,26 @@ class BingoCardPublic
      */
     public function get_custom_post_type_template($single_template)
     {
-        global $post;
-        if ('bingo_theme' === $post->post_type) {
+        global $post_type;
+        if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
             $single_template = $this->attributes['templates_path'] . '/bingo-theme-template.php';
         }
         return $single_template;
+    }
+
+    /**
+     * Add custom css
+     */
+    public function add_custom_css()
+    {
+        global $post;
+        if ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card') {
+            $custom_css = get_post_meta($post->ID, 'bingo_card_custom_css', true);
+            ?>
+            <style type="text/css">
+                <?php echo $custom_css; ?>
+            </style>
+            <?php
+        }
     }
 }

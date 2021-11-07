@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     const $ = jQuery;
 
     /**
@@ -36,18 +36,22 @@ jQuery(document).ready(function() {
     /**
      * Change grid size value
      */
-    $('#bc-size').on('change', function() {
-        const value = $(this).val();
+    $('#bc-size').on('change', function () {
+        const value = $(this).val(),
+            freeSquareEl = $('#free-square');
         if (value !== null) {
             $('input[name="bingo_grid_size"]').val(value);
             // Change words/emojis or numbers count information
             const countEl = $('#content-items-count');
             if (value === '3x3') {
                 countEl.html(36);
+                freeSquareEl.show();
             } else if (value === '4x4') {
                 countEl.html(64);
+                freeSquareEl.hide();
             } else {
                 countEl.html(100);
+                freeSquareEl.show();
             }
             checkWordsCount();
         }
@@ -63,7 +67,8 @@ jQuery(document).ready(function() {
             gridSizeInput = $('input[name="bingo_grid_size"]'),
             specTitleElements = $('td.bc-title-1-75'),
             contentElements = $('td.bc-content'),
-            contentItemsCount = $('#content-items-count');
+            contentItemsCount = $('#content-items-count'),
+            freeSquareEl = $('#free-square');
         switch (thisValue) {
             case '1-9':
                 // Only 3x3
@@ -76,6 +81,7 @@ jQuery(document).ready(function() {
                 contentElements.each(function () {
                     $(this).show();
                 });
+                freeSquareEl.show();
                 contentItemsCount.html(36);
                 break;
             case '1-75':
@@ -89,6 +95,7 @@ jQuery(document).ready(function() {
                 contentElements.each(function () {
                     $(this).hide();
                 });
+                freeSquareEl.show();
                 break;
             case '1-90':
                 // Only 9x3
@@ -101,6 +108,7 @@ jQuery(document).ready(function() {
                 contentElements.each(function () {
                     $(this).hide();
                 });
+                freeSquareEl.hide();
                 break;
             case '1-25':
             case '1-80':
@@ -114,6 +122,7 @@ jQuery(document).ready(function() {
                 contentElements.each(function () {
                     $(this).show();
                 });
+                freeSquareEl.show();
                 break;
         }
     });

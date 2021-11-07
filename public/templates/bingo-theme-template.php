@@ -16,6 +16,36 @@ get_header(); ?>
 
 global $post;
 $data = get_post_meta($post->ID);
+if (!empty($data['bc_header'][0])) {
+    $bc_header = unserialize($data['bc_header'][0]);
+} else {
+    $bc_header = [
+        'color' => '#d6be89',
+        'image' => '',
+        'opacity' => 0,
+        'repeat' => 'off'
+    ];
+}
+if (!empty($data['bc_grid'][0])) {
+    $bc_grid = unserialize($data['bc_grid'][0]);
+} else {
+    $bc_grid = [
+        'color' => '#997d3c',
+        'image' => '',
+        'opacity' => 0,
+        'repeat' => 'off'
+    ];
+}
+if (!empty($data['bc_card'][0])) {
+    $bc_card = unserialize($data['bc_card'][0]);
+} else {
+    $bc_card = [
+        'color' => '#d6be89',
+        'image' => '',
+        'opacity' => 0,
+        'repeat' => 'off'
+    ];
+}
 ?>
 
 <div class="custom-container" style="width: 900px; margin: 0 auto">
@@ -160,7 +190,7 @@ $data = get_post_meta($post->ID);
                                 /* card styles */
 
                                 --lbcg-card-bg-color: #FFF;
-                                --lbcg-card-bg-image: url(https://thumbs.dreamstime.com/z/crazy-cat-tongue-hanging-out-40087599.jpg);
+                                --lbcg-card-bg-image: url(<?php echo !empty($bc_card['image']) ? wp_get_attachment_image_url($bc_card['image'], 'large') : 'https://thumbs.dreamstime.com/z/crazy-cat-tongue-hanging-out-40087599.jpg'; ?>);
                                 --lbcg-card-bg-opacity: 1;
 
                                 /* header styles */
@@ -169,8 +199,8 @@ $data = get_post_meta($post->ID);
                                 --lbcg-card-header-height: 48px;
                                 --lbcg-card-header-font-family: 'Roboto', sans-serif;
                                 --lbcg-card-header-text-color: #FFF;
-                                --lbcg-card-header-bg-color: transparent;
-                                --lbcg-card-header-bg-image: none;
+                                --lbcg-card-header-bg-color: <?php echo !empty($bc_header['color']) ? $bc_header['color'] : 'transparent'; ?>;
+                                --lbcg-card-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
                                 --lbcg-card-header-bg-opacity: 1;
 
                                 /* body styles */
@@ -181,13 +211,13 @@ $data = get_post_meta($post->ID);
                                 /* let root = document.documentElement; */
                                 /* root.style.setProperty('--lbcg-card-col-line-height', '60px'); */
                                 --lbcg-card-col-text-color: #79ffd3;
-                                --lbcg-card-col-bg-color: #003221;
+                                --lbcg-card-col-bg-color: <?php echo !empty($bc_grid['color']) ? $bc_grid['color'] : '#003221'; ?>;
                                 --lbcg-card-col-border-color: #45ffbf;
                                 --lbcg-card-col-bg-opacity: .5;
                             }
                         </style>
                         <div class="lbcg-card-header">
-                            <span class="lbcg-card-header-text">Make Your Own Bingo!</span>
+                            <span class="lbcg-card-header-text"><?php echo !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : ''; ?></span>
                         </div>
                         <div class="lbcg-card-body">
                             <div class="lbcg-card-body-grid lbcg-grid-5"><!-- lbcg-grid-3/lbcg-grid-4 -->
