@@ -1,0 +1,123 @@
+.lbcg-input, .lbcg-select {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  line-height: 20px;
+  outline: none;
+  margin: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &:not([type="file"]) {
+    height: 30px;
+    padding: 4px 10px;
+    background-color: #FFF;
+    border: 1px solid #000;
+
+    &:focus {
+      outline: none;
+      border: 1px solid #000;
+    }
+  }
+}
+
+textarea.lbcg-input {
+  &, &:not([type="file"]) {
+    height: auto;
+  }
+}
+
+.lbcg-input {
+  &-wrap {
+    position: relative;
+    justify-content: stretch;
+    &:not(:first-child) {
+      margin-top: 15px;
+    }
+
+    &, &-in {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    &-in {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &--subtitle {
+      .lbcg-label {
+        width: 15%;
+      }
+
+      .lbcg-input {
+        text-align: center;
+      }
+    }
+  }
+}
+
+.lbcg-label {
+  display: block;
+  width: 100%;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.lbcg-checkbox {
+  position: absolute;
+  opacity: 0;
+  z-index: -1000;
+  left: 0;
+  top: 0;
+
+  ~ .lbcg-label {
+    padding-right: 30px;
+  }
+
+  &:not(:checked) {
+    ~ .lbcg-input-wrap--collapse {
+      display: none;
+    }
+  }
+
+  &:checked {
+    ~ .lbcg-checkbox-holder {
+      &:before {
+        opacity: 1;
+      }
+    }
+  }
+
+  &-holder {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #000;
+    background-color: #FFF;
+    cursor: pointer;
+
+    &:before {
+      content: "";
+      display: block;
+      width: 12px;
+      height: 12px;
+      background-color: #000;
+      transition: opacity .3s;
+      opacity: 0;
+    }
+  }
+}

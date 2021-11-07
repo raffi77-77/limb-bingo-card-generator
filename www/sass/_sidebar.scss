@@ -72,4 +72,34 @@
     max-height: 0;
     transition: max-height .3s;
   }
+
+  &-link {
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #000;
+    text-decoration: none;
+    background-color: #fff;
+    transition: all .3s;
+
+    &:hover, &:focus {
+      color: #000;
+      background-color: darken(#fff, 15%);
+    }
+
+    &.active {
+      &, &:focus {
+        background-color: darken(#fff, 15%);
+        color: #000;
+      }
+
+      &:hover {
+        background-color: darken(#fff, 30%);
+      }
+    }
+
+
+  }
 }
