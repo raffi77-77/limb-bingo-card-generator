@@ -166,7 +166,8 @@
       -ms-flex-pack: justify;
           justify-content: space-between; }
     .lbcg-parent .lbcg-input-wrap--subtitle .lbcg-label {
-      width: 15%; }
+      width: 15%;
+      min-width: 30px; }
     .lbcg-parent .lbcg-input-wrap--subtitle .lbcg-input {
       text-align: center; }
   .lbcg-parent .lbcg-label {
@@ -322,8 +323,10 @@
       line-height: var(--lbcg-card-col-line-height);
       color: inherit; }
     .lbcg-parent .lbcg-card-body {
+      position: relative;
       margin-top: 20px;
-      padding: 0 20px; }
+      padding: 0 20px;
+      z-index: 2; }
       .lbcg-parent .lbcg-card-body-grid {
         display: -ms-grid;
         display: grid;

@@ -110,8 +110,10 @@
   }
 
   &-body {
+    position: relative;
     margin-top: 20px;
     padding: 0 20px;
+    z-index: 2;
     &-grid {
       display: grid;
       grid-template-rows: 1fr;
