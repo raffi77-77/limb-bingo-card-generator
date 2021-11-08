@@ -86,7 +86,8 @@ class BingoCardAdmin
      *
      * @param $post_id
      */
-    private function save_theme_custom_fields($post_id) {
+    private function save_theme_custom_fields($post_id)
+    {
         // Type and size
         if (empty($_POST['bingo_card_type']) || empty($_POST['bingo_grid_size'])) {
             // TODO bingo card type and size aren't defined
@@ -116,15 +117,6 @@ class BingoCardAdmin
         }
         // Header color, image with attributes
         if (!empty($_POST['bc_header'])) {
-            if (!empty($_FILES['bc_header']['size']['image'])) {
-                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_header'], $post_id);
-                $_POST['bc_header']['image'] = $attach_id;
-            } else if (!empty($data['bc_header'][0])) {
-                $bc_header = unserialize($data['bc_header'][0]);
-                $_POST['bc_header']['image'] = $bc_header['image'];
-            } else {
-                $_POST['bc_header']['image'] = 0;
-            }
             if (empty($_POST['bc_header']['repeat'])) {
                 $_POST['bc_header']['repeat'] = 'off';
             }
@@ -132,15 +124,6 @@ class BingoCardAdmin
         }
         // Grid color, image with attributes
         if (!empty($_POST['bc_grid'])) {
-            if (!empty($_FILES['bc_grid']['size']['image'])) {
-                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_grid'], $post_id);
-                $_POST['bc_grid']['image'] = $attach_id;
-            } else if (!empty($data['bc_grid'][0])) {
-                $bc_grid = unserialize($data['bc_grid'][0]);
-                $_POST['bc_grid']['image'] = $bc_grid['image'];
-            } else {
-                $_POST['bc_grid']['image'] = 0;
-            }
             if (empty($_POST['bc_grid']['repeat'])) {
                 $_POST['bc_grid']['repeat'] = 'off';
             }
@@ -148,15 +131,6 @@ class BingoCardAdmin
         }
         // Card color, image with attributes
         if (!empty($_POST['bc_card'])) {
-            if (!empty($_FILES['bc_card']['size']['image'])) {
-                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_card'], $post_id);
-                $_POST['bc_card']['image'] = $attach_id;
-            } else if (!empty($data['bc_card'][0])) {
-                $bc_card = unserialize($data['bc_card'][0]);
-                $_POST['bc_card']['image'] = $bc_card['image'];
-            } else {
-                $_POST['bc_card']['image'] = 0;
-            }
             if (empty($_POST['bc_card']['repeat'])) {
                 $_POST['bc_card']['repeat'] = 'off';
             }
@@ -182,6 +156,9 @@ class BingoCardAdmin
         global $post_type;
         if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
             wp_enqueue_script('jquery');
+            if (!did_action('wp_enqueue_media')) {
+                wp_enqueue_media();
+            }
             wp_enqueue_script('bingo-theme-admin-script', $this->attributes['plugin_url'] . '/admin/js/bingo-theme.js?ver=' . BingoCard::VERSION);
             wp_enqueue_style('bingo-theme-admin-style', $this->attributes['plugin_url'] . '/admin/css/bingo-theme.css?ver=' . BingoCard::VERSION);
         }

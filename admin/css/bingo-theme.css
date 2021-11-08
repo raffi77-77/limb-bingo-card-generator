@@ -2,6 +2,10 @@
     font-weight: 600;
 }
 
+#bingo-theme-custom-fields td label.bca-subtitle {
+    font-size: large;
+}
+
 #bingo-theme-custom-fields table, tbody {
     width: 100%;
 }
@@ -27,7 +31,6 @@
 
 #bingo-theme-custom-fields td input[type="number"] {
     max-width: 70px;
-    float: right;
 }
 
 #bingo-theme-custom-fields td input[type="color"] {

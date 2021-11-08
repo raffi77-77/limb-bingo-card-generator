@@ -64,6 +64,13 @@ class BingoCardPublic
      */
     public function add_custom_css()
     {
+        ?>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <?php foreach (BingoCardHelper::$fonts as $font): ?>
+        <link href="<?php echo $font['url'] ?>" rel="stylesheet">
+        <?php endforeach; ?>
+        <?php
         global $post;
         if ($post instanceof WP_Post && ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card')) {
             $custom_css = get_post_meta($post->ID, 'bingo_card_custom_css', true);

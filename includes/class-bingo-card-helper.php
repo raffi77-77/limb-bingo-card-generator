@@ -6,6 +6,38 @@
 class BingoCardHelper
 {
     /**
+     * Google Fonts
+     *
+     * @var string[]
+     */
+    public static $fonts = [
+        'mochiy-pop-p-one' => [
+            'name' => 'Mochiy Pop P One',
+            'url' => 'https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap'
+        ],
+        'dancing-script' => [
+            'name' => 'Dancing Script',
+            'url' => 'https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap'
+        ],
+        'saira-condensed' => [
+            'name' => 'Saira Condensed',
+            'url' => 'https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@100&display=swap'
+        ],
+        'righteous' => [
+            'name' => 'Righteous',
+            'url' => 'https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap'
+        ],
+        'press-start-2p' => [
+            'name' => 'Press Start 2P',
+            'url' => 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'
+        ],
+        'henny-penny' => [
+            'name' => 'Henny Penny',
+            'url' => 'https://fonts.googleapis.com/css2?family=Henny+Penny&display=swap'
+        ]
+    ];
+
+    /**
      * Register custom post types and hooks
      */
     public static function register_custom_post_types()
@@ -15,18 +47,6 @@ class BingoCardHelper
 
         add_filter('post_type_link', array('BingoCardHelper', 'check_post_link'), 10, 2);
         add_filter('query_vars', array('BingoCardHelper', 'query_vars'));
-        add_action('post_edit_form_tag', array('BingoCardHelper', 'update_admin_edit_form'));
-    }
-
-    /**
-     * Make post save form as multipart
-     */
-    public static function update_admin_edit_form()
-    {
-        global $post_type;
-        if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
-            echo ' enctype="multipart/form-data"';
-        }
     }
 
     /**
@@ -41,11 +61,11 @@ class BingoCardHelper
             'menu_name' => __('Bingo themes', 'textdomain'),
             'name_admin_bar' => __('Bingo theme', 'textdomain'),
             'add_new' => __('Add new', 'textdomain'),
-            'add_new_item' => __('Add new theme', 'textdomain'),
-            'new_item' => __('New theme', 'textdomain'),
-            'edit_item' => __('Edit theme', 'textdomain'),
-            'view_item' => __('View theme', 'textdomain'),
-            'all_items' => __('All themes', 'textdomain'),
+            'add_new_item' => __('Add new bingo theme', 'textdomain'),
+            'new_item' => __('New bingo theme', 'textdomain'),
+            'edit_item' => __('Edit bingo theme', 'textdomain'),
+            'view_item' => __('View bingo theme', 'textdomain'),
+            'all_items' => __('All bingo themes', 'textdomain'),
             'search_items' => __('Search Bingo themes', 'textdomain'),
             'not_found' => __('No themes found.', 'textdomain')
         );
@@ -200,6 +220,32 @@ class BingoCardHelper
             'words_count' => $to,
             'words' => implode("\n", range(1, $to))
         ];
+    }
+
+    /**
+     * Get 1-75 bingo card random numbers
+     *
+     * @return array
+     */
+    public static function get_1_75_bingo_card_words()
+    {
+        $word_cols = [];
+        for ($i = 1; $i < 62; $i += 15) {
+            $temp_numbers = range($i, $i + 14);
+            shuffle($temp_numbers);
+            $word_cols[] = $temp_numbers;
+        }
+        $bingo_card_words = [];
+        $i = 0;
+        $j = 0;
+        while ($j < 5) {
+            $bingo_card_words[] = $word_cols[$i][$j];
+            ++$i;
+            if (($i %= 5) === 0) {
+                ++$j;
+            }
+        }
+        return $bingo_card_words;
     }
 
     /**

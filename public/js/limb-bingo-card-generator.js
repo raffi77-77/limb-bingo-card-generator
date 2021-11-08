@@ -1,6 +1,4 @@
-jQuery(document).ready(function() {
-    const $ = jQuery;
-
+jQuery(document).ready(function ($) {
     /**
      * On title change
      */

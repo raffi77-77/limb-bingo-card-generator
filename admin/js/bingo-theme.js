@@ -1,6 +1,4 @@
-jQuery(document).ready(function () {
-    const $ = jQuery;
-
+jQuery(document).ready(function ($) {
     /**
      * Check words count in container
      */
@@ -132,4 +130,31 @@ jQuery(document).ready(function () {
      * Checking words count when content changed
      */
     $('#bc-content').bind('input propertychange', checkWordsCount);
+
+    /**
+     * WP Media Uploader
+     */
+    $('body').on('click', '.bc-image-upload', function (e) {
+        e.preventDefault();
+        const button = $(this),
+            custom_uploader = wp.media({
+                title: 'Insert image',
+                library: {
+                    type: 'image'
+                },
+                button: {
+                    text: 'Use this image'
+                },
+                multiple: false
+            }).on('select', function () {
+                const attachment = custom_uploader.state().get('selection').first().toJSON();
+                button.html('<img src="' + attachment.sizes.thumbnail.url + '" style="margin-top: 12px; width: 50px;">').next().show().next().val(attachment.id);
+            }).open();
+    });
+    $('body').on('click', '.bc-remove-uploaded-image', function (e) {
+        e.preventDefault();
+        const button = $(this);
+        button.next().val(0);
+        button.hide().prev().html('Upload image');
+    });
 });
