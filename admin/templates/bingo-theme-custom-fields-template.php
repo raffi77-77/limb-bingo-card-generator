@@ -91,7 +91,7 @@ $special_types = array('1-9', '1-75', '1-90');
         </td>
         <td>
             <textarea id="bc-title"
-                      name="bingo_card_title"><?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?></textarea>
+                          name="bingo_card_title"><?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?></textarea>
         </td>
         <td class="bc-content" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;"' : ''; ?>>
             <label for="bc-content">Enter words/emojis or numbers:</label>
@@ -105,15 +105,15 @@ $special_types = array('1-9', '1-75', '1-90');
             <label>Bingo card title for 1-75:</label>
         </td>
         <td class="bc-title-1-75" <?php echo $bingo_card_type !== '1-75' ? 'style="display: none;"' : ''; ?>>
-            <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1"
+            <input type="text" name="bingo_card_spec_title[0]" class="letter-title" size="1" maxlength="1"
                    value="<?php echo $bingo_card_spec_title[0]; ?>">
-            <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1"
+            <input type="text" name="bingo_card_spec_title[1]" class="letter-title" size="1" maxlength="1"
                    value="<?php echo $bingo_card_spec_title[1]; ?>">
-            <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1"
+            <input type="text" name="bingo_card_spec_title[2]" class="letter-title" size="1" maxlength="1"
                    value="<?php echo $bingo_card_spec_title[2]; ?>">
-            <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1"
+            <input type="text" name="bingo_card_spec_title[3]" class="letter-title" size="1" maxlength="1"
                    value="<?php echo $bingo_card_spec_title[3]; ?>">
-            <input type="text" name="bingo_card_spec_title[]" class="letter-title" size="1" maxlength="1"
+            <input type="text" name="bingo_card_spec_title[4]" class="letter-title" size="1" maxlength="1"
                    value="<?php echo $bingo_card_spec_title[4]; ?>">
         </td>
     </tr>
@@ -145,7 +145,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <label for="bci-header-opacity">Image opacity (%):</label>
             <input type="number" id="bci-header-opacity" name="bc_header[opacity]" min="0" max="100"
-                   value="<?php echo $bc_header['opacity']; ?>">
+                   placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>">
         </td>
     </tr>
     <tr class="white-space">&nbsp;</tr>
@@ -176,7 +176,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <label for="bci-grid-opacity">Image opacity (%):</label>
             <input type="number" id="bci-grid-opacity" name="bc_grid[opacity]" min="0" max="100"
-                   value="<?php echo $bc_grid['opacity']; ?>">
+                   placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>">
         </td>
     </tr>
     <tr class="white-space">&nbsp;</tr>
@@ -207,7 +207,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <label for="bci-card-opacity">Image opacity (%):</label>
             <input type="number" id="bci-card-opacity" name="bc_card[opacity]" min="0" max="100"
-                   value="<?php echo $bc_card['opacity']; ?>">
+                   placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>">
         </td>
     </tr>
     <tr class="white-space">&nbsp;</tr>

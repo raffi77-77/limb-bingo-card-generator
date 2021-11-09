@@ -112,4 +112,27 @@ jQuery(document).ready(function ($) {
     $('#lbcg-free-space-check').change(function () {
         changeFreeSpaceItem(this.checked);
     });
+
+    /**
+     * On card generate button click
+     */
+    $('#generate-bc').on('click', function () {
+        $.ajax({
+            url: LBC['ajaxUrl'],
+            method: 'POST',
+            data: $('#bingo-card-generation').serialize(),
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data.success === true) {
+                    location.replace(location.href + '/invitation');
+                } else {
+                    console.error("Generation errors: ".data.errors.join("\n"));
+                    alert('Something went wrong. Please try again.');
+                }
+            },
+            error: function () {
+                alert('Could not generate.');
+            }
+        });
+    });
 });

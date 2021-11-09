@@ -27,7 +27,19 @@ class BingoCardAjax
      */
     public function register_dependencies()
     {
-//        add_action('wp_ajax_nopriv_{$action}', array($this, '{action}'));
-//        add_action('wp_ajax_{$action}', array($this, '{action}'));
+        add_action('wp_ajax_nopriv_bingo_card_generation', array($this, 'bingo_card_generation'));
+        add_action('wp_ajax_bingo_card_generation', array($this, 'bingo_card_generation'));
+    }
+
+    /**
+     * Generate card
+     */
+    public function bingo_card_generation()
+    {
+        print_r(json_encode([
+            'success' => true,
+            'errors' => []
+        ]));
+        die();
     }
 }

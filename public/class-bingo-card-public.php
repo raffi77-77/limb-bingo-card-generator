@@ -42,7 +42,8 @@ class BingoCardPublic
             wp_enqueue_script('limb-bingo-card-generator-js', $this->attributes['plugin_url'] . '/public/js/limb-bingo-card-generator.js?ver=' . BingoCard::VERSION);
             wp_localize_script('limb-bingo-card-generator-js', 'LBC', [
                 'fonts' => BingoCardHelper::$fonts,
-                'freeSquareWord' => BingoCardHelper::$free_space_word
+                'freeSquareWord' => BingoCardHelper::$free_space_word,
+                'ajaxUrl' => admin_url('admin-ajax.php')
             ]);
             wp_enqueue_style('limb-bingo-card-generator-css', $this->attributes['plugin_url'] . '/public/css/limb-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
         }
@@ -58,7 +59,11 @@ class BingoCardPublic
     {
         global $post_type;
         if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
-            $single_template = $this->attributes['templates_path'] . '/bingo-theme-template.php';
+            if (strpos($_SERVER['REQUEST_URI'], '/invitation') !== false) {
+                $single_template = $this->attributes['templates_path'] . '/invitation-template.php';
+            } else {
+                $single_template = $this->attributes['templates_path'] . '/bingo-theme-template.php';
+            }
         }
         return $single_template;
     }
@@ -73,7 +78,7 @@ class BingoCardPublic
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <?php foreach (BingoCardHelper::$fonts as $font): ?>
         <link href="<?php echo $font['url'] ?>" rel="stylesheet">
-        <?php endforeach; ?>
+    <?php endforeach; ?>
         <?php
         global $post;
         if ($post instanceof WP_Post && ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card')) {

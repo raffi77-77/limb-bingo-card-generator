@@ -23,13 +23,13 @@ class BingoCardHelper
             'name' => 'Saira Condensed',
             'url' => 'https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@100&display=swap'
         ],
-        'righteous' => [
-            'name' => 'Righteous',
-            'url' => 'https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap'
+        'creepster' => [
+            'name' => 'Creepster',
+            'url' => 'https://fonts.googleapis.com/css2?family=Creepster&display=swap'
         ],
-        'press-start-2p' => [
-            'name' => 'Press Start 2P',
-            'url' => 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'
+        'holtwood-one-sc' => [
+            'name' => 'Holtwood One SC',
+            'url' => 'https://fonts.googleapis.com/css2?family=Holtwood+One+SC&display=swap'
         ],
         'henny-penny' => [
             'name' => 'Henny Penny',
@@ -96,7 +96,7 @@ class BingoCardHelper
             )
         );
         add_rewrite_rule(
-            'category/([^/]+)/bingo-theme/([^/]+)/?$',
+            'category/([^/]+)/bingo-theme/([^/]+)/?(([^/]+)/?)?$',
             'index.php?post_type=bingo_theme&name=$matches[2]',
             'top'
         );
