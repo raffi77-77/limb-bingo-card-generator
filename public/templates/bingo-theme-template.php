@@ -10,8 +10,9 @@ if (!defined('ABSPATH')) {
 get_header();
 
 global $post;
-$data = get_post_meta($post->ID);
-$data = get_post_meta($post->ID);
+$current_id = $post->ID;
+$data = get_post_meta($current_id);
+$data = get_post_meta($current_id);
 $bingo_card_type = !empty($data['bingo_card_type'][0]) ? $data['bingo_card_type'][0] : '1-9';
 $bingo_grid_size = !empty($data['bingo_grid_size'][0]) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : '';
@@ -34,7 +35,7 @@ if ($bingo_card_type === '1-75') {
     $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_words();
 } else {
     $bingo_card_words = explode("\r\n", $bingo_card_content);
-    shuffle($bingo_card_words);
+//    shuffle($bingo_card_words);
 }
 // Header style
 if (!empty($data['bc_header'][0])) {
@@ -80,33 +81,30 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
     <div class="custom-container" style="width: 900px; margin: 0 auto;">
         <main class="lbcg-parent">
             <aside class="lbcg-sidebar">
-                <div class="lbcg-sidebar-in collapsed"><!-- collapsed for dropdown -->
+                <div class="lbcg-sidebar-in collapsed">
                     <div class="lbcg-sidebar-header">
-                        <a href="#" class="lbcg-sidebar-btn">Popular</a>
+                        <a href="#" class="lbcg-sidebar-btn">BIngo Types</a>
                         <span class="lbcg-sidebar-arrow"></span>
                     </div>
                     <div class="lbcg-sidebar-body">
-                        <a href="#" class="lbcg-sidebar-link active"><!-- active for active -->Bingo Card Generator</a>
-                        <a href="#" class="lbcg-sidebar-link">1-75 Bingo</a>
-                        <a href="#" class="lbcg-sidebar-link">1-90 Bingo</a>
-                        <a href="#" class="lbcg-sidebar-link">Virtual Bingo</a>
-                        <a href="#" class="lbcg-sidebar-link">Online Escape Rooms</a>
-                        <a href="#" class="lbcg-sidebar-link">Find My Order</a>
-                    </div>
-                </div>
-                <div class="lbcg-sidebar-in"><!-- collapsed for dropdown -->
-                    <div class="lbcg-sidebar-header">
-                        <a href="#" class="lbcg-sidebar-btn">Numbers</a>
-                        <span class="lbcg-sidebar-arrow"></span>
-                    </div>
-                    <div class="lbcg-sidebar-body">
-                        <a href="#" class="lbcg-sidebar-link">1-75</a>
-                        <a href="#" class="lbcg-sidebar-link">1-90</a>
-                        <a href="#" class="lbcg-sidebar-link">1-100</a>
-                        <a href="#" class="lbcg-sidebar-link">1-25</a>
-                        <a href="#" class="lbcg-sidebar-link">1-25 Words</a>
-                        <a href="#" class="lbcg-sidebar-link">1-20</a>
-                        <a href="#" class="lbcg-sidebar-link">1-9</a>
+                        <?php
+                        $args = array(
+                            'post_type' => 'bingo_theme',
+                            'post_status' => 'publish',
+                            'order' => 'ASC'
+                        );
+                        $query = new WP_Query($args);
+                        if ($query->have_posts()) {
+                            while ($query->have_posts()) {
+                                $query->the_post();
+                                ?>
+                                <a href="<?php echo esc_url(get_permalink(get_the_ID())); ?>"
+                                   class="lbcg-sidebar-link <?php echo $current_id === get_the_ID() ? 'active' : ''; ?>"><?php the_title(); ?></a>
+                                <?php
+                            }
+                            wp_reset_postdata();
+                        }
+                        ?>
                     </div>
                 </div>
             </aside>
@@ -149,14 +147,14 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                         <?php if (!empty($data['bingo_card_type'][0]) && $data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90'): ?>
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-body-content" class="lbcg-label">Enter words/emojis or numbers</label>
-                                <textarea class="lbcg-input" id="lbcg-body-content" name="lbcg-body-content" cols=""
+                                <textarea class="lbcg-input" id="lbcg-body-content" name="lbcg_body_content" cols=""
                                           rows="11"><?php echo !empty($data['bingo_card_content'][0]) ? $data['bingo_card_content'][0] : ''; ?></textarea>
                             </div>
                         <?php endif; ?>
                         <?php if ($bingo_card_type !== '1-9' && $bingo_card_type !== '1-75' && $bingo_card_type !== '1-90'): ?>
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
-                                <select name="lbcg-grid-size" id="lbcg-grid-size" class="lbcg-select">
+                                <select name="lbcg_grid_size" id="lbcg-grid-size" class="lbcg-select">
                                     <option value="grid-3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>
                                         3x3
                                     </option>
@@ -171,15 +169,15 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                         <?php endif; ?>
                         <div class="lbcg-input-wrap">
                             <label for="lbcg-font" class="lbcg-label">Select Font Family</label>
-                            <select name="lbcg-font" id="lbcg-font" class="lbcg-select">
+                            <select name="lbcg_font" id="lbcg-font" class="lbcg-select">
                                 <?php foreach (BingoCardHelper::$fonts as $key => $font): ?>
                                     <option value="<?php echo $key; ?>" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === $key ? 'selected="selected"' : ''; ?>><?php
                                         echo $font['name']; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <?php if ($bingo_card_type !== '1-75' && $bingo_card_type !== '1-90' && $bingo_grid_size !== '4x4'): ?>
-                            <div class="lbcg-input-wrap">
+                        <?php if ($bingo_card_type !== '1-75' && $bingo_card_type !== '1-90'): ?>
+                            <div class="lbcg-input-wrap" <?php echo $bingo_grid_size === '4x4' ? 'style="display: none;"' : ''; ?>>
                                 <input type="checkbox" class="lbcg-checkbox" id="lbcg-free-space-check"
                                        hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>
                                 <label for="lbcg-free-space-check" class="lbcg-checkbox-holder"></label>
@@ -284,7 +282,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                         <div class="lbcg-card-col">
                                         <span class="lbcg-card-text"><?php
                                             if ((int)ceil($grid_sq_count / 2) === $i && $bingo_grid_free_square) {
-                                                echo '&#9733';
+                                                echo BingoCardHelper::$free_space_word;
                                             } else {
                                                 echo $bingo_card_words[$i - 1];
                                             }

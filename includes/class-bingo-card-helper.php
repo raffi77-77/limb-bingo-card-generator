@@ -38,6 +38,13 @@ class BingoCardHelper
     ];
 
     /**
+     * Free space word
+     *
+     * @var string
+     */
+    public static $free_space_word = '&#9733;';
+
+    /**
      * Register custom post types and hooks
      */
     public static function register_custom_post_types()
