@@ -124,6 +124,29 @@ jQuery(document).ready(function ($) {
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.success === true) {
+                    location.replace(location.href + '/invitation?c=' + data.cardId);
+                } else {
+                    console.error("Generation errors: ".data.errors.join("\n"));
+                    alert('Something went wrong. Please try again.');
+                }
+            },
+            error: function () {
+                alert('Could not generate.');
+            }
+        });
+    });
+
+    /**
+     * On card invite button click
+     */
+    $('#invite-bc').on('click', function () {
+        $.ajax({
+            url: LBC['ajaxUrl'],
+            method: 'POST',
+            data: $('#bingo-card-invitation').serialize(),
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data.success === true) {
                     location.replace(location.href + '/invitation');
                 } else {
                     console.error("Generation errors: ".data.errors.join("\n"));

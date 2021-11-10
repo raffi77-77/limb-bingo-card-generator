@@ -44,6 +44,13 @@ class BingoCardHelper
      */
     public static $free_space_word = '&#9733;';
 
+    public static $card_default_params = [
+        'bingo_card_type' => '1-9',
+        'bingo_grid_size' => '3x3',
+        'bingo_card_title' => 'Bingo card',
+        'bingo_card_spec_title' => ['B', 'I', 'N', 'G', 'O']
+    ];
+
     /**
      * Register custom post types and hooks
      */
@@ -253,6 +260,67 @@ class BingoCardHelper
             }
         }
         return $bingo_card_words;
+    }
+
+    public static function collect_card_data_from($data)
+    {
+        // Check some cases
+        if (empty($data['bingo_card_type']) || empty($data['bingo_grid_size'])) {
+            return false;
+        } elseif ($data['bingo_card_type'] !== '1-75' && $data['bingo_card_type'] !== '1-90' && empty($data['bingo_card_content'])) {
+            return false;
+        }
+        // Check other important data existence
+        $other_important_keys = ['bc_header', 'bc_grid', 'bc_card'];
+        foreach ($other_important_keys as $key) {
+            if (empty($data[$key])) {
+                return false;
+            }
+        }
+        // Collect data
+        $card_data = [
+            'bingo_card_type' => '',
+            'bingo_grid_size' => '',
+            'bingo_card_title' => '',
+            'bingo_card_spec_title' => '',
+            'bingo_card_content' => '',
+            'bc_header' => '',
+            'bc_grid' => '',
+            'bc_card' => '',
+            'bingo_card_font' => '',
+            'bingo_card_free_square' => '',
+            'bingo_card_custom_css' => ''
+        ];
+        foreach ($card_data as $key => $value) {
+            if (!empty($data[$key])) {
+                $card_data[$key] = $data[$key];
+            }
+        }
+        return $card_data;
+    }
+
+    public static function save_card_meta_fields($post_id, $data)
+    {
+        // TODO continue
+    }
+
+    /**
+     * Check if correct emails
+     *
+     * @param string|array $emails
+     * @return bool
+     */
+    public static function is_valid_emails($emails)
+    {
+        if (!is_array($emails)) {
+            $emails = [$emails];
+        }
+        foreach ($emails as $email) {
+            if (!is_email($email)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

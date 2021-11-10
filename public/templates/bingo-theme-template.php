@@ -121,63 +121,55 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 <input class="lbcg-input" id="lbcg-title" type="text" name="bingo_card_title"
                                        value="<?php echo !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : ''; ?>"/>
                             </div>
-                            <?php if (!empty($data['bingo_card_type'][0]) && $data['bingo_card_type'][0] === '1-75'): ?>
-                                <div class="lbcg-input-wrap">
-                                    <label for="lbcg-title" class="lbcg-label">Enter a Subtitle</label>
-                                    <div class="lbcg-input-wrap-in lbcg-input-wrap--subtitle">
-                                        <label class="lbcg-label lbcg-label--single">
-                                            <input class="lbcg-input" id="lbcg-subtitle-1" size="1" maxlength="1"
-                                                   name="bingo_card_spec_title[0]"
-                                                   type="text" value="<?php echo $bingo_card_spec_title[0]; ?>"/>
-                                        </label>
-                                        <label class="lbcg-label lbcg-label--single">
-                                            <input class="lbcg-input" id="lbcg-subtitle-2" size="1" maxlength="1"
-                                                   name="bingo_card_spec_title[1]"
-                                                   type="text" value="<?php echo $bingo_card_spec_title[1]; ?>"/>
-                                        </label>
-                                        <label class="lbcg-label lbcg-label--single">
-                                            <input class="lbcg-input" id="lbcg-subtitle-3" size="1" maxlength="1"
-                                                   name="bingo_card_spec_title[2]"
-                                                   type="text" value="<?php echo $bingo_card_spec_title[2]; ?>"/>
-                                        </label>
-                                        <label class="lbcg-label lbcg-label--single">
-                                            <input class="lbcg-input" id="lbcg-subtitle-4" size="1" maxlength="1"
-                                                   name="bingo_card_spec_title[3]"
-                                                   type="text" value="<?php echo $bingo_card_spec_title[3]; ?>"/>
-                                        </label>
-                                        <label class="lbcg-label lbcg-label--single">
-                                            <input class="lbcg-input" id="lbcg-subtitle-5" size="1" maxlength="1"
-                                                   name="bingo_card_spec_title[4]"
-                                                   type="text" value="<?php echo $bingo_card_spec_title[4]; ?>"/>
-                                        </label>
-                                    </div>
+                            <div class="lbcg-input-wrap" <?php echo !(!empty($data['bingo_card_type'][0]) && $data['bingo_card_type'][0] === '1-75') ? 'style="display: none;"' : ''; ?>>
+                                <label for="lbcg-title" class="lbcg-label">Enter a Subtitle</label>
+                                <div class="lbcg-input-wrap-in lbcg-input-wrap--subtitle">
+                                    <label class="lbcg-label lbcg-label--single">
+                                        <input class="lbcg-input" id="lbcg-subtitle-1" size="1" maxlength="1"
+                                               name="bingo_card_spec_title[0]"
+                                               type="text" value="<?php echo $bingo_card_spec_title[0]; ?>"/>
+                                    </label>
+                                    <label class="lbcg-label lbcg-label--single">
+                                        <input class="lbcg-input" id="lbcg-subtitle-2" size="1" maxlength="1"
+                                               name="bingo_card_spec_title[1]"
+                                               type="text" value="<?php echo $bingo_card_spec_title[1]; ?>"/>
+                                    </label>
+                                    <label class="lbcg-label lbcg-label--single">
+                                        <input class="lbcg-input" id="lbcg-subtitle-3" size="1" maxlength="1"
+                                               name="bingo_card_spec_title[2]"
+                                               type="text" value="<?php echo $bingo_card_spec_title[2]; ?>"/>
+                                    </label>
+                                    <label class="lbcg-label lbcg-label--single">
+                                        <input class="lbcg-input" id="lbcg-subtitle-4" size="1" maxlength="1"
+                                               name="bingo_card_spec_title[3]"
+                                               type="text" value="<?php echo $bingo_card_spec_title[3]; ?>"/>
+                                    </label>
+                                    <label class="lbcg-label lbcg-label--single">
+                                        <input class="lbcg-input" id="lbcg-subtitle-5" size="1" maxlength="1"
+                                               name="bingo_card_spec_title[4]"
+                                               type="text" value="<?php echo $bingo_card_spec_title[4]; ?>"/>
+                                    </label>
                                 </div>
-                            <?php endif; ?>
-                            <?php if (!empty($data['bingo_card_type'][0]) && $data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90'): ?>
-                                <div class="lbcg-input-wrap">
-                                    <label for="lbcg-body-content" class="lbcg-label">Enter words/emojis or
-                                        numbers</label>
-                                    <textarea class="lbcg-input" id="lbcg-body-content" name="bingo_card_content"
-                                              cols=""
-                                              rows="11"><?php echo !empty($data['bingo_card_content'][0]) ? $data['bingo_card_content'][0] : ''; ?></textarea>
-                                </div>
-                            <?php endif; ?>
-                            <?php if ($bingo_card_type !== '1-9' && $bingo_card_type !== '1-75' && $bingo_card_type !== '1-90'): ?>
-                                <div class="lbcg-input-wrap">
-                                    <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
-                                    <select name="bingo_grid_size" id="lbcg-grid-size" class="lbcg-select">
-                                        <option value="grid-3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>
-                                            3x3
-                                        </option>
-                                        <option value="grid-4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>
-                                            4x4
-                                        </option>
-                                        <option value="grid-5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>
-                                            5x5
-                                        </option>
-                                    </select>
-                                </div>
-                            <?php endif; ?>
+                            </div>
+                            <div class="lbcg-input-wrap" <?php echo !(!empty($data['bingo_card_type'][0]) && $data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90') ? 'style="display: none;' : ''; ?>>
+                                <label for="lbcg-body-content" class="lbcg-label">Enter words/emojis or numbers</label>
+                                <textarea class="lbcg-input" id="lbcg-body-content" name="bingo_card_content" cols=""
+                                          rows="11"><?php echo !empty($data['bingo_card_content'][0]) ? $data['bingo_card_content'][0] : ''; ?></textarea>
+                            </div>
+                            <div class="lbcg-input-wrap" <?php echo !($bingo_card_type !== '1-9' && $bingo_card_type !== '1-75' && $bingo_card_type !== '1-90') ? 'style="display: none;"' : ''; ?>>
+                                <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
+                                <select name="bingo_grid_size" id="lbcg-grid-size" class="lbcg-select">
+                                    <option value="grid-3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>
+                                        3x3
+                                    </option>
+                                    <option value="grid-4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>
+                                        4x4
+                                    </option>
+                                    <option value="grid-5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>
+                                        5x5
+                                    </option>
+                                </select>
+                            </div>
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-font" class="lbcg-label">Select Font Family</label>
                                 <select name="bingo_card_font" id="lbcg-font" class="lbcg-select">
@@ -187,18 +179,15 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <?php if ($bingo_card_type !== '1-75' && $bingo_card_type !== '1-90'): ?>
-                                <div class="lbcg-input-wrap" <?php echo $bingo_grid_size === '4x4' ? 'style="display: none;"' : ''; ?>>
-                                    <input type="checkbox" class="lbcg-checkbox" id="lbcg-free-space-check"
-                                           name="bingo_card_free_square"
-                                           hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>
-                                    <label for="lbcg-free-space-check" class="lbcg-checkbox-holder"></label>
-                                    <label for="lbcg-free-space-check" class="lbcg-label">Include free space?</label>
-                                </div>
-                            <?php endif; ?>
+                            <div class="lbcg-input-wrap" <?php echo ($bingo_card_type === '1-75' || $bingo_card_type === '1-90' || $bingo_grid_size === '4x4') ? 'style="display: none;"' : ''; ?>>
+                                <input type="checkbox" class="lbcg-checkbox" id="lbcg-free-space-check"
+                                       name="bingo_card_free_square"
+                                       hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>
+                                <label for="lbcg-free-space-check" class="lbcg-checkbox-holder"></label>
+                                <label for="lbcg-free-space-check" class="lbcg-label">Include free space?</label>
+                            </div>
                             <div class="lbcg-input-wrap">
-                                <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse"
-                                       id="lbcg-bg-image-check" hidden/>
+                                <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-bg-image-check" hidden/>
                                 <label for="lbcg-bg-image-check" class="lbcg-checkbox-holder"></label>
                                 <label for="lbcg-bg-image-check" class="lbcg-label">Background Image</label>
                                 <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
