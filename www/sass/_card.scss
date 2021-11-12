@@ -15,9 +15,9 @@
     bottom: 0;
     left: 0;
     z-index: 1;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
+    background-repeat: var(--lbcg-card-bg-repeat);
+    //background-size: cover;
+    background-position: 0 0;
     background-color: var(--lbcg-card-bg-color);
     background-image: var(--lbcg-card-bg-image);
     opacity: var(--lbcg-card-bg-opacity);
@@ -90,9 +90,10 @@
         bottom: 0;
         left: 0;
         z-index: 1;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
+        background-repeat: var(--lbcg-header-bg-repeat);
+        //background-size: cover;
+
+        background-position: 0 0;
         background-color: var(--lbcg-header-bg-color);
         background-image: var(--lbcg-header-bg-image);
         opacity: var(--lbcg-header-bg-opacity);
@@ -118,21 +119,6 @@
     overflow: hidden;
     color: var(--lbcg-grid-text-color);
     z-index: 2;
-
-    &:after {
-      content: "";
-      position: absolute;
-      display: block;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background-color: var(--lbcg-grid-bg-color);
-      opacity: var(--lbcg-grid-bg-opacity);
-      pointer-events: none;
-      user-select: none;
-      z-index: 1;
-    }
   }
 
   &-text {
@@ -156,14 +142,30 @@
     z-index: 2;
 
     &-grid {
+      position: relative;
       display: grid;
       grid-template-rows: 1fr;
       grid-column-gap: 0;
       grid-row-gap: 0;
       border-right: 1px solid var(--lbcg-grid-border-color);
       border-bottom: 1px solid var(--lbcg-grid-border-color);
-      background-image: var(--lbcg-grid-bg-image);
-      background-size: cover;
+
+      &:before {
+        content: "";
+        position: absolute;
+        display: block;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1;
+        background-image: var(--lbcg-grid-bg-image);
+        opacity: var(--lbcg-grid-bg-opacity);
+        background-color: var(--lbcg-grid-bg-color);
+        //background-size: cover;
+      }
 
       &.lbcg-grid-3 {
         grid-template-columns: repeat(3, 1fr);

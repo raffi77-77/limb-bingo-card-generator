@@ -236,9 +236,8 @@
       bottom: 0;
       left: 0;
       z-index: 1;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center center;
+      background-repeat: var(--lbcg-card-bg-repeat);
+      background-position: 0 0;
       background-color: var(--lbcg-card-bg-color);
       background-image: var(--lbcg-card-bg-image);
       opacity: var(--lbcg-card-bg-opacity);
@@ -308,9 +307,8 @@
           bottom: 0;
           left: 0;
           z-index: 1;
-          background-repeat: no-repeat;
-          background-size: cover;
-          background-position: center center;
+          background-repeat: var(--lbcg-header-bg-repeat);
+          background-position: 0 0;
           background-color: var(--lbcg-header-bg-color);
           background-image: var(--lbcg-header-bg-image);
           opacity: var(--lbcg-header-bg-opacity);
@@ -331,21 +329,6 @@
       overflow: hidden;
       color: var(--lbcg-grid-text-color);
       z-index: 2; }
-      .lbcg-parent .lbcg-card-col:after {
-        content: "";
-        position: absolute;
-        display: block;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: var(--lbcg-grid-bg-color);
-        opacity: var(--lbcg-grid-bg-opacity);
-        pointer-events: none;
-        -webkit-user-select: none;
-            -ms-user-select: none;
-                user-select: none;
-        z-index: 1; }
     .lbcg-parent .lbcg-card-text {
       display: block;
       position: absolute;
@@ -364,6 +347,7 @@
       padding: 0 20px;
       z-index: 2; }
       .lbcg-parent .lbcg-card-body-grid {
+        position: relative;
         display: -ms-grid;
         display: grid;
         -ms-grid-rows: 1fr;
@@ -371,9 +355,23 @@
         grid-column-gap: 0;
         grid-row-gap: 0;
         border-right: 1px solid var(--lbcg-grid-border-color);
-        border-bottom: 1px solid var(--lbcg-grid-border-color);
-        background-image: var(--lbcg-grid-bg-image);
-        background-size: cover; }
+        border-bottom: 1px solid var(--lbcg-grid-border-color); }
+        .lbcg-parent .lbcg-card-body-grid:before {
+          content: "";
+          position: absolute;
+          display: block;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          pointer-events: none;
+          -webkit-user-select: none;
+              -ms-user-select: none;
+                  user-select: none;
+          z-index: 1;
+          background-image: var(--lbcg-grid-bg-image);
+          opacity: var(--lbcg-grid-bg-opacity);
+          background-color: var(--lbcg-grid-bg-color); }
         .lbcg-parent .lbcg-card-body-grid.lbcg-grid-3 {
           -ms-grid-columns: (1fr)[3];
               grid-template-columns: repeat(3, 1fr); }
