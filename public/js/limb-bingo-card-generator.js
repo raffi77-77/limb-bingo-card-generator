@@ -103,7 +103,7 @@ jQuery(document).ready(function ($) {
      * On font change
      */
     $('#lbcg-font').on('change', function () {
-        document.documentElement.style.setProperty('--lbcg-card-header-font-family', LBC['fonts'][$(this).val()]['name'] + ', sans-serif');
+        document.documentElement.style.setProperty('--lbcg-header-font-family', LBC['fonts'][$(this).val()]['name'] + ', sans-serif');
     });
 
     /**
@@ -111,29 +111,6 @@ jQuery(document).ready(function ($) {
      */
     $('#lbcg-free-space-check').change(function () {
         changeFreeSpaceItem(this.checked);
-    });
-
-    /**
-     * On card generate button click
-     */
-    $('#generate-bc').on('click', function () {
-        $.ajax({
-            url: LBC['ajaxUrl'],
-            method: 'POST',
-            data: $('#bingo-card-generation').serialize(),
-            success: function (data) {
-                data = JSON.parse(data);
-                if (data.success === true) {
-                    location.replace(location.href + '/invitation?c=' + data.cardId);
-                } else {
-                    console.error("Generation errors: ".data.errors.join("\n"));
-                    alert('Something went wrong. Please try again.');
-                }
-            },
-            error: function () {
-                alert('Could not generate.');
-            }
-        });
     });
 
     /**
@@ -147,9 +124,9 @@ jQuery(document).ready(function ($) {
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.success === true) {
-                    location.replace(location.href + '/invitation');
+                    location.replace(location.href + '/all');
                 } else {
-                    console.error("Generation errors: ".data.errors.join("\n"));
+                    console.error("Generation errors: " + data.errors.join("\n"));
                     alert('Something went wrong. Please try again.');
                 }
             },
@@ -157,5 +134,33 @@ jQuery(document).ready(function ($) {
                 alert('Could not generate.');
             }
         });
+    });
+
+    /**
+     * Header/Grid/Card background
+     */
+    // On color change
+    $('.bc-color').on('change', function () {
+        const type = $(this).data('bct');
+        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-color', $(this).val());
+    });
+    // On image change
+    $('.bc-image').on('change', function () {
+        const type = $(this).data('bct');
+        $('input[name="bc_' + type + '[remove_image]"]').val('0');
+        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'url(' + URL.createObjectURL(this.files[0]) + ')');
+    });
+    // Remove image
+    $('.remove-bc-image').on('click', function (e) {
+        e.preventDefault();
+        const type = $(this).data('bct');
+        $('#bc-' + type + '-image').val('');
+        $('input[name="bc_' + type + '[remove_image]"]').val(1);
+        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
+    });
+    // On opacity change
+    $('.bc-opacity').on('change', function () {
+        const type = $(this).data('bct');
+        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-opacity', $(this).val() / 100);
     });
 });

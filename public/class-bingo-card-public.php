@@ -39,6 +39,9 @@ class BingoCardPublic
     {
         if (is_singular('bingo_theme') || is_singular('bingo_card')) {
             wp_enqueue_script('jquery');
+            if (!did_action('wp_enqueue_media')) {
+                wp_enqueue_media();
+            }
             wp_enqueue_script('limb-bingo-card-generator-js', $this->attributes['plugin_url'] . '/public/js/limb-bingo-card-generator.js?ver=' . BingoCard::VERSION);
             wp_localize_script('limb-bingo-card-generator-js', 'LBC', [
                 'fonts' => BingoCardHelper::$fonts,

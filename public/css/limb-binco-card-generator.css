@@ -256,10 +256,10 @@
           align-items: stretch;
       -ms-flex-pack: center;
           justify-content: center;
-      font-size: var(--lbcg-card-header-font-size);
-      line-height: calc(var(--lbcg-card-header-font-size) * 1.1);
-      color: var(--lbcg-card-header-text-color);
-      font-family: var(--lbcg-card-header-font-family);
+      font-size: var(--lbcg-header-font-size);
+      line-height: calc(var(--lbcg-header-font-size) * 1.1);
+      color: var(--lbcg-header-text-color);
+      font-family: var(--lbcg-header-font-family);
       z-index: 2; }
       .lbcg-parent .lbcg-card-subtitle-text {
         position: relative;
@@ -290,11 +290,11 @@
           align-items: stretch;
       -ms-flex-pack: center;
           justify-content: center;
-      font-size: var(--lbcg-card-header-font-size);
-      line-height: calc(var(--lbcg-card-header-font-size) * 1.1);
-      height: var(--lbcg-card-header-height);
-      color: var(--lbcg-card-header-text-color);
-      font-family: var(--lbcg-card-header-font-family);
+      font-size: var(--lbcg-header-font-size);
+      line-height: calc(var(--lbcg-header-font-size) * 1.1);
+      height: var(--lbcg-header-height);
+      color: var(--lbcg-header-text-color);
+      font-family: var(--lbcg-header-font-family);
       z-index: 2; }
       .lbcg-parent .lbcg-card-header-holder {
         position: relative;
@@ -311,9 +311,9 @@
           background-repeat: no-repeat;
           background-size: cover;
           background-position: center center;
-          background-color: var(--lbcg-card-header-bg-color);
-          background-image: var(--lbcg-card-header-bg-image);
-          opacity: var(--lbcg-card-header-bg-opacity);
+          background-color: var(--lbcg-header-bg-color);
+          background-image: var(--lbcg-header-bg-image);
+          opacity: var(--lbcg-header-bg-opacity);
           pointer-events: none;
           -webkit-user-select: none;
               -ms-user-select: none;
@@ -326,10 +326,10 @@
         z-index: 2; }
     .lbcg-parent .lbcg-card-col {
       position: relative;
-      border-top: 1px solid var(--lbcg-card-col-border-color);
-      border-left: 1px solid var(--lbcg-card-col-border-color);
+      border-top: 1px solid var(--lbcg-grid-border-color);
+      border-left: 1px solid var(--lbcg-grid-border-color);
       overflow: hidden;
-      color: var(--lbcg-card-col-text-color);
+      color: var(--lbcg-grid-text-color);
       z-index: 2; }
       .lbcg-parent .lbcg-card-col:after {
         content: "";
@@ -339,8 +339,8 @@
         right: 0;
         bottom: 0;
         left: 0;
-        background-color: var(--lbcg-card-col-bg-color);
-        opacity: var(--lbcg-card-col-bg-opacity);
+        background-color: var(--lbcg-grid-bg-color);
+        opacity: var(--lbcg-grid-bg-opacity);
         pointer-events: none;
         -webkit-user-select: none;
             -ms-user-select: none;
@@ -355,8 +355,8 @@
       padding: 0 3px;
       text-align: center;
       z-index: 2;
-      font-size: var(--lbcg-card-col-font-size);
-      line-height: var(--lbcg-card-col-line-height);
+      font-size: var(--lbcg-grid-font-size);
+      line-height: var(--lbcg-grid-line-height);
       color: inherit; }
     .lbcg-parent .lbcg-card-body {
       position: relative;
@@ -370,8 +370,10 @@
             grid-template-rows: 1fr;
         grid-column-gap: 0;
         grid-row-gap: 0;
-        border-right: 1px solid var(--lbcg-card-col-border-color);
-        border-bottom: 1px solid var(--lbcg-card-col-border-color); }
+        border-right: 1px solid var(--lbcg-grid-border-color);
+        border-bottom: 1px solid var(--lbcg-grid-border-color);
+        background-image: var(--lbcg-grid-bg-image);
+        background-size: cover; }
         .lbcg-parent .lbcg-card-body-grid.lbcg-grid-3 {
           -ms-grid-columns: (1fr)[3];
               grid-template-columns: repeat(3, 1fr); }

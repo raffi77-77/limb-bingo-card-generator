@@ -12,7 +12,6 @@ get_header();
 global $post;
 $current_id = $post->ID;
 $data = get_post_meta($current_id);
-$data = get_post_meta($current_id);
 $bingo_card_type = !empty($data['bingo_card_type'][0]) ? $data['bingo_card_type'][0] : '1-9';
 $bingo_grid_size = !empty($data['bingo_grid_size'][0]) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : '';
@@ -112,8 +111,9 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
 
             <section class="lbcg-content">
                 <div class="lbcg-content-left">
-                    <form id="bingo-card-generation" method="post" enctype="multipart/form-data">
+                    <form id="bingo-card-generation" action="<?php echo admin_url('admin-post.php'); ?>" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="bingo_card_generation">
+                        <input type="hidden" name="bingo_theme_id" value="<?php echo $current_id; ?>">
                         <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
                         <div class="lbcg-content-form">
                             <div class="lbcg-input-wrap">
@@ -159,13 +159,13 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                             <div class="lbcg-input-wrap" <?php echo !($bingo_card_type !== '1-9' && $bingo_card_type !== '1-75' && $bingo_card_type !== '1-90') ? 'style="display: none;"' : ''; ?>>
                                 <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
                                 <select name="bingo_grid_size" id="lbcg-grid-size" class="lbcg-select">
-                                    <option value="grid-3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>
+                                    <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>
                                         3x3
                                     </option>
-                                    <option value="grid-4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>
+                                    <option value="4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>
                                         4x4
                                     </option>
-                                    <option value="grid-5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>
+                                    <option value="5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>
                                         5x5
                                     </option>
                                 </select>
@@ -187,21 +187,39 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 <label for="lbcg-free-space-check" class="lbcg-label">Include free space?</label>
                             </div>
                             <div class="lbcg-input-wrap">
-                                <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-bg-image-check" hidden/>
-                                <label for="lbcg-bg-image-check" class="lbcg-checkbox-holder"></label>
-                                <label for="lbcg-bg-image-check" class="lbcg-label">Background Image</label>
+                                <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-header-bg-check" hidden/>
+                                <label for="lbcg-header-bg-check" class="lbcg-checkbox-holder"></label>
+                                <label for="lbcg-header-bg-check" class="lbcg-label">Header Background</label>
                                 <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
-                                    <label class="lbcg-label">
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-header-color" class="lbcg-label">Background Color</label>
+                                        <input type="color" id="bc-header-color" class="bc-color" name="bc_header[color]" value="<?php echo $bc_header['color']; ?>" data-bct="header">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-header-image" class="lbcg-label">Image</label>
+                                        <input type="file" accept="image/*" id="bc-header-image" class="bc-image" name="bc_header[image]" value="<?php echo !empty($bc_header['image']) ? $bc_header['image'] : '0'; ?>" data-bct="header">
+                                        <button class="remove-bc-image" data-bct="header">Remove image</button>
+                                        <input type="hidden" name="bc_header[remove_image]" value="0">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-header-repeat" class="lbcg-label">Repeat</label>
+                                        <input type="checkbox" id="bc-header-repeat" class="bc-repeat" name="bc_header[repeat]" <?php echo $bc_header['repeat'] === 'on' ? 'checked' : ''; ?> data-bct="header">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-header-opacity" class="lbcg-label">Opacity (%)</label>
+                                        <input type="number" id="bc-header-opacity" class="bc-opacity" name="bc_header[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>" data-bct="header">
+                                    </div>
+                                    <!--<label class="lbcg-label">
                                         <input type="file" class="lbcg-input" id="lbcg-bg-image"/>
-                                    </label>
-                                    <label class="lbcg-label">
+                                    </label>-->
+                                    <!--<label class="lbcg-label">
                                         <select name="lbcg-bg-pos" id="lbcg-bg-pos" class="lbcg-select">
                                             <option value="0" disabled selected>Background Position</option>
                                             <option value="top-left">Top Left</option>
                                             <option value="top-center">Top Center</option>
                                         </select>
-                                    </label>
-                                    <label class="lbcg-label">
+                                    </label>-->
+                                    <!--<label class="lbcg-label">
                                         <select name="lbcg-bg-rep" id="lbcg-bg-rep" class="lbcg-select">
                                             <option value="0" disabled selected>Background Repeat</option>
                                             <option value="repeat">Repeat</option>
@@ -209,28 +227,69 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                             <option value="repeat-y">Repeat Y</option>
                                             <option value="no-repeat-y">No Repeat</option>
                                         </select>
-                                    </label>
-                                    <label class="lbcg-label">
+                                    </label>-->
+                                    <!--<label class="lbcg-label">
                                         <select name="lbcg-bg-size" id="lbcg-bg-size" class="lbcg-select">
                                             <option value="0" disabled selected>Background Size</option>
                                             <option value="cover">Cover</option>
                                             <option value="contain">Contain</option>
                                         </select>
-                                    </label>
+                                    </label>-->
                                 </div>
                             </div>
                             <div class="lbcg-input-wrap">
-                                <label for="lbcg-bg-color" class="lbcg-label">Background Color</label>
-                                COLOR PICKER HERE
+                                <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-grid-bg-check" hidden/>
+                                <label for="lbcg-grid-bg-check" class="lbcg-checkbox-holder"></label>
+                                <label for="lbcg-grid-bg-check" class="lbcg-label">Grid Background</label>
+                                <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-grid-color" class="lbcg-label">Background Color</label>
+                                        <input type="color" id="bc-grid-color" class="bc-color" name="bc_grid[color]" value="<?php echo $bc_grid['color']; ?>" data-bct="grid">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-grid-image" class="lbcg-label">Image</label>
+                                        <input type="file" accept="image/*" id="bc-grid-image" class="bc-image" name="bc_grid[image]" value="<?php echo !empty($bc_grid['image']) ? $bc_grid['image'] : '0'; ?>" data-bct="grid">
+                                        <button class="remove-bc-image" data-bct="grid">Remove image</button>
+                                        <input type="hidden" name="bc_grid[remove_image]" value="0">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-grid-repeat" class="lbcg-label">Repeat</label>
+                                        <input type="checkbox" id="bc-grid-repeat" class="bc-repeat" name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'on' ? 'checked' : ''; ?> data-bct="grid">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-grid-opacity" class="lbcg-label">Opacity (%)</label>
+                                        <input type="number" id="bc-grid-opacity" class="bc-opacity" name="bc_grid[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>" data-bct="grid">
+                                    </div>
+                                </div>
                             </div>
                             <div class="lbcg-input-wrap">
-                                <label for="lbcg-bg-opacity" class="lbcg-label">Background Opacity</label>
-                                <input type="number" min="0" max="100" placeholder="0-100" class="lbcg-input"
-                                       id="lbcg-bg-opacity"/>
+                                <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-card-bg-check" hidden/>
+                                <label for="lbcg-card-bg-check" class="lbcg-checkbox-holder"></label>
+                                <label for="lbcg-card-bg-check" class="lbcg-label">Card Background</label>
+                                <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-card-color" class="lbcg-label">Background Color</label>
+                                        <input type="color" id="bc-card-color" class="bc-color" name="bc_card[color]" value="<?php echo $bc_card['color']; ?>" data-bct="card">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-card-image" class="lbcg-label">Image</label>
+                                        <input type="file" accept="image/*" id="bc-card-image" class="bc-image" name="bc_card[image]" value="<?php echo !empty($bc_card['image']) ? $bc_card['image'] : '0'; ?>" data-bct="card">
+                                        <button class="remove-bc-image" data-bct="card">Remove image</button>
+                                        <input type="hidden" name="bc_card[remove_image]" value="0">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-card-repeat" class="lbcg-label">Repeat</label>
+                                        <input type="checkbox" id="bc-card-repeat" class="bc-repeat" name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'on' ? 'checked' : ''; ?> data-bct="card">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-card-opacity" class="lbcg-label">Opacity (%)</label>
+                                        <input type="number" id="bc-card-opacity" class="bc-opacity" name="bc_card[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>" data-bct="card">
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <input type="submit" id="generate-bc" value="Generate Bingo Card">
                     </form>
-                    <button id="generate-bc">Generate Bingo Card</button>
                 </div>
                 <div class="lbcg-content-right">
                     <div class="lbcg-card-wrap">
@@ -239,28 +298,30 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 :root {
                                     /* card styles */
 
-                                    --lbcg-card-bg-color: #FFF;
-                                    --lbcg-card-bg-image: url(<?php echo !empty($bc_card['image']) ? wp_get_attachment_image_url($bc_card['image'], 'large') : 'https://thumbs.dreamstime.com/z/crazy-cat-tongue-hanging-out-40087599.jpg'; ?>);
+                                    --lbcg-card-bg-color: <?php echo !empty($bc_card['color']) ? $bc_card['color'] : '#FFF'; ?>;
+                                    --lbcg-card-bg-image: <?php echo !empty($bc_card['image']) ? 'url(' . wp_get_attachment_image_url($bc_card['image'], 'large') . ')' : 'none'; ?>;
                                     --lbcg-card-bg-opacity: <?php echo isset($bc_card['opacity']) ? $bc_card['opacity'] / 100 : 1; ?>;
 
                                     /* header styles */
 
-                                    --lbcg-card-header-font-size: 16px;
-                                    --lbcg-card-header-height: 48px;
-                                    --lbcg-card-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
-                                    --lbcg-card-header-text-color: #FFF;
-                                    --lbcg-card-header-bg-color: <?php echo !empty($bc_header['color']) ? $bc_header['color'] : 'transparent'; ?>;
-                                    --lbcg-card-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
-                                    --lbcg-card-header-bg-opacity: <?php echo isset($bc_header['opacity']) ? $bc_header['opacity'] / 100 : 1; ?>;
+                                    --lbcg-header-font-size: 16px;
+                                    --lbcg-header-height: 48px;
+                                    --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
+                                    --lbcg-header-text-color: #FFF;
+                                    --lbcg-header-bg-color: <?php echo !empty($bc_header['color']) ? $bc_header['color'] : 'transparent'; ?>;
+                                    --lbcg-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
+                                    --lbcg-header-bg-opacity: <?php echo isset($bc_header['opacity']) ? $bc_header['opacity'] / 100 : 1; ?>;
 
                                     /* body styles */
 
-                                    --lbcg-card-col-font-size: 16px; /* esi Vah jan gtnumes es <span class="lbcg-card-text"> srancic amenamec heightov@ U HAMEL amena erkar u dnumes es variable-i mej */
-                                    --lbcg-card-col-line-height: 61.8px; /* esi Vah jan vercnum es <div class="lbcg-card-col"> sra height@ u dnumes es variable-i mej */
-                                    --lbcg-card-col-text-color: #79ffd3;
-                                    --lbcg-card-col-bg-color: <?php echo !empty($bc_grid['color']) ? $bc_grid['color'] : '#003221'; ?>;
-                                    --lbcg-card-col-border-color: #45ffbf;
-                                    --lbcg-card-col-bg-opacity: <?php echo isset($bc_grid['opacity']) ? $bc_grid['opacity'] / 100 : .5; ?>;
+                                    --lbcg-grid-font-size: 16px; /* esi Vah jan gtnumes es <span class="lbcg-card-text"> srancic amenamec heightov@ U HAMEL amena erkar u dnumes es variable-i mej */
+                                    --lbcg-grid-line-height: 61.8px; /* esi Vah jan vercnum es <div class="lbcg-card-col"> sra height@ u dnumes es variable-i mej */
+                                    --lbcg-grid-text-color: #79ffd3;
+                                    --lbcg-grid-bg-color: <?php echo !empty($bc_grid['color']) ? $bc_grid['color'] : '#003221'; ?>;
+                                    --lbcg-grid-border-color: #45ffbf;
+                                    --lbcg-grid-bg-opacity: <?php echo isset($bc_grid['opacity']) ? $bc_grid['opacity'] / 100 : .5; ?>;
+                                    /* MISSING */
+                                    --lbcg-grid-bg-image: <?php echo !empty($bc_grid['image']) ? 'url(' . wp_get_attachment_image_url($bc_grid['image'], 'large') . ')' : 'none'; ?>;
                                 }
                             </style>
                             <div class="lbcg-card-header-holder">

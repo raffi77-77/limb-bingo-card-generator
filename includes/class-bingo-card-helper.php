@@ -264,18 +264,25 @@ class BingoCardHelper
 
     public static function collect_card_data_from($data)
     {
+        $errors = [];
         // Check some cases
-        if (empty($data['bingo_card_type']) || empty($data['bingo_grid_size'])) {
-            return false;
-        } elseif ($data['bingo_card_type'] !== '1-75' && $data['bingo_card_type'] !== '1-90' && empty($data['bingo_card_content'])) {
-            return false;
+        if (empty($data['bingo_card_type'])) {
+            $errors[] = "Bingo card type isn't defined.";
         }
-        // Check other important data existence
-        $other_important_keys = ['bc_header', 'bc_grid', 'bc_card'];
-        foreach ($other_important_keys as $key) {
-            if (empty($data[$key])) {
-                return false;
-            }
+        if (empty($data['bingo_grid_size'])) {
+            $errors[] = "Bingo card grid size isn't defined.";
+        }
+        if ($data['bingo_card_type'] !== '1-75' && $data['bingo_card_type'] !== '1-90' && empty($data['bingo_card_content'])) {
+            $errors[] = "Bingo card words/emojis or numbers are empty.";
+        }
+        if (empty($data['bc_header']) || empty($data['bc_grid']) || empty($data['bc_card'])) {
+            $errors[] = "Bingo card styles are not defined.";
+        }
+        if (!empty($errors)) {
+            return [
+                'success' => false,
+                'data' => $errors
+            ];
         }
         // Collect data
         $card_data = [
@@ -296,12 +303,90 @@ class BingoCardHelper
                 $card_data[$key] = $data[$key];
             }
         }
-        return $card_data;
+        return [
+            'success' => true,
+            'data' => $card_data
+        ];
     }
 
-    public static function save_card_meta_fields($post_id, $data)
+    /**
+     * Save bingo card/theme meta fields
+     *
+     * @param $post_id
+     * @param $data
+     */
+    public static function save_bingo_meta_fields($post_id, $data)
     {
-        // TODO continue
+        $special_cards = array('1-75', '1-90');
+        // Type and size
+        update_post_meta($post_id, 'bingo_card_type', $data['bingo_card_type']);
+        update_post_meta($post_id, 'bingo_grid_size', $data['bingo_grid_size']);
+        // Title
+        if (!empty($data['bingo_card_title'])) {
+            $title = trim(wp_strip_all_tags($data['bingo_card_title']));
+            update_post_meta($post_id, 'bingo_card_title', $title);
+        }
+        // 1-75 special title
+        if ($data['bingo_card_type'] === '1-75' && !empty($data['bingo_card_spec_title']) && count($data['bingo_card_spec_title']) === 5) {
+            update_post_meta($post_id, 'bingo_card_spec_title', implode('|', $data['bingo_card_spec_title']));
+        } else {
+            delete_post_meta($post_id, 'bingo_card_spec_title');
+        }
+        // Words/emojis or numbers
+        if (!in_array($data['bingo_card_type'], $special_cards) && !empty($data['bingo_card_content'])) {
+            update_post_meta($post_id, 'bingo_card_content', trim(wp_strip_all_tags($data['bingo_card_content'])));
+        } else {
+            delete_post_meta($post_id, 'bingo_card_content');
+        }
+        // Header color, image with attributes
+        if (!empty($data['bc_header'])) {
+            if (!empty($_FILES['bc_header']['size']['image'])) {
+                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_header'], $post_id);
+                $data['bc_header']['image'] = $attach_id;
+            }/* else if (!empty($data['bc_header'][0])) {
+                $bc_header = unserialize($data['bc_header'][0]);
+                $data['bc_header']['image'] = $bc_header['image'];
+            } else {
+                $data['bc_header']['image'] = 0;
+            }*/
+            if (empty($data['bc_header']['repeat'])) {
+                $data['bc_header']['repeat'] = 'off';
+            }
+            if (isset($data['bc_header']['remove_image']) && (int)$data['bc_header']['remove_image'] === 1) {
+                $data['bc_header']['image'] = '0';
+            }
+            update_post_meta($post_id, 'bc_header', $data['bc_header']);
+        }
+        // Grid color, image with attributes
+        if (!empty($data['bc_grid'])) {
+            if (empty($data['bc_grid']['repeat'])) {
+                $data['bc_grid']['repeat'] = 'off';
+            }
+            if (isset($data['bc_grid']['remove_image']) && (int)$data['bc_grid']['remove_image'] === 1) {
+                $data['bc_grid']['image'] = '0';
+            }
+            update_post_meta($post_id, 'bc_grid', $data['bc_grid']);
+        }
+        // Card color, image with attributes
+        if (!empty($data['bc_card'])) {
+            if (empty($data['bc_card']['repeat'])) {
+                $data['bc_card']['repeat'] = 'off';
+            }
+            if (isset($data['bc_card']['remove_image']) && (int)$data['bc_card']['remove_image'] === 1) {
+                $data['bc_card']['image'] = '0';
+            }
+            update_post_meta($post_id, 'bc_card', $data['bc_card']);
+        }
+        // Font
+        if (!empty($data['bingo_card_font'])) {
+            update_post_meta($post_id, 'bingo_card_font', $data['bingo_card_font']);
+        }
+        // Free square
+        update_post_meta($post_id, 'bingo_card_free_square', empty($data['bingo_card_free_square']) ? 'off' : 'on');
+        // Custom CSS
+        if (!empty($data['bingo_card_custom_css'])) {
+            update_post_meta($post_id, 'bingo_card_custom_css', trim(wp_strip_all_tags($data['bingo_card_custom_css'])));
+        }
     }
 
     /**

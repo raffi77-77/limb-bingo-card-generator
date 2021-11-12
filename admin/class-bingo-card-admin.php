@@ -29,8 +29,45 @@ class BingoCardAdmin
     {
         add_action('add_meta_boxes', array($this, 'add_custom_meta_boxes'));
         add_action('save_post', array($this, 'save_custom_fields'));
+        add_action('post_updated_messages', array($this, 'show_editor_message'));
         add_action('admin_print_scripts-post-new.php', array($this, 'enqueue_admin_script_and_styles'), 11);
         add_action('admin_print_scripts-post.php', array($this, 'enqueue_admin_script_and_styles'), 11);
+        add_action('admin_post_nopriv_bingo_card_generation', array($this, 'bingo_card_generation'));
+        add_action('admin_post_bingo_card_generation', array($this, 'bingo_card_generation'));
+    }
+
+    /**
+     * Generate author card
+     */
+    public function bingo_card_generation()
+    {
+        // Check current bingo theme
+        $post = get_post($_POST['bingo_theme_id']);
+        if (empty($post->post_type) || $post->post_type !== 'bingo_theme') {
+            return;
+        }
+        // Create card
+        $result = BingoCardHelper::collect_card_data_from($_POST);
+        if ($result['success'] === false) {
+            return;
+        }
+        $title = "Bingo Card {$result['data']['bingo_card_type']} {$result['data']['bingo_grid_size']}";
+        $uniq_string = wp_generate_password(16, false);
+        // Create new card
+        $args = [
+            'post_author' => 0,
+            'post_title' => $title,
+            'post_type' => 'bingo_card',
+            'post_name' => str_replace(' ', '-', strtolower($title)) . '-' . $uniq_string
+        ];
+        $id = wp_insert_post($args);
+        if ($id instanceof WP_Error || $id === 0) {
+            return;
+        }
+        // Save card data
+        BingoCardHelper::save_bingo_meta_fields($id, $result['data']);
+        wp_safe_redirect(get_permalink($_POST['bingo_theme_id']) . 'invitation?bt=' . $_POST['bingo_theme_id'] . '&bc=' . $id);
+        die();
     }
 
     /**
@@ -77,7 +114,7 @@ class BingoCardAdmin
     {
         global $post_type;
         if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
-            $this->save_theme_custom_fields($post_id);
+            $this->save_bingo_custom_fields($post_id);
         }
     }
 
@@ -86,66 +123,40 @@ class BingoCardAdmin
      *
      * @param $post_id
      */
-    private function save_theme_custom_fields($post_id)
+    private function save_bingo_custom_fields($post_id)
     {
-        // Type and size
-        if (empty($_POST['bingo_card_type']) || empty($_POST['bingo_grid_size'])) {
-            // TODO bingo card type and size aren't defined
-            return;
-        }
-        $special_cards = array('1-75', '1-90');
-        update_post_meta($post_id, 'bingo_card_type', $_POST['bingo_card_type']);
-        update_post_meta($post_id, 'bingo_grid_size', $_POST['bingo_grid_size']);
-        $data = get_post_meta($post_id);
-        // Title
-        if (!empty($_POST['bingo_card_title'])) {
-            // $title = trim(str_replace("\r\n", '<br>', wp_strip_all_tags($_POST['bingo_card_title'])));
-            $title = trim(wp_strip_all_tags($_POST['bingo_card_title']));
-            update_post_meta($post_id, 'bingo_card_title', $title);
-        }
-        // 1-75 special title
-        if ($_POST['bingo_card_type'] === '1-75' && !empty($_POST['bingo_card_spec_title']) && count($_POST['bingo_card_spec_title']) === 5) {
-            update_post_meta($post_id, 'bingo_card_spec_title', implode('|', $_POST['bingo_card_spec_title']));
-        } else {
-            delete_post_meta($post_id, 'bingo_card_spec_title');
-        }
-        // Words/emojis or numbers
-        if (!in_array($_POST['bingo_card_type'], $special_cards) && !empty($_POST['bingo_card_content'])) {
-            update_post_meta($post_id, 'bingo_card_content', trim(wp_strip_all_tags($_POST['bingo_card_content'])));
-        } else {
-            delete_post_meta($post_id, 'bingo_card_content');
-        }
-        // Header color, image with attributes
-        if (!empty($_POST['bc_header'])) {
-            if (empty($_POST['bc_header']['repeat'])) {
-                $_POST['bc_header']['repeat'] = 'off';
+        BingoCardHelper::save_bingo_meta_fields($post_id, $_POST);
+    }
+
+    /**
+     * Set error messages
+     *
+     * @param array $messages
+     * @return array
+     */
+    public function show_editor_message($messages)
+    {
+        global $post;
+        if ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card') {
+            $post_meta = get_post_meta($post->ID);
+            // Collecting errors
+            $errors = [];
+            if (empty($post_meta['bingo_card_type'][0])) {
+                $errors[] = "Bingo card type isn't defined.";
             }
-            update_post_meta($post_id, 'bc_header', $_POST['bc_header']);
-        }
-        // Grid color, image with attributes
-        if (!empty($_POST['bc_grid'])) {
-            if (empty($_POST['bc_grid']['repeat'])) {
-                $_POST['bc_grid']['repeat'] = 'off';
+            if (empty($post_meta['bingo_grid_size'][0])) {
+                $errors[] = "Bingo card grid size isn't defined.";
             }
-            update_post_meta($post_id, 'bc_grid', $_POST['bc_grid']);
-        }
-        // Card color, image with attributes
-        if (!empty($_POST['bc_card'])) {
-            if (empty($_POST['bc_card']['repeat'])) {
-                $_POST['bc_card']['repeat'] = 'off';
+            // Setting errors to show
+            if (!empty($errors)) {
+                foreach ($errors as $key => $error) {
+                    $unique = 'bc_error_' . ($key + 1);
+                    add_settings_error($unique, str_replace('_', '-', $unique), $error);
+                    settings_errors($unique);
+                }
             }
-            update_post_meta($post_id, 'bc_card', $_POST['bc_card']);
         }
-        // Font
-        if (!empty($_POST['bingo_card_font'])) {
-            update_post_meta($post_id, 'bingo_card_font', $_POST['bingo_card_font']);
-        }
-        // Free square
-        update_post_meta($post_id, 'bingo_card_free_square', empty($_POST['bingo_card_free_square']) ? 'off' : 'on');
-        // Custom CSS
-        if (!empty($_POST['bingo_card_custom_css'])) {
-            update_post_meta($post_id, 'bingo_card_custom_css', trim(wp_strip_all_tags($_POST['bingo_card_custom_css'])));
-        }
+        return $messages;
     }
 
     /**
