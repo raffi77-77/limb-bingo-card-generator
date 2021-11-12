@@ -44,7 +44,7 @@ if (!empty($data['bc_header'][0])) {
         'color' => '#d6be89',
         'image' => '',
         'opacity' => 0,
-        'repeat' => 'off'
+        'repeat' => 'no-repeat'
     ];
 }
 // Grid style
@@ -55,7 +55,7 @@ if (!empty($data['bc_grid'][0])) {
         'color' => '#997d3c',
         'image' => '',
         'opacity' => 0,
-        'repeat' => 'off'
+        'repeat' => 'no-repeat'
     ];
 }
 // Card style
@@ -66,7 +66,7 @@ if (!empty($data['bc_card'][0])) {
         'color' => '#d6be89',
         'image' => '',
         'opacity' => 0,
-        'repeat' => 'off'
+        'repeat' => 'no-repeat'
     ];
 }
 // If include free space
@@ -203,7 +203,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-header-repeat" class="lbcg-label">Repeat</label>
-                                        <input type="checkbox" id="bc-header-repeat" class="bc-repeat" name="bc_header[repeat]" <?php echo $bc_header['repeat'] === 'on' ? 'checked' : ''; ?> data-bct="header">
+                                        <input type="checkbox" id="bc-header-repeat" class="bc-repeat" name="bc_header[repeat]" <?php echo $bc_header['repeat'] === 'repeat' ? 'checked' : ''; ?> data-bct="header" value="repeat">
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-header-opacity" class="lbcg-label">Opacity (%)</label>
@@ -254,7 +254,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-grid-repeat" class="lbcg-label">Repeat</label>
-                                        <input type="checkbox" id="bc-grid-repeat" class="bc-repeat" name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'on' ? 'checked' : ''; ?> data-bct="grid">
+                                        <input type="checkbox" id="bc-grid-repeat" class="bc-repeat" name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'repeat' ? 'checked' : ''; ?> data-bct="grid" value="repeat">
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-grid-opacity" class="lbcg-label">Opacity (%)</label>
@@ -279,7 +279,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-card-repeat" class="lbcg-label">Repeat</label>
-                                        <input type="checkbox" id="bc-card-repeat" class="bc-repeat" name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'on' ? 'checked' : ''; ?> data-bct="card">
+                                        <input type="checkbox" id="bc-card-repeat" class="bc-repeat" name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'repeat' ? 'checked' : ''; ?> data-bct="card" value="repeat">
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-card-opacity" class="lbcg-label">Opacity (%)</label>
@@ -298,8 +298,9 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 :root {
                                     /* card styles */
 
-                                    --lbcg-card-bg-color: <?php echo !empty($bc_card['color']) ? $bc_card['color'] : '#FFF'; ?>;
                                     --lbcg-card-bg-image: <?php echo !empty($bc_card['image']) ? 'url(' . wp_get_attachment_image_url($bc_card['image'], 'large') . ')' : 'none'; ?>;
+                                    --lbcg-card-bg-repeat: '<?php echo !empty($bc_card['repeat'])  ? $bc_card['repeat'] : 'no-repeat'; ?>';
+                                    --lbcg-card-bg-color: <?php echo !empty($bc_card['color']) ? $bc_card['color'] : '#FFF'; ?>;
                                     --lbcg-card-bg-opacity: <?php echo isset($bc_card['opacity']) ? $bc_card['opacity'] / 100 : 1; ?>;
 
                                     /* header styles */
@@ -308,20 +309,22 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     --lbcg-header-height: 48px;
                                     --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
                                     --lbcg-header-text-color: #FFF;
-                                    --lbcg-header-bg-color: <?php echo !empty($bc_header['color']) ? $bc_header['color'] : 'transparent'; ?>;
                                     --lbcg-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
+                                    --lbcg-header-bg-repeat: '<?php echo !empty($bc_header['repeat']) ? $bc_header['repeat'] : 'no-repeat'; ?>';
+                                    --lbcg-header-bg-color: <?php echo !empty($bc_header['color']) ? $bc_header['color'] : 'transparent'; ?>;
                                     --lbcg-header-bg-opacity: <?php echo isset($bc_header['opacity']) ? $bc_header['opacity'] / 100 : 1; ?>;
 
                                     /* body styles */
 
                                     --lbcg-grid-font-size: 16px; /* esi Vah jan gtnumes es <span class="lbcg-card-text"> srancic amenamec heightov@ U HAMEL amena erkar u dnumes es variable-i mej */
+                                    --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
                                     --lbcg-grid-line-height: 61.8px; /* esi Vah jan vercnum es <div class="lbcg-card-col"> sra height@ u dnumes es variable-i mej */
                                     --lbcg-grid-text-color: #79ffd3;
-                                    --lbcg-grid-bg-color: <?php echo !empty($bc_grid['color']) ? $bc_grid['color'] : '#003221'; ?>;
                                     --lbcg-grid-border-color: #45ffbf;
-                                    --lbcg-grid-bg-opacity: <?php echo isset($bc_grid['opacity']) ? $bc_grid['opacity'] / 100 : .5; ?>;
-                                    /* MISSING */
                                     --lbcg-grid-bg-image: <?php echo !empty($bc_grid['image']) ? 'url(' . wp_get_attachment_image_url($bc_grid['image'], 'large') . ')' : 'none'; ?>;
+                                    --lbcg-grid-bg-repeat: '<?php echo !empty($bc_grid['repeat']) ? $bc_grid['repeat'] : 'no-repeat'; ?>';
+                                    --lbcg-grid-bg-color: <?php echo !empty($bc_grid['color']) ? $bc_grid['color'] : '#003221'; ?>;
+                                    --lbcg-grid-bg-opacity: <?php echo isset($bc_grid['opacity']) ? $bc_grid['opacity'] / 100 : .5; ?>;
                                 }
                             </style>
                             <div class="lbcg-card-header-holder">

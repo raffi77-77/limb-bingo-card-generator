@@ -371,7 +371,8 @@
           z-index: 1;
           background-image: var(--lbcg-grid-bg-image);
           opacity: var(--lbcg-grid-bg-opacity);
-          background-color: var(--lbcg-grid-bg-color); }
+          background-color: var(--lbcg-grid-bg-color);
+          background-repeat: var(--lbcg-grid-bg-repeat); }
         .lbcg-parent .lbcg-card-body-grid.lbcg-grid-3 {
           -ms-grid-columns: (1fr)[3];
               grid-template-columns: repeat(3, 1fr); }

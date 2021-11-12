@@ -158,6 +158,11 @@ jQuery(document).ready(function ($) {
         $('input[name="bc_' + type + '[remove_image]"]').val(1);
         document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
     });
+    // On repeat change
+    $('.bc-repeat').on('change', function () {
+        const type = $(this).data('bct');
+        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-repeat', $(this).is(':checked') ? 'repeat' : 'no-repeat');
+    });
     // On opacity change
     $('.bc-opacity').on('change', function () {
         const type = $(this).data('bct');

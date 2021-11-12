@@ -65,7 +65,7 @@ class BingoCardAdmin
             return;
         }
         // Save card data
-        BingoCardHelper::save_bingo_meta_fields($id, $result['data']);
+        BingoCardHelper::save_bingo_meta_fields($id, $result['data'], $_POST['bingo_theme_id']);
         wp_safe_redirect(get_permalink($_POST['bingo_theme_id']) . 'invitation?bt=' . $_POST['bingo_theme_id'] . '&bc=' . $id);
         die();
     }

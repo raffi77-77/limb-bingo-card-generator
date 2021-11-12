@@ -23,7 +23,7 @@ if (!empty($data['bc_header'][0])) {
         'color' => '#d6be89',
         'image' => '',
         'opacity' => 0,
-        'repeat' => 'off'
+        'repeat' => 'no-repeat'
     ];
 }
 if (!empty($data['bc_grid'][0])) {
@@ -33,7 +33,7 @@ if (!empty($data['bc_grid'][0])) {
         'color' => '#997d3c',
         'image' => '',
         'opacity' => 0,
-        'repeat' => 'off'
+        'repeat' => 'no-repeat'
     ];
 }
 if (!empty($data['bc_card'][0])) {
@@ -43,7 +43,7 @@ if (!empty($data['bc_card'][0])) {
         'color' => '#d6be89',
         'image' => '',
         'opacity' => 0,
-        'repeat' => 'off'
+        'repeat' => 'no-repeat'
     ];
 }
 
@@ -140,7 +140,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <label for="bci-header-repeat">Image repeat:</label>
             <input type="checkbox" id="bci-header-repeat"
-                   name="bc_header[repeat]" <?php echo $bc_header['repeat'] === 'on' ? 'checked' : ''; ?>>
+                   name="bc_header[repeat]" <?php echo $bc_header['repeat'] === 'repeat' ? 'checked' : ''; ?> value="repeat">
         </td>
         <td>
             <label for="bci-header-opacity">Image opacity (%):</label>
@@ -171,7 +171,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <label for="bci-grid-repeat">Image repeat:</label>
             <input type="checkbox" id="bci-grid-repeat"
-                   name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'on' ? 'checked' : ''; ?>>
+                   name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'repeat' ? 'checked' : ''; ?> value="repeat">
         </td>
         <td>
             <label for="bci-grid-opacity">Image opacity (%):</label>
@@ -202,7 +202,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <label for="bci-card-repeat">Image repeat:</label>
             <input type="checkbox" id="bci-card-repeat"
-                   name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'on' ? 'checked' : ''; ?>>
+                   name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'repeat' ? 'checked' : ''; ?> value="repeat">
         </td>
         <td>
             <label for="bci-card-opacity">Image opacity (%):</label>

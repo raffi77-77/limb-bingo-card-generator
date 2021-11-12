@@ -315,8 +315,11 @@ class BingoCardHelper
      * @param $post_id
      * @param $data
      */
-    public static function save_bingo_meta_fields($post_id, $data)
+    public static function save_bingo_meta_fields($post_id, $data, $theme_id = null)
     {
+        if ($theme_id !== null) {
+            $theme_meta_data = get_post_meta($theme_id);
+        }
         $special_cards = array('1-75', '1-90');
         // Type and size
         update_post_meta($post_id, 'bingo_card_type', $data['bingo_card_type']);
@@ -343,14 +346,14 @@ class BingoCardHelper
             if (!empty($_FILES['bc_header']['size']['image'])) {
                 $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_header'], $post_id);
                 $data['bc_header']['image'] = $attach_id;
-            }/* else if (!empty($data['bc_header'][0])) {
-                $bc_header = unserialize($data['bc_header'][0]);
+            } else if (!empty($theme_meta_data['bc_header'][0])) {
+                $bc_header = unserialize($theme_meta_data['bc_header'][0]);
                 $data['bc_header']['image'] = $bc_header['image'];
-            } else {
-                $data['bc_header']['image'] = 0;
-            }*/
+            } else if (empty($data['bc_header']['image'])) {
+                $data['bc_header']['image'] = '0';
+            }
             if (empty($data['bc_header']['repeat'])) {
-                $data['bc_header']['repeat'] = 'off';
+                $data['bc_header']['repeat'] = 'no-repeat';
             }
             if (isset($data['bc_header']['remove_image']) && (int)$data['bc_header']['remove_image'] === 1) {
                 $data['bc_header']['image'] = '0';
@@ -359,8 +362,17 @@ class BingoCardHelper
         }
         // Grid color, image with attributes
         if (!empty($data['bc_grid'])) {
+            if (!empty($_FILES['bc_grid']['size']['image'])) {
+                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_grid'], $post_id);
+                $data['bc_grid']['image'] = $attach_id;
+            } else if (!empty($theme_meta_data['bc_grid'][0])) {
+                $bc_grid = unserialize($theme_meta_data['bc_grid'][0]);
+                $data['bc_grid']['image'] = $bc_grid['image'];
+            } else if (empty($data['bc_header']['image'])) {
+                $data['bc_grid']['image'] = '0';
+            }
             if (empty($data['bc_grid']['repeat'])) {
-                $data['bc_grid']['repeat'] = 'off';
+                $data['bc_grid']['repeat'] = 'no-repeat';
             }
             if (isset($data['bc_grid']['remove_image']) && (int)$data['bc_grid']['remove_image'] === 1) {
                 $data['bc_grid']['image'] = '0';
@@ -369,8 +381,17 @@ class BingoCardHelper
         }
         // Card color, image with attributes
         if (!empty($data['bc_card'])) {
+            if (!empty($_FILES['bc_card']['size']['image'])) {
+                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_card'], $post_id);
+                $data['bc_card']['image'] = $attach_id;
+            } else if (!empty($theme_meta_data['bc_card'][0])) {
+                $bc_card = unserialize($theme_meta_data['bc_card'][0]);
+                $data['bc_card']['image'] = $bc_card['image'];
+            } else if (empty($data['bc_header']['image'])) {
+                $data['bc_card']['image'] = 0;
+            }
             if (empty($data['bc_card']['repeat'])) {
-                $data['bc_card']['repeat'] = 'off';
+                $data['bc_card']['repeat'] = 'no-repeat';
             }
             if (isset($data['bc_card']['remove_image']) && (int)$data['bc_card']['remove_image'] === 1) {
                 $data['bc_card']['image'] = '0';
