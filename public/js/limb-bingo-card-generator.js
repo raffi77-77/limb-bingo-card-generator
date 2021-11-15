@@ -1,171 +1,171 @@
-jQuery(document).ready(function ($) {
+document.addEventListener('DOMContentLoaded', function () {
     /**
      * Draw new grid
      */
     function drawNewGrid() {
-        const gridColsCount = $('#lbcg-grid-size').val().replace('grid-', '')[0],
-            words = $('#lbcg-body-content').val().split("\n"),
-            includeFreeSpace = $('#lbcg-free-space-check').is(':checked'),
+        const gridColsCount = document.getElementById('lbcg-grid-size').value.replace('grid-', '')[0],
+            words = document.getElementById('lbcg-body-content').value.split("\n"),
+            includeFreeSpace = document.getElementById('lbcg-free-space-check').checked,
             newItemsCount = gridColsCount ** 2;
         let gridItems = '';
         for (let i = 1; i <= newItemsCount; i++) {
             gridItems += '<div class="lbcg-card-col">' +
                 '<span class="lbcg-card-text">' +
-                (Math.round(newItemsCount / 2) === i && includeFreeSpace ? LBC['freeSquareWord'] : words[i - 1]) +
+                (Math.round(newItemsCount / 2) === i && includeFreeSpace ? LBCG['freeSquareWord'] : words[i - 1]) +
                 '</span>' +
                 '</div>'
         }
-        const gridBodyEl = $('div.lbcg-card-body-grid'),
-            currentGridSize = Math.sqrt(gridBodyEl.find('span.lbcg-card-text').length);
-        gridBodyEl.removeClass('lbcg-grid-' + currentGridSize).addClass('lbcg-grid-' + gridColsCount);
-        gridBodyEl.html(gridItems);
+        const gridBodyEl = document.querySelector('div.lbcg-card-body-grid'),
+            currentGridSize = Math.sqrt(document.querySelectorAll('div.lbcg-card-body-grid span.lbcg-card-text').length);
+        gridBodyEl.classList.remove('lbcg-grid-' + currentGridSize);
+        gridBodyEl.classList.add('lbcg-grid-' + gridColsCount);
+        gridBodyEl.innerHTML = gridItems;
     }
 
     /**
      * Remove or add star in middle of grid
      */
     function changeFreeSpaceItem(add) {
-        const gridItems = $('div.lbcg-card-body-grid').find('span.lbcg-card-text'),
+        const gridItems = document.querySelectorAll('div.lbcg-card-body-grid span.lbcg-card-text'),
             index = Math.round(gridItems.length / 2) - 1;
         if (add) {
-            $(gridItems[index]).html(LBC['freeSquareWord']);
+            gridItems[index].innerHTML = LBCG['freeSquareWord'];
         } else {
-            const words = $('#lbcg-body-content').val().split("\n");
-            $(gridItems[index]).html(words[index]);
+            const words = document.getElementById('lbcg-body-content').value.split("\n");
+            gridItems[index].innerHTML = words[index];
         }
     }
 
-    /**
-     * On sidebar header click
-     */
-    $('div.lbcg-sidebar-header').on('click', function () {
-        const sidebarHeader = $(this).parent();
-        if (sidebarHeader.hasClass('collapsed')) {
-            sidebarHeader.removeClass('collapsed')
-        } else {
-            sidebarHeader.addClass('collapsed')
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('div.lbcg-sidebar-header')) {
+            // On sidebar header click
+            const sidebarHeader = event.target.parentNode;
+            if (sidebarHeader.classList.contains('collapsed')) {
+                sidebarHeader.classList.remove('collapsed')
+            } else {
+                sidebarHeader.classList.add('collapsed')
+            }
         }
     });
 
-    /**
-     * On title change
-     */
-    $('#lbcg-title').bind('input propertychange', function () {
-        $('div.lbcg-card-header span.lbcg-card-header-text').html($(this).val());
+    document.addEventListener('input', function (event) {
+        if (event.target.matches('#lbcg-title')) {
+            // On title change
+            document.querySelector('div.lbcg-card-header span.lbcg-card-header-text').innerHTML = event.target.value;
+        } else if (event.target.matches('#lbcg-body-content')) {
+            // On bingo card content change
+            const words = event.target.value.split("\n"),
+                gridItems = document.querySelectorAll('div.lbcg-card-body-grid span.lbcg-card-text'),
+                includeFreeSpace = document.getElementById('lbcg-free-space-check').checked;
+            for (let i = 1; i <= gridItems.length; i++) {
+                if (Math.round(gridItems.length / 2) === i && includeFreeSpace) {
+                    gridItems[i - 1].innerHTML = LBCG['freeSquareWord'];
+                } else {
+                    gridItems[i - 1].innerHTML = words[i - 1];
+                }
+            }
+        }
+    });
+
+    document.addEventListener('change', function (event) {
+        if (event.target.matches('#lbcg-grid-size')) {
+            // On grid size change
+            const gridSize = event.target.value,
+                freeSpaceEl = document.getElementById('lbcg-free-space-check');
+            if (gridSize === '4x4') {
+                window.LBCIncludeFreeSpace = freeSpaceEl.checked;
+                freeSpaceEl.checked = false;
+                freeSpaceEl.parentNode.style.display = 'none';
+            } else {
+                freeSpaceEl.checked = window.LBCIncludeFreeSpace;
+                freeSpaceEl.parentNode.style.display = '';
+            }
+            drawNewGrid();
+        } else if (event.target.matches('#lbcg-font')) {
+            // On font change
+            document.documentElement.style.setProperty('--lbcg-header-font-family', LBCG['fonts'][event.target.value]['name'] + ', sans-serif');
+        } else if (event.target.matches('#lbcg-free-space-check')) {
+            // On free space checkbox change
+            changeFreeSpaceItem(event.target.checked);
+        }
     });
 
     /**
      * On subtitle letters change
      */
-    $('label.lbcg-label--single input.lbcg-input').bind('input propertychange', function () {
-        const letterElements = $('div.lbcg-card-subtitle span.lbcg-card-subtitle-text span');
-        const $this = $(this);
-        const id = $this.attr('id');
-        const index = id.replace('lbcg-subtitle-', '') - 1;
-        $(letterElements[index]).html($this.val());
-    });
-
-    /**
-     * On bingo card content change
-     */
-    $('#lbcg-body-content').bind('input propertychange', function () {
-        const $this = $(this),
-            words = $this.val().split("\n"),
-            gridItems = $('div.lbcg-card-body-grid span.lbcg-card-text'),
-            includeFreeSpace = $('#lbcg-free-space-check').is(':checked');
-        for (let i = 1; i <= gridItems.length; i++) {
-            if (Math.round(gridItems.length / 2) === i && includeFreeSpace) {
-                $(gridItems[i - 1]).html(LBC['freeSquareWord']);
-            } else {
-                $(gridItems[i - 1]).html(words[i - 1]);
-            }
-        }
-    });
-
-    /**
-     * On grid size change
-     */
-    $('#lbcg-grid-size').on('change', function () {
-        const gridSize = $("#lbcg-grid-size").val(),
-            freeSpaceEl = $("#lbcg-free-space-check");
-        if (gridSize === 'grid-4x4') {
-            window.LBCIncludeFreeSpace = freeSpaceEl.is(':checked');
-            freeSpaceEl.prop("checked", false);
-            freeSpaceEl.parent().hide();
-        } else {
-            freeSpaceEl.prop("checked", window.LBCIncludeFreeSpace);
-            freeSpaceEl.parent().show();
-        }
-        drawNewGrid();
-    });
-
-    /**
-     * On font change
-     */
-    $('#lbcg-font').on('change', function () {
-        document.documentElement.style.setProperty('--lbcg-header-font-family', LBC['fonts'][$(this).val()]['name'] + ', sans-serif');
-    });
-
-    /**
-     * On free space checkbox change
-     */
-    $('#lbcg-free-space-check').change(function () {
-        changeFreeSpaceItem(this.checked);
-    });
-
-    /**
-     * On card invite button click
-     */
-    $('#invite-bc').on('click', function () {
-        $.ajax({
-            url: LBC['ajaxUrl'],
-            method: 'POST',
-            data: $('#bingo-card-invitation').serialize(),
-            success: function (data) {
-                data = JSON.parse(data);
-                if (data.success === true) {
-                    location.replace(location.href + '/all');
-                } else {
-                    console.error("Generation errors: " + data.errors.join("\n"));
-                    alert('Something went wrong. Please try again.');
-                }
-            },
-            error: function () {
-                alert('Could not generate.');
-            }
+    document.querySelectorAll('label.lbcg-label--single input.lbcg-input').forEach(function (el) {
+        el.addEventListener('input', function (event) {
+            const $this = event.target,
+                letterElements = document.querySelectorAll('div.lbcg-card-subtitle span.lbcg-card-subtitle-text span'),
+                id = $this.getAttribute('id'),
+                index = id.replace('lbcg-subtitle-', '') - 1;
+            letterElements[index].innerHTML = $this.value;
         });
+    });
+
+    document.addEventListener('submit', function (event) {
+        if (event.target.matches('#lbcg-bc-generation')) {
+            // On card generation button click
+            event.preventDefault();
+            const data = new FormData(event.target);
+            const request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (request.readyState !== 4 || request.status !== 200) return;
+                // On success
+                const resData = JSON.parse(request.responseText);
+                if (resData.success === true) {
+                    location.replace(resData.redirectTo);
+                } else {
+                    alert(resData.errors.join("\n"));
+                }
+            }
+            request.open(event.target.method, LBCG['ajaxUrl'], true);
+            request.send(data);
+        } else if (event.target.matches('#lbcg-bc-invitation')) {
+            // On card invite button click
+            event.preventDefault();
+            const data = new FormData(event.target);
+            const request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                console.log(request);
+            }
+            request.open(event.target.method, LBCG['ajaxUrl'], true);
+            request.send(data);
+        }
     });
 
     /**
      * Header/Grid/Card background
      */
-    // On color change
-    $('.bc-color').on('change', function () {
-        const type = $(this).data('bct');
-        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-color', $(this).val());
-    });
-    // On image change
-    $('.bc-image').on('change', function () {
-        const type = $(this).data('bct');
-        $('input[name="bc_' + type + '[remove_image]"]').val('0');
-        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'url(' + URL.createObjectURL(this.files[0]) + ')');
+    document.addEventListener('change', function (event) {
+        if (event.target.matches('.bc-color')) {
+            // On color change
+            const type = event.target.getAttribute('data-bct');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-color', event.target.value);
+        } else if (event.target.matches('.bc-image')) {
+            // On image change
+            const type = event.target.getAttribute('data-bct');
+            var aaa = event.target.files;
+            document.getElementsByName('bc_' + type + '[remove_image]')[0].value = '0';
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'url(' + URL.createObjectURL(event.target.files[0]) + ')');
+        } else if (event.target.matches('.bc-repeat')) {
+            // On repeat change
+            const type = event.target.getAttribute('data-bct');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-repeat', event.target.checked ? 'repeat' : 'no-repeat');
+        } else if (event.target.matches('.bc-opacity')) {
+            // On opacity change
+            const type = event.target.getAttribute('data-bct');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-opacity', event.target.value / 100);
+        }
     });
     // Remove image
-    $('.remove-bc-image').on('click', function (e) {
-        e.preventDefault();
-        const type = $(this).data('bct');
-        $('#bc-' + type + '-image').val('');
-        $('input[name="bc_' + type + '[remove_image]"]').val(1);
-        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
-    });
-    // On repeat change
-    $('.bc-repeat').on('change', function () {
-        const type = $(this).data('bct');
-        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-repeat', $(this).is(':checked') ? 'repeat' : 'no-repeat');
-    });
-    // On opacity change
-    $('.bc-opacity').on('change', function () {
-        const type = $(this).data('bct');
-        document.documentElement.style.setProperty('--lbcg-' + type + '-bg-opacity', $(this).val() / 100);
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.remove-bc-image')) {
+            event.preventDefault();
+            const type = event.target.getAttribute('data-bct');
+            document.getElementById('bc-' + type + '-image').value = '';
+            document.getElementsByName('bc_' + type + '[remove_image]')[0].value = 1;
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
+        }
     });
 });

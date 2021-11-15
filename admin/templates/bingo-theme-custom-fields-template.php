@@ -131,7 +131,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <?php $image = wp_get_attachment_image_url($bc_header['image']); ?>
             <a href="#" class="bc-image-upload button button-primary button-large"><?php
-                echo $image ? '<img src="' . $image . '" style="margin-top: 12px; width: 50px;"/>' : 'Upload image';
+                echo $image ? '<img src="' . $image . '" class="lbcg-image-uploaded"/>' : 'Upload image';
                 ?></a>
             <a href="#" class="bc-remove-uploaded-image button button-primary button-large" <?php
             echo $image === false ? 'style="display: none;"' : ''; ?>>Remove image</a>
@@ -162,7 +162,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <?php $image = wp_get_attachment_image_url($bc_grid['image']); ?>
             <a href="#" class="bc-image-upload button button-primary button-large"><?php
-                echo $image ? '<img src="' . $image . '" style="margin-top: 12px; width: 50px;"/>' : 'Upload image';
+                echo $image ? '<img src="' . $image . '" class="lbcg-image-uploaded"/>' : 'Upload image';
                 ?></a>
             <a href="#" class="bc-remove-uploaded-image button button-primary button-large" <?php
             echo $image === false ? 'style="display: none;"' : ''; ?>>Remove image</a>
@@ -193,7 +193,7 @@ $special_types = array('1-9', '1-75', '1-90');
         <td>
             <?php $image = wp_get_attachment_image_url($bc_card['image']); ?>
             <a href="#" class="bc-image-upload button button-primary button-large"><?php
-                echo $image ? '<img src="' . $image . '" style="margin-top: 12px; width: 50px;"/>' : 'Upload image';
+                echo $image ? '<img src="' . $image . '" class="lbcg-image-uploaded"/>' : 'Upload image';
                 ?></a>
             <a href="#" class="bc-remove-uploaded-image button button-primary button-large" <?php
             echo $image === false ? 'style="display: none;"' : ''; ?>>Remove image</a>

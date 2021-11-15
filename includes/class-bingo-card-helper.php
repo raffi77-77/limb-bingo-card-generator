@@ -429,6 +429,11 @@ class BingoCardHelper
         return true;
     }
 
+    public static function create_bingo_cards($bingo_card_id, $author_email, $invite_emails)
+    {
+        // ...
+    }
+
     /**
      * Upload file
      *

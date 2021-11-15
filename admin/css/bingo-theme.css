@@ -62,3 +62,8 @@
 #bingo-theme-custom-fields input.letter-title:last-child {
     margin-right: 0;
 }
+
+#bingo-theme-custom-fields .lbcg-image-uploaded {
+    width: 50px;
+    margin-top: 12px;
+}

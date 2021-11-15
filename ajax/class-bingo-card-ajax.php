@@ -27,13 +27,97 @@ class BingoCardAjax
      */
     public function register_dependencies()
     {
-        add_action('wp_ajax_nopriv_bc_invitation', array($this, 'bingo_card_invitation'));
-        add_action('wp_ajax_bc_invitation', array($this, 'bingo_card_invitation'));
+        add_action('wp_ajax_nopriv_lbcg_bc_generation', array($this, 'generation'));
+        add_action('wp_ajax_lbcg_bc_generation', array($this, 'generation'));
+        add_action('wp_ajax_nopriv_lbcg_bc_invitation', array($this, 'invitation'));
+        add_action('wp_ajax_lbcg_bc_invitation', array($this, 'invitation'));
     }
 
-    public function bingo_card_invitation() {
+    /**
+     * Generate author card
+     */
+    public function generation()
+    {
         // Check current bingo theme
-//        if () TODO
+        $post_type = get_post_type($_POST['bingo_theme_id']);
+        if (empty($post_type) || $post_type !== 'bingo_theme') {
+            print_r(json_encode([
+                'success' => false,
+                'errors' => ["Invalid request"],
+                'redirectTo' => get_site_url()
+            ]));
+            die();
+        }
+        // Create card
+        $result = BingoCardHelper::collect_card_data_from($_POST);
+        if ($result['success'] === false) {
+            print_r(json_encode([
+                'success' => false,
+                'errors' => $result['data'],
+                'redirectTo' => ''
+            ]));
+            die();
+        }
+        $title = "Bingo Card {$result['data']['bingo_card_type']} {$result['data']['bingo_grid_size']}";
+        $uniq_string = wp_generate_password(16, false);
+//        $uniq_string = wp_generate_uuid4();
+//        $uniq_string = str_replace('-', '', $uniq_string);
+        // Create new card
+        $args = [
+            'post_author' => 0,
+            'post_title' => $title,
+            'post_type' => 'bingo_card',
+            'post_name' => $uniq_string
+        ];
+        $id = wp_insert_post($args);
+        if ($id instanceof WP_Error || $id === 0) {
+            print_r(json_encode([
+                'success' => false,
+                'errors' => ["Failed to save data. Please try again."],
+                'redirectTo' => ''
+            ]));
+            die();
+        }
+        // Save card data
+        BingoCardHelper::save_bingo_meta_fields($id, $result['data'], $_POST['bingo_theme_id']);
+        update_post_meta($id, 'bingo_theme_id', $_POST['bingo_theme_id']);
+        print_r(json_encode([
+            'success' => true,
+            'errors' => [],
+            'redirectTo' => get_permalink($_POST['bingo_theme_id']) . 'invitation?bc=' . $uniq_string
+        ]));
+        die();
+    }
+
+    /**
+     * Create all cards and invite them
+     */
+    public function invitation()
+    {
+        // Check current parent bingo card
+        if (empty($_GET['bc'])) {
+            print_r(json_encode([
+                'success' => false,
+                'errors' => ["Invalid request."],
+                'redirectTo' => ''
+            ]));
+            die();
+        }
+        $bc_posts = get_posts([
+            'name' => $_GET['bc'],
+            'post_type' => 'bingo_card',
+            'posts_per_page' => 1,
+            'post_status' => 'draft',
+        ]);
+        if (empty($bc_posts[0]->ID)) {
+            print_r(json_encode([
+                'success' => false,
+                'errors' => ["Invalid request."],
+                'redirectTo' => ''
+            ]));
+            die();
+        }
+        $bingo_card = $bc_posts[0];
         // Get emails
         $author_email = trim($_POST['author_email']);
         $invite_emails = explode("\r\n", $_POST['invite_emails']);
@@ -53,15 +137,17 @@ class BingoCardAjax
         if (!empty($error_messages)) {
             print_r(json_encode([
                 'success' => false,
-                'errors' => $error_messages
+                'errors' => $error_messages,
+                'redirectTo' => ''
             ]));
             die();
         }
         // Create bingo cards TODO
-        BingoCardHelper::create_bingo_cards((int)$_GET['bc'], $author_email, $invite_emails);
+        BingoCardHelper::create_bingo_cards($bingo_card->ID, $author_email, $invite_emails);
         print_r(json_encode([
             'success' => true,
-            'errors' => []
+            'errors' => [],
+            'redirectTo' => get_permalink($bingo_card->ID) . 'all'
         ]));
         die();
     }

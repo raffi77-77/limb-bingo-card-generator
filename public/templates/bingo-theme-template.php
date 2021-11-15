@@ -11,7 +11,20 @@ get_header();
 
 global $post;
 $current_id = $post->ID;
-$data = get_post_meta($current_id);
+if (!empty($_GET['bc'])) {
+    $bc_posts = get_posts([
+        'name' => $_GET['bc'],
+        'post_type' => 'bingo_card',
+        'posts_per_page' => 1,
+        'post_status' => 'draft',
+    ]);
+    if (!empty($bc_posts[0]->ID)) {
+        $data = get_post_meta($bc_posts[0]->ID);
+    }
+}
+if (empty($data)) {
+    $data = get_post_meta($current_id);
+}
 $bingo_card_type = !empty($data['bingo_card_type'][0]) ? $data['bingo_card_type'][0] : '1-9';
 $bingo_grid_size = !empty($data['bingo_grid_size'][0]) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : '';
@@ -111,8 +124,8 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
 
             <section class="lbcg-content">
                 <div class="lbcg-content-left">
-                    <form id="bingo-card-generation" action="<?php echo admin_url('admin-post.php'); ?>" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="action" value="bingo_card_generation">
+                    <form id="lbcg-bc-generation" action="<?php echo admin_url('admin-ajax.php'); ?>" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="lbcg_bc_generation">
                         <input type="hidden" name="bingo_theme_id" value="<?php echo $current_id; ?>">
                         <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
                         <div class="lbcg-content-form">
@@ -197,7 +210,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-header-image" class="lbcg-label">Image</label>
-                                        <input type="file" accept="image/*" id="bc-header-image" class="bc-image" name="bc_header[image]" value="<?php echo !empty($bc_header['image']) ? $bc_header['image'] : '0'; ?>" data-bct="header">
+                                        <input type="file" accept="image/*" id="bc-header-image" class="bc-image lbcg-input" name="bc_header[image]" value="<?php echo !empty($bc_header['image']) ? $bc_header['image'] : '0'; ?>" data-bct="header">
                                         <button class="remove-bc-image" data-bct="header">Remove image</button>
                                         <input type="hidden" name="bc_header[remove_image]" value="0">
                                     </div>
@@ -207,7 +220,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-header-opacity" class="lbcg-label">Opacity (%)</label>
-                                        <input type="number" id="bc-header-opacity" class="bc-opacity" name="bc_header[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>" data-bct="header">
+                                        <input type="number" id="bc-header-opacity" class="bc-opacity lbcg-input" name="bc_header[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>" data-bct="header">
                                     </div>
                                     <!--<label class="lbcg-label">
                                         <input type="file" class="lbcg-input" id="lbcg-bg-image"/>
@@ -248,7 +261,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-grid-image" class="lbcg-label">Image</label>
-                                        <input type="file" accept="image/*" id="bc-grid-image" class="bc-image" name="bc_grid[image]" value="<?php echo !empty($bc_grid['image']) ? $bc_grid['image'] : '0'; ?>" data-bct="grid">
+                                        <input type="file" accept="image/*" id="bc-grid-image" class="bc-image lbcg-input" name="bc_grid[image]" value="<?php echo !empty($bc_grid['image']) ? $bc_grid['image'] : '0'; ?>" data-bct="grid">
                                         <button class="remove-bc-image" data-bct="grid">Remove image</button>
                                         <input type="hidden" name="bc_grid[remove_image]" value="0">
                                     </div>
@@ -258,7 +271,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-grid-opacity" class="lbcg-label">Opacity (%)</label>
-                                        <input type="number" id="bc-grid-opacity" class="bc-opacity" name="bc_grid[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>" data-bct="grid">
+                                        <input type="number" id="bc-grid-opacity" class="bc-opacity lbcg-input" name="bc_grid[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>" data-bct="grid">
                                     </div>
                                 </div>
                             </div>
@@ -273,7 +286,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-card-image" class="lbcg-label">Image</label>
-                                        <input type="file" accept="image/*" id="bc-card-image" class="bc-image" name="bc_card[image]" value="<?php echo !empty($bc_card['image']) ? $bc_card['image'] : '0'; ?>" data-bct="card">
+                                        <input type="file" accept="image/*" id="bc-card-image" class="bc-image lbcg-input" name="bc_card[image]" value="<?php echo !empty($bc_card['image']) ? $bc_card['image'] : '0'; ?>" data-bct="card">
                                         <button class="remove-bc-image" data-bct="card">Remove image</button>
                                         <input type="hidden" name="bc_card[remove_image]" value="0">
                                     </div>
@@ -283,12 +296,12 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-card-opacity" class="lbcg-label">Opacity (%)</label>
-                                        <input type="number" id="bc-card-opacity" class="bc-opacity" name="bc_card[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>" data-bct="card">
+                                        <input type="number" id="bc-card-opacity" class="bc-opacity lbcg-input" name="bc_card[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>" data-bct="card">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <input type="submit" id="generate-bc" value="Generate Bingo Card">
+                        <input type="submit" value="Generate Bingo Card">
                     </form>
                 </div>
                 <div class="lbcg-content-right">
