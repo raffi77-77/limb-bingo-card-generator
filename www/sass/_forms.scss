@@ -9,6 +9,10 @@
   -moz-appearance: none;
   appearance: none;
 
+  &[type="file"] {
+    display: none;
+  }
+
   &:not([type="file"]) {
     height: 30px;
     padding: 4px 10px;
@@ -20,6 +24,28 @@
       border: 1px solid #000;
     }
   }
+
+  &[type="color"] {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #000;
+    background-color: #FFF;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  &[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &[type="color"]::-webkit-color-swatch {
+    border: none;
+  }
 }
 
 textarea.lbcg-input {
@@ -29,9 +55,31 @@ textarea.lbcg-input {
 }
 
 .lbcg-input {
+  &--opacity {
+    position: absolute;
+    right: 0;
+    top: -5px;
+    width: 100px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #000;
+    background-color: #FFF;
+    cursor: pointer;
+    z-index: 1;
+  }
+
   &-wrap {
     position: relative;
     justify-content: stretch;
+    width: 100%;
+
+    &--collapse {
+      margin: 10px 0;
+      padding: 10px 0 10px 15px;
+      border-top: 1px dashed #000;
+      border-bottom: 1px dashed #000;
+    }
+
     &:not(:first-child) {
       margin-top: 15px;
     }
@@ -40,11 +88,16 @@ textarea.lbcg-input {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+      justify-content: stretch;
     }
 
     &-in {
       width: 100%;
       justify-content: space-between;
+
+      .lbcg-input-wrap:first-child {
+        margin-top: 8px;
+      }
     }
 
     &--subtitle {
@@ -110,6 +163,7 @@ textarea.lbcg-input {
     border: 1px solid #000;
     background-color: #FFF;
     cursor: pointer;
+    z-index: 1;
 
     &:before {
       content: "";
@@ -119,6 +173,71 @@ textarea.lbcg-input {
       background-color: #000;
       transition: opacity .3s;
       opacity: 0;
+    }
+  }
+}
+
+label.lbcg-btn,
+button.lbcg-btn,
+a.lbcg-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  background-color: transparent!important;
+  background-repeat: no-repeat;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    outline: none;
+  }
+
+  &--main {
+    padding: 4px 10px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 400;
+    background-color: #fff!important;
+    color: #000!important;
+    border: 1px solid #000;
+    transition: all .3s;
+
+    &:hover, &:focus {
+      background-color: darken(#fff, 20%) !important;
+      border: 1px solid #000;
+    }
+
+    &.lbcg-btn--lg {
+      width: 100%;
+      height: 40px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+
+  &--remove {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    width: 20px;
+    height: 20px;
+    background-position: center center;
+    background-size: 20px 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Layer_1' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cpath style='fill:%23E21B1B;' d='M255.832,32.021c123.697,0.096,223.907,100.45,223.811,224.147s-100.45,223.907-224.147,223.811 C131.863,479.883,31.685,379.633,31.685,256C31.869,132.311,132.143,32.117,255.832,32.021 M255.832,0 C114.443,0.096-0.096,114.779,0,256.168S114.779,512.096,256.168,512C397.485,511.904,512,397.317,512,256 C511.952,114.571,397.261-0.048,255.832,0z'/%3E%3Cg%3E%3Crect x='227.863' y='113.103' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -106.0971 255.9227)' style='fill:%23E21B1B;' width='56.028' height='285.857'/%3E%3Crect x='112.943' y='227.962' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -106.0594 255.9024)' style='fill:%23E21B1B;' width='285.857' height='56.028'/%3E%3C/g%3E%3C/svg%3E");
+    z-index: 1;
+    opacity: 0.65;
+    transition: opacity .3s;
+    &:hover, &:focus {
+      opacity: 1;
     }
   }
 }

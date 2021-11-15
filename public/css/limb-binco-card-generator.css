@@ -138,6 +138,8 @@
     margin: 0;
     -webkit-appearance: none;
     appearance: none; }
+    .lbcg-parent .lbcg-input[type="file"], .lbcg-parent .lbcg-select[type="file"] {
+      display: none; }
     .lbcg-parent .lbcg-input:not([type="file"]), .lbcg-parent .lbcg-select:not([type="file"]) {
       height: 30px;
       padding: 4px 10px;
@@ -146,12 +148,45 @@
       .lbcg-parent .lbcg-input:not([type="file"]):focus, .lbcg-parent .lbcg-select:not([type="file"]):focus {
         outline: none;
         border: 1px solid #000; }
+    .lbcg-parent .lbcg-input[type="color"], .lbcg-parent .lbcg-select[type="color"] {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      margin: 0;
+      border: 1px solid #000;
+      background-color: #FFF;
+      cursor: pointer;
+      z-index: 1; }
+    .lbcg-parent .lbcg-input[type="color"]::-webkit-color-swatch-wrapper, .lbcg-parent .lbcg-select[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0; }
+    .lbcg-parent .lbcg-input[type="color"]::-webkit-color-swatch, .lbcg-parent .lbcg-select[type="color"]::-webkit-color-swatch {
+      border: none; }
   .lbcg-parent textarea.lbcg-input, .lbcg-parent textarea.lbcg-input:not([type="file"]) {
     height: auto; }
+  .lbcg-parent .lbcg-input--opacity {
+    position: absolute;
+    right: 0;
+    top: -5px;
+    width: 100px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #000;
+    background-color: #FFF;
+    cursor: pointer;
+    z-index: 1; }
   .lbcg-parent .lbcg-input-wrap {
     position: relative;
     -ms-flex-pack: stretch;
-        justify-content: stretch; }
+        justify-content: stretch;
+    width: 100%; }
+    .lbcg-parent .lbcg-input-wrap--collapse {
+      margin: 10px 0;
+      padding: 10px 0 10px 15px;
+      border-top: 1px dashed #000;
+      border-bottom: 1px dashed #000; }
     .lbcg-parent .lbcg-input-wrap:not(:first-child) {
       margin-top: 15px; }
     .lbcg-parent .lbcg-input-wrap, .lbcg-parent .lbcg-input-wrap-in {
@@ -160,11 +195,15 @@
       -ms-flex-direction: row;
           flex-direction: row;
       -ms-flex-wrap: wrap;
-          flex-wrap: wrap; }
+          flex-wrap: wrap;
+      -ms-flex-pack: stretch;
+          justify-content: stretch; }
     .lbcg-parent .lbcg-input-wrap-in {
       width: 100%;
       -ms-flex-pack: justify;
           justify-content: space-between; }
+      .lbcg-parent .lbcg-input-wrap-in .lbcg-input-wrap:first-child {
+        margin-top: 8px; }
     .lbcg-parent .lbcg-input-wrap--subtitle .lbcg-label {
       width: 15%;
       min-width: 30px; }
@@ -207,7 +246,8 @@
       margin: 0;
       border: 1px solid #000;
       background-color: #FFF;
-      cursor: pointer; }
+      cursor: pointer;
+      z-index: 1; }
       .lbcg-parent .lbcg-checkbox-holder:before {
         content: "";
         display: block;
@@ -216,6 +256,78 @@
         background-color: #000;
         transition: opacity .3s;
         opacity: 0; }
+  .lbcg-parent label.lbcg-btn,
+  .lbcg-parent button.lbcg-btn,
+  .lbcg-parent a.lbcg-btn {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+        justify-content: center;
+    -ms-flex-align: center;
+        align-items: center;
+    height: 30px;
+    background-color: transparent !important;
+    background-repeat: no-repeat;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer; }
+    .lbcg-parent label.lbcg-btn:hover, .lbcg-parent label.lbcg-btn:focus,
+    .lbcg-parent button.lbcg-btn:hover,
+    .lbcg-parent button.lbcg-btn:focus,
+    .lbcg-parent a.lbcg-btn:hover,
+    .lbcg-parent a.lbcg-btn:focus {
+      background-color: transparent;
+      background-repeat: no-repeat;
+      border: none;
+      outline: none; }
+    .lbcg-parent label.lbcg-btn--main,
+    .lbcg-parent button.lbcg-btn--main,
+    .lbcg-parent a.lbcg-btn--main {
+      padding: 4px 10px;
+      height: 30px;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 400;
+      background-color: #fff !important;
+      color: #000 !important;
+      border: 1px solid #000;
+      transition: all .3s; }
+      .lbcg-parent label.lbcg-btn--main:hover, .lbcg-parent label.lbcg-btn--main:focus,
+      .lbcg-parent button.lbcg-btn--main:hover,
+      .lbcg-parent button.lbcg-btn--main:focus,
+      .lbcg-parent a.lbcg-btn--main:hover,
+      .lbcg-parent a.lbcg-btn--main:focus {
+        background-color: #cccccc !important;
+        border: 1px solid #000; }
+      .lbcg-parent label.lbcg-btn--main.lbcg-btn--lg,
+      .lbcg-parent button.lbcg-btn--main.lbcg-btn--lg,
+      .lbcg-parent a.lbcg-btn--main.lbcg-btn--lg {
+        width: 100%;
+        height: 40px;
+        font-size: 20px;
+        font-weight: 700; }
+    .lbcg-parent label.lbcg-btn--remove,
+    .lbcg-parent button.lbcg-btn--remove,
+    .lbcg-parent a.lbcg-btn--remove {
+      position: absolute;
+      right: 0;
+      bottom: 5px;
+      width: 20px;
+      height: 20px;
+      background-position: center center;
+      background-size: 20px 20px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Layer_1' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cpath style='fill:%23E21B1B;' d='M255.832,32.021c123.697,0.096,223.907,100.45,223.811,224.147s-100.45,223.907-224.147,223.811 C131.863,479.883,31.685,379.633,31.685,256C31.869,132.311,132.143,32.117,255.832,32.021 M255.832,0 C114.443,0.096-0.096,114.779,0,256.168S114.779,512.096,256.168,512C397.485,511.904,512,397.317,512,256 C511.952,114.571,397.261-0.048,255.832,0z'/%3E%3Cg%3E%3Crect x='227.863' y='113.103' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -106.0971 255.9227)' style='fill:%23E21B1B;' width='56.028' height='285.857'/%3E%3Crect x='112.943' y='227.962' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -106.0594 255.9024)' style='fill:%23E21B1B;' width='285.857' height='56.028'/%3E%3C/g%3E%3C/svg%3E");
+      z-index: 1;
+      opacity: 0.65;
+      transition: opacity .3s; }
+      .lbcg-parent label.lbcg-btn--remove:hover, .lbcg-parent label.lbcg-btn--remove:focus,
+      .lbcg-parent button.lbcg-btn--remove:hover,
+      .lbcg-parent button.lbcg-btn--remove:focus,
+      .lbcg-parent a.lbcg-btn--remove:hover,
+      .lbcg-parent a.lbcg-btn--remove:focus {
+        opacity: 1; }
   .lbcg-parent .lbcg-card {
     position: relative;
     display: -ms-flexbox;
@@ -226,7 +338,7 @@
         justify-content: flex-start;
     -ms-flex-align: stretch;
         align-items: stretch;
-    padding: 20px 0; }
+    padding: 0 0 20px 0; }
     .lbcg-parent .lbcg-card:before {
       content: "";
       position: absolute;
@@ -237,7 +349,8 @@
       left: 0;
       z-index: 1;
       background-repeat: var(--lbcg-card-bg-repeat);
-      background-position: 0 0;
+      background-size: var(--lbcg-card-bg-size);
+      background-position: var(--lbcg-card-bg-pos);
       background-color: var(--lbcg-card-bg-color);
       background-image: var(--lbcg-card-bg-image);
       opacity: var(--lbcg-card-bg-opacity);
@@ -297,7 +410,7 @@
       z-index: 2; }
       .lbcg-parent .lbcg-card-header-holder {
         position: relative;
-        padding: 0 20px; }
+        padding: 20px 20px 0 20px; }
         .lbcg-parent .lbcg-card-header-holder:before {
           content: "";
           position: absolute;
@@ -308,7 +421,8 @@
           left: 0;
           z-index: 1;
           background-repeat: var(--lbcg-header-bg-repeat);
-          background-position: 0 0;
+          background-size: var(--lbcg-header-bg-size);
+          background-position: var(--lbcg-header-bg-pos);
           background-color: var(--lbcg-header-bg-color);
           background-image: var(--lbcg-header-bg-image);
           opacity: var(--lbcg-header-bg-opacity);
@@ -373,7 +487,9 @@
           background-image: var(--lbcg-grid-bg-image);
           opacity: var(--lbcg-grid-bg-opacity);
           background-color: var(--lbcg-grid-bg-color);
-          background-repeat: var(--lbcg-grid-bg-repeat); }
+          background-repeat: var(--lbcg-grid-bg-repeat);
+          background-size: var(--lbcg-grid-bg-size);
+          background-position: var(--lbcg-grid-bg-pos); }
         .lbcg-parent .lbcg-card-body-grid.lbcg-grid-3 {
           -ms-grid-columns: (1fr)[3];
               grid-template-columns: repeat(3, 1fr); }
