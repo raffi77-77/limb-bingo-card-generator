@@ -206,7 +206,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-header-color" class="lbcg-label">Background Color</label>
-                                        <input type="color" id="bc-header-color" class="lbcg-input" name="bc_header[color]" value="<?php echo $bc_header['color']; ?>" data-bct="header">
+                                        <input type="color" id="bc-header-color" class="bc-color lbcg-input" name="bc_header[color]" value="<?php echo $bc_header['color']; ?>" data-bct="header">
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-header-image" class="lbcg-label">Image</label>
