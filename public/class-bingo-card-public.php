@@ -61,13 +61,17 @@ class BingoCardPublic
     public function get_custom_post_type_template($single_template)
     {
         global $post_type;
-        if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
-            if (strpos($_SERVER['REQUEST_URI'], '/invitation') !== false) {
+        if ($post_type === 'bingo_theme') {
+            if (strpos($_SERVER['REQUEST_URI'], '/invitation/') !== false) {
                 $single_template = $this->attributes['templates_path'] . '/invitation-template.php';
-            } else if (strpos($_SERVER['REQUEST_URI'], '/all')) {
-                $single_template = $this->attributes['templates_path'] . '/all-bingo-cards-template.php';
             } else {
                 $single_template = $this->attributes['templates_path'] . '/bingo-theme-template.php';
+            }
+        } else if ($post_type === 'bingo_card') {
+            if (strpos($_SERVER['REQUEST_URI'], '/all/')) {
+                $single_template = $this->attributes['templates_path'] . '/all-bingo-cards-template.php';
+            } else {
+                $single_template = $this->attributes['templates_path'] . '/bingo-card-template.php';
             }
         }
         return $single_template;

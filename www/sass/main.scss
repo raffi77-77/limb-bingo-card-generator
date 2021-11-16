@@ -2,6 +2,11 @@
 @import "helpers/helpers";
 
 .lbcg-parent {
+  * {
+    -webkit-print-color-adjust: exact !important;   /* Chrome, Safari, Edge */
+    color-adjust: exact !important;                 /*Firefox*/
+  }
+
   display: grid;
   grid-template-columns: 180px 1fr;
   grid-template-rows: 1fr;

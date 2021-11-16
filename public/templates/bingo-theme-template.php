@@ -34,20 +34,18 @@ if (!empty($data['bingo_card_spec_title'][0])) {
 } else {
     $bingo_card_spec_title = ['B', 'I', 'N', 'G', 'O'];
 }
-// Get bingo card words
-$result = BingoCardHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
-$words_count = $result['words_count'];
-if (!empty($data['bingo_card_content'][0])) {
-    $bingo_card_content = $data['bingo_card_content'][0];
-} else {
-    $bingo_card_content = $result['words'];
-}
 // Bingo card words
 if ($bingo_card_type === '1-75') {
     $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_words();
 } else {
+    // Get bingo card words
+    if (!empty($data['bingo_card_content'][0])) {
+        $bingo_card_content = $data['bingo_card_content'][0];
+    } else {
+        $result = BingoCardHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
+        $bingo_card_content = $result['words'];
+    }
     $bingo_card_words = explode("\r\n", $bingo_card_content);
-//    shuffle($bingo_card_words);
 }
 // Header style
 if (!empty($data['bc_header'][0])) {
@@ -89,7 +87,6 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
     $bingo_grid_free_square = false;
 }
 ?>
-
     <div class="custom-container" style="width: 900px; margin: 0 auto;">
         <main class="lbcg-parent">
             <aside class="lbcg-sidebar">
@@ -384,45 +381,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                 </div>
                 <div class="lbcg-content-right">
                     <div class="lbcg-card-wrap">
-                        <style type="text/css">
-                            :root {
-                                /* card styles */
-
-                                --lbcg-card-bg-image: <?php echo !empty($bc_card['image']) ? 'url(' . wp_get_attachment_image_url($bc_card['image'], 'large') . ')' : 'none'; ?>;
-                                --lbcg-card-bg-pos: <?php echo !empty($bc_card['bg_pos']) ? $bc_card['bg_pos'] : '0 0'; ?>;
-                                --lbcg-card-bg-repeat: <?php echo !empty($bc_card['repeat'])  ? $bc_card['repeat'] : 'no-repeat'; ?>;
-                                --lbcg-card-bg-size: <?php echo !empty($bc_card['bg_size']) ? $bc_card['bg_size'] : 'auto'; ?>;
-                                --lbcg-card-bg-color: <?php echo !empty($bc_card['color']) ? $bc_card['color'] : '#FFF'; ?>;
-                                --lbcg-card-bg-opacity: <?php echo isset($bc_card['opacity']) ? $bc_card['opacity'] / 100 : 1; ?>;
-
-                                /* header styles */
-
-                                --lbcg-header-font-size: 16px;
-                                --lbcg-header-height: 48px;
-                                --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
-                                --lbcg-header-text-color: #FFF;
-                                --lbcg-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
-                                --lbcg-header-bg-pos: <?php echo !empty($bc_header['bg_pos']) ? $bc_header['bg_pos'] : '0 0'; ?>;
-                                --lbcg-header-bg-repeat: <?php echo !empty($bc_header['repeat']) ? $bc_header['repeat'] : 'no-repeat'; ?>;
-                                --lbcg-header-bg-size: <?php echo !empty($bc_header['bg_size']) ? $bc_header['bg_size'] : 'auto'; ?>;
-                                --lbcg-header-bg-color: <?php echo !empty($bc_header['color']) ? $bc_header['color'] : 'transparent'; ?>;
-                                --lbcg-header-bg-opacity: <?php echo isset($bc_header['opacity']) ? $bc_header['opacity'] / 100 : 1; ?>;
-
-                                /* body styles */
-
-                                --lbcg-grid-font-size: 16px; /* esi Vah jan gtnumes es <span class="lbcg-card-text"> srancic amenamec heightov@ U HAMEL amena erkar u dnumes es variable-i mej */
-                                --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
-                                --lbcg-grid-line-height: 61.8px; /* esi Vah jan vercnum es <div class="lbcg-card-col"> sra height@ u dnumes es variable-i mej */
-                                --lbcg-grid-text-color: #79ffd3;
-                                --lbcg-grid-border-color: #45ffbf;
-                                --lbcg-grid-bg-image: <?php echo !empty($bc_grid['image']) ? 'url(' . wp_get_attachment_image_url($bc_grid['image'], 'large') . ')' : 'none'; ?>;
-                                --lbcg-grid-bg-pos: <?php echo !empty($bc_grid['bg_pos']) ? $bc_grid['bg_pos'] : '0 0'; ?>;
-                                --lbcg-grid-bg-repeat: <?php echo !empty($bc_grid['repeat']) ? $bc_grid['repeat'] : 'no-repeat'; ?>;
-                                --lbcg-grid-bg-size: <?php echo !empty($bc_grid['bg_size']) ? $bc_grid['bg_size'] : 'auto'; ?>;
-                                --lbcg-grid-bg-color: <?php echo !empty($bc_grid['color']) ? $bc_grid['color'] : '#003221'; ?>;
-                                --lbcg-grid-bg-opacity: <?php echo isset($bc_grid['opacity']) ? $bc_grid['opacity'] / 100 : .5; ?>;
-                            }
-                        </style>
+                        <?php include __DIR__ . '/props-template.php'; ?>
                         <div class="lbcg-card">
                             <div class="lbcg-card-header-holder">
                                 <div class="lbcg-card-header">
@@ -457,6 +416,5 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
             </section>
         </main>
     </div>
-
 <?php
 get_footer();
