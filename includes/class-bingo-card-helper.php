@@ -241,12 +241,14 @@ class BingoCardHelper
      *
      * @return array
      */
-    public static function get_1_75_bingo_card_words()
+    public static function get_1_75_bingo_card_words($random = false)
     {
         $word_cols = [];
         for ($i = 1; $i < 62; $i += 15) {
             $temp_numbers = range($i, $i + 14);
-            shuffle($temp_numbers);
+            if ($random === true) {
+                shuffle($temp_numbers);
+            }
             $word_cols[] = $temp_numbers;
         }
         $bingo_card_words = [];

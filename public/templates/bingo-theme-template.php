@@ -216,48 +216,43 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                         <input type="hidden" name="bc_header[remove_image]" value="0">
                                     </div>
                                     <div class="lbcg-input-wrap">
-                                        <label for="bc-header-repeat" class="lbcg-label">Repeat</label>
-                                        <input hidden type="checkbox" class="lbcg-checkbox" id="bc-header-repeat" class="bc-repeat" name="bc_header[repeat]" <?php echo $bc_grid['repeat'] === 'repeat' ? 'checked' : ''; ?> data-bct="header" value="repeat" hidden/>
-                                        <label for="bc-header-repeat" class="lbcg-checkbox-holder"></label>
-                                    </div>
-                                    <div class="lbcg-input-wrap">
                                         <label for="bc-header-opacity" class="lbcg-label">Opacity (%)</label>
                                         <input type="number" id="bc-header-opacity" class="bc-opacity lbcg-input lbcg-input--opacity" name="bc_header[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>" data-bct="header">
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label class="lbcg-label">
-                                            <select name="lbcg-bg-pos" id="lbcg-bg-pos" class="lbcg-select">
-                                                <option value="0" disabled selected>Background Position</option>
-                                                <option value="top left">Top Left</option>
-                                                <option value="top center">Top Center</option>
-                                                <option value="top right">Top Right</option>
-                                                <option value="center left">Center Left</option>
-                                                <option value="center center">Center Center</option>
-                                                <option value="center right">Center Right</option>
-                                                <option value="bottom left">Bottom Left</option>
-                                                <option value="bottom center">Bottom Center</option>
-                                                <option value="bottom right">Bottom Right</option>
+                                            <select name="bc_header[bg_pos]" class="bc-pos lbcg-select" data-bct="header">
+                                                <option value="0 0" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                                                <option value="top left" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                                                <option value="top center" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                                                <option value="top right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                                                <option value="center left" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                                                <option value="center center" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                                                <option value="center right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                                                <option value="bottom left" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                                                <option value="bottom center" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                                                <option value="bottom right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
                                             </select>
                                         </label>
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label class="lbcg-label">
-                                            <select name="lbcg-bg-rep" id="lbcg-bg-rep" class="lbcg-select">
-                                                <option value="no-repeat" disabled selected>Background Repeat</option>
-                                                <option value="repeat">Repeat</option>
-                                                <option value="repeat-x">Repeat X</option>
-                                                <option value="repeat-y">Repeat Y</option>
-                                                <option value="no-repeat">No Repeat</option>
+                                            <select name="bc_header[repeat]" class="bc-repeat lbcg-select" data-bct="header">
+                                                <option value="no-repeat" <?php echo !empty($bc_header['repeat']) && $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
+                                                <option value="repeat" <?php echo !empty($bc_header['repeat']) && $bc_header['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                                                <option value="repeat-x" <?php echo !empty($bc_header['repeat']) && $bc_header['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                                                <option value="repeat-y" <?php echo !empty($bc_header['repeat']) && $bc_header['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                                                <option value="no-repeat" <?php echo !empty($bc_header['repeat']) && $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
                                             </select>
                                         </label>
                                     </div>
                                     <div class="lbcg-input-wrap">
                                         <label class="lbcg-label">
-                                            <select name="lbcg-bg-size" id="lbcg-bg-size" class="lbcg-select">
-                                                <option value="auto" disabled selected>Background Size</option>
-                                                <option value="auto">Auto</option>
-                                                <option value="contain">Contain</option>
-                                                <option value="cover">Cover</option>
+                                            <select name="bc_header[bg_size]" class="bc-size lbcg-select" data-bct="header">
+                                                <option value="auto" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                                                <option value="auto" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                                                <option value="contain" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                                                <option value="cover" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
                                             </select>
                                         </label>
                                     </div>
@@ -280,13 +275,45 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                         <input type="hidden" name="bc_grid[remove_image]" value="0">
                                     </div>
                                     <div class="lbcg-input-wrap">
-                                        <label for="bc-grid-repeat" class="lbcg-label">Repeat</label>
-                                        <input hidden type="checkbox" id="bc-grid-repeat" class="bc-repeat" name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'repeat' ? 'checked' : ''; ?> data-bct="grid" value="repeat">
-                                        <label for="bc-grid-repeat" class="lbcg-checkbox-holder"></label>
-                                    </div>
-                                    <div class="lbcg-input-wrap">
                                         <label for="bc-grid-opacity" class="lbcg-label">Opacity (%)</label>
                                         <input type="number" id="bc-grid-opacity" class="bc-opacity lbcg-input lbcg-input--opacity" name="bc_grid[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>" data-bct="grid">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label class="lbcg-label">
+                                            <select name="bc_grid[bg_pos]" class="bc-pos lbcg-select" data-bct="grid">
+                                                <option value="0 0" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                                                <option value="top left" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                                                <option value="top center" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                                                <option value="top right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                                                <option value="center left" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                                                <option value="center center" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                                                <option value="center right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                                                <option value="bottom left" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                                                <option value="bottom center" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                                                <option value="bottom right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label class="lbcg-label">
+                                            <select name="bc_grid[repeat]" class="bc-repeat lbcg-select" data-bct="grid">
+                                                <option value="no-repeat" <?php echo !empty($bc_grid['repeat']) && $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
+                                                <option value="repeat" <?php echo !empty($bc_grid['repeat']) && $bc_grid['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                                                <option value="repeat-x" <?php echo !empty($bc_grid['repeat']) && $bc_grid['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                                                <option value="repeat-y" <?php echo !empty($bc_grid['repeat']) && $bc_grid['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                                                <option value="no-repeat" <?php echo !empty($bc_grid['repeat']) && $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label class="lbcg-label">
+                                            <select name="bc_grid[bg_size]" class="bc-size lbcg-select" data-bct="grid">
+                                                <option value="auto" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                                                <option value="auto" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                                                <option value="contain" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                                                <option value="cover" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+                                            </select>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -307,13 +334,45 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                         <input type="hidden" name="bc_card[remove_image]" value="0">
                                     </div>
                                     <div class="lbcg-input-wrap">
-                                        <label for="bc-card-repeat" class="lbcg-label">Repeat</label>
-                                        <input hidden type="checkbox" id="bc-card-repeat" class="bc-repeat" name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'repeat' ? 'checked' : ''; ?> data-bct="card" value="repeat">
-                                        <label for="bc-card-repeat" class="lbcg-checkbox-holder"></label>
-                                    </div>
-                                    <div class="lbcg-input-wrap">
                                         <label for="bc-card-opacity" class="lbcg-label">Opacity (%)</label>
                                         <input type="number" id="bc-card-opacity" class="bc-opacity lbcg-input lbcg-input--opacity" name="bc_card[opacity]" min="0" max="100" placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>" data-bct="card">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label class="lbcg-label">
+                                            <select name="bc_card[bg_pos]" class="bc-pos lbcg-select" data-bct="card">
+                                                <option value="0 0" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                                                <option value="top left" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                                                <option value="top center" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                                                <option value="top right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                                                <option value="center left" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                                                <option value="center center" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                                                <option value="center right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                                                <option value="bottom left" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                                                <option value="bottom center" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                                                <option value="bottom right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label class="lbcg-label">
+                                            <select name="bc_card[repeat]" class="bc-repeat lbcg-select" data-bct="card">
+                                                <option value="no-repeat" <?php echo !empty($bc_card['repeat']) && $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
+                                                <option value="repeat" <?php echo !empty($bc_card['repeat']) && $bc_card['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                                                <option value="repeat-x" <?php echo !empty($bc_card['repeat']) && $bc_card['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                                                <option value="repeat-y" <?php echo !empty($bc_card['repeat']) && $bc_card['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                                                <option value="no-repeat" <?php echo !empty($bc_card['repeat']) && $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label class="lbcg-label">
+                                            <select name="bc_card[bg_size]" class="bc-size lbcg-select" data-bct="card">
+                                                <option value="auto" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                                                <option value="auto" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                                                <option value="contain" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                                                <option value="cover" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+                                            </select>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -330,9 +389,9 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 /* card styles */
 
                                 --lbcg-card-bg-image: <?php echo !empty($bc_card['image']) ? 'url(' . wp_get_attachment_image_url($bc_card['image'], 'large') . ')' : 'none'; ?>;
-                                --lbcg-card-bg-size: '<?php echo !empty($bc_card['size']) ? $bc_card['size'] : 'auto'; ?>';
-                                --lbcg-card-bg-pos: '<?php echo !empty($bc_card['pos']) ? $bc_card['pos'] : '0 0'; ?>';
-                                --lbcg-card-bg-repeat: '<?php echo !empty($bc_card['repeat'])  ? $bc_card['repeat'] : 'no-repeat'; ?>';
+                                --lbcg-card-bg-pos: <?php echo !empty($bc_card['bg_pos']) ? $bc_card['bg_pos'] : '0 0'; ?>;
+                                --lbcg-card-bg-repeat: <?php echo !empty($bc_card['repeat'])  ? $bc_card['repeat'] : 'no-repeat'; ?>;
+                                --lbcg-card-bg-size: <?php echo !empty($bc_card['bg_size']) ? $bc_card['bg_size'] : 'auto'; ?>;
                                 --lbcg-card-bg-color: <?php echo !empty($bc_card['color']) ? $bc_card['color'] : '#FFF'; ?>;
                                 --lbcg-card-bg-opacity: <?php echo isset($bc_card['opacity']) ? $bc_card['opacity'] / 100 : 1; ?>;
 
@@ -343,9 +402,9 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
                                 --lbcg-header-text-color: #FFF;
                                 --lbcg-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
-                                --lbcg-header-bg-size: '<?php echo !empty($bc_header['size']) ? $bc_header['size'] : 'auto'; ?>';
-                                --lbcg-header-bg-pos: '<?php echo !empty($bc_header['pos']) ? $bc_header['pos'] : '0 0'; ?>';
-                                --lbcg-header-bg-repeat: '<?php echo !empty($bc_header['repeat']) ? $bc_header['repeat'] : 'no-repeat'; ?>';
+                                --lbcg-header-bg-pos: <?php echo !empty($bc_header['bg_pos']) ? $bc_header['bg_pos'] : '0 0'; ?>;
+                                --lbcg-header-bg-repeat: <?php echo !empty($bc_header['repeat']) ? $bc_header['repeat'] : 'no-repeat'; ?>;
+                                --lbcg-header-bg-size: <?php echo !empty($bc_header['bg_size']) ? $bc_header['bg_size'] : 'auto'; ?>;
                                 --lbcg-header-bg-color: <?php echo !empty($bc_header['color']) ? $bc_header['color'] : 'transparent'; ?>;
                                 --lbcg-header-bg-opacity: <?php echo isset($bc_header['opacity']) ? $bc_header['opacity'] / 100 : 1; ?>;
 
@@ -357,9 +416,9 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 --lbcg-grid-text-color: #79ffd3;
                                 --lbcg-grid-border-color: #45ffbf;
                                 --lbcg-grid-bg-image: <?php echo !empty($bc_grid['image']) ? 'url(' . wp_get_attachment_image_url($bc_grid['image'], 'large') . ')' : 'none'; ?>;
-                                --lbcg-grid-bg-size: '<?php echo !empty($bc_grid['size']) ? $bc_grid['size'] : 'auto'; ?>';
-                                --lbcg-grid-bg-pos: '<?php echo !empty($bc_grid['pos']) ? $bc_grid['pos'] : '0 0'; ?>';
-                                --lbcg-grid-bg-repeat: '<?php echo !empty($bc_grid['repeat']) ? $bc_grid['repeat'] : 'no-repeat'; ?>';
+                                --lbcg-grid-bg-pos: <?php echo !empty($bc_grid['bg_pos']) ? $bc_grid['bg_pos'] : '0 0'; ?>;
+                                --lbcg-grid-bg-repeat: <?php echo !empty($bc_grid['repeat']) ? $bc_grid['repeat'] : 'no-repeat'; ?>;
+                                --lbcg-grid-bg-size: <?php echo !empty($bc_grid['bg_size']) ? $bc_grid['bg_size'] : 'auto'; ?>;
                                 --lbcg-grid-bg-color: <?php echo !empty($bc_grid['color']) ? $bc_grid['color'] : '#003221'; ?>;
                                 --lbcg-grid-bg-opacity: <?php echo isset($bc_grid['opacity']) ? $bc_grid['opacity'] / 100 : .5; ?>;
                             }

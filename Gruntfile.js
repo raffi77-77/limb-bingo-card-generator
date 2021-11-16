@@ -33,7 +33,7 @@ module.exports = function (grunt) {
 		sass: {
 			compile: {
 				files: {
-					"<%= buildDir %>/css/limb-binco-card-generator.css": "<%= srcDir %>/sass/main.scss"
+					"<%= buildDir %>/css/lbcg-binco-card-generator.css": "<%= srcDir %>/sass/main.scss"
 				}
 			}
 		},
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 				]
 			},
 			dist: {
-				src: "<%= buildDir %>/css/limb-binco-card-generator.css"
+				src: "<%= buildDir %>/css/lbcg-binco-card-generator.css"
 			}
 		},
 		cssmin: {

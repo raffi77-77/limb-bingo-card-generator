@@ -134,8 +134,8 @@ class BingoCardAdmin
             if (!did_action('wp_enqueue_media')) {
                 wp_enqueue_media();
             }
-            wp_enqueue_script('bingo-theme-admin-script', $this->attributes['plugin_url'] . 'admin/js/bingo-theme.js?ver=' . BingoCard::VERSION);
-            wp_enqueue_style('bingo-theme-admin-style', $this->attributes['plugin_url'] . 'admin/css/bingo-theme.css?ver=' . BingoCard::VERSION);
+            wp_enqueue_script('lbcg-bingo-theme-admin-script', $this->attributes['plugin_url'] . 'admin/js/bingo-theme.js?ver=' . BingoCard::VERSION);
+            wp_enqueue_style('lbcg-bingo-theme-admin-style', $this->attributes['plugin_url'] . 'admin/css/bingo-theme.css?ver=' . BingoCard::VERSION);
         }
     }
 }

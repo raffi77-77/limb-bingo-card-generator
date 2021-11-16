@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (event.target.matches('#lbcg-font')) {
             // On font change
             document.documentElement.style.setProperty('--lbcg-header-font-family', LBCG['fonts'][event.target.value]['name'] + ', sans-serif');
+            document.documentElement.style.setProperty('--lbcg-grid-font-family', LBCG['fonts'][event.target.value]['name'] + ', sans-serif');
         } else if (event.target.matches('#lbcg-free-space-check')) {
             // On free space checkbox change
             changeFreeSpaceItem(event.target.checked);
@@ -127,7 +128,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = new FormData(event.target);
             const request = new XMLHttpRequest();
             request.onreadystatechange = function () {
-                console.log(request);
+                if (request.readyState !== 4 || request.status !== 200) return;
+                // On success
+                const resData = JSON.parse(request.responseText);
+                if (resData.success === true) {
+                    location.replace(resData.redirectTo);
+                } else {
+                    alert(resData.errors.join("\n"));
+                }
             }
             request.open(event.target.method, LBCG['ajaxUrl'], true);
             request.send(data);
@@ -148,10 +156,18 @@ document.addEventListener('DOMContentLoaded', function () {
             var aaa = event.target.files;
             document.getElementsByName('bc_' + type + '[remove_image]')[0].value = '0';
             document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'url(' + URL.createObjectURL(event.target.files[0]) + ')');
+        } else if (event.target.matches('.bc-pos')) {
+            // On position change
+            const type = event.target.getAttribute('data-bct');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-pos', event.target.value);
         } else if (event.target.matches('.bc-repeat')) {
             // On repeat change
             const type = event.target.getAttribute('data-bct');
-            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-repeat', event.target.checked ? 'repeat' : 'no-repeat');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-repeat', event.target.value);
+        } else if (event.target.matches('.bc-size')) {
+            // On size change
+            const type = event.target.getAttribute('data-bct');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-size', event.target.value);
         } else if (event.target.matches('.bc-opacity')) {
             // On opacity change
             const type = event.target.getAttribute('data-bct');

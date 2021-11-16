@@ -39,16 +39,16 @@ class BingoCardPublic
     {
         if (is_singular('bingo_theme') || is_singular('bingo_card')) {
             wp_enqueue_script('lbcg-vanilla-js', $this->attributes['plugin_url'] . 'includes/js/vanilla.js');
-            if (!did_action('wp_enqueue_media')) {
+            /*if (!did_action('wp_enqueue_media')) {
                 wp_enqueue_media();
-            }
-            wp_enqueue_script('limb-bingo-card-generator-js', $this->attributes['plugin_url'] . 'public/js/limb-bingo-card-generator.js?ver=' . BingoCard::VERSION);
-            wp_localize_script('limb-bingo-card-generator-js', 'LBCG', [
+            }*/
+            wp_enqueue_script('lbcg-bingo-card-generator-js', $this->attributes['plugin_url'] . 'public/js/lbcg-bingo-card-generator.js?ver=' . BingoCard::VERSION);
+            wp_localize_script('lbcg-bingo-card-generator-js', 'LBCG', [
                 'fonts' => BingoCardHelper::$fonts,
                 'freeSquareWord' => BingoCardHelper::$free_space_word,
                 'ajaxUrl' => admin_url('admin-ajax.php')
             ]);
-            wp_enqueue_style('limb-bingo-card-generator-css', $this->attributes['plugin_url'] . 'public/css/limb-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
+            wp_enqueue_style('lbcg-bingo-card-generator-css', $this->attributes['plugin_url'] . 'public/css/lbcg-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
         }
     }
 

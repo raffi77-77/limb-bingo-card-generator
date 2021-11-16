@@ -22,8 +22,10 @@ if (!empty($data['bc_header'][0])) {
     $bc_header = [
         'color' => '#d6be89',
         'image' => '',
-        'opacity' => 0,
-        'repeat' => 'no-repeat'
+        'opacity' => 100,
+        'repeat' => 'no-repeat',
+        'bg_pos' => '0 0',
+        'bg_size' => 'auto'
     ];
 }
 if (!empty($data['bc_grid'][0])) {
@@ -32,8 +34,10 @@ if (!empty($data['bc_grid'][0])) {
     $bc_grid = [
         'color' => '#997d3c',
         'image' => '',
-        'opacity' => 0,
-        'repeat' => 'no-repeat'
+        'opacity' => 100,
+        'repeat' => 'no-repeat',
+        'bg_pos' => '0 0',
+        'bg_size' => 'auto'
     ];
 }
 if (!empty($data['bc_card'][0])) {
@@ -42,8 +46,10 @@ if (!empty($data['bc_card'][0])) {
     $bc_card = [
         'color' => '#d6be89',
         'image' => '',
-        'opacity' => 0,
-        'repeat' => 'no-repeat'
+        'opacity' => 100,
+        'repeat' => 'no-repeat',
+        'bg_pos' => '0 0',
+        'bg_size' => 'auto'
     ];
 }
 
@@ -78,9 +84,7 @@ $special_types = array('1-9', '1-75', '1-90');
                 <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected="selected"' : ''; ?>>3x3</option>
                 <option value="4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected="selected"' : ''; ?>>4x4</option>
                 <option value="5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected="selected"' : ''; ?>>5x5</option>
-                <option value="9x3" <?php echo $bingo_grid_size === '9x3' ? 'selected="selected"' : ''; ?> disabled>9x3
-                    (special)
-                </option>
+                <option value="9x3" <?php echo $bingo_grid_size === '9x3' ? 'selected="selected"' : ''; ?> disabled>9x3 (special)</option>
             </select>
         </td>
     </tr>
@@ -91,7 +95,7 @@ $special_types = array('1-9', '1-75', '1-90');
         </td>
         <td>
             <textarea id="bc-title"
-                          name="bingo_card_title"><?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?></textarea>
+                      name="bingo_card_title"><?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?></textarea>
         </td>
         <td class="bc-content" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;"' : ''; ?>>
             <label for="bc-content">Enter words/emojis or numbers:</label>
@@ -124,28 +128,57 @@ $special_types = array('1-9', '1-75', '1-90');
         </td>
     </tr>
     <tr>
-        <td>
+        <td rowspan="2">
             <label>Header background color:</label>
             <input type="color" name="bc_header[color]" value="<?php echo $bc_header['color']; ?>">
         </td>
-        <td>
+        <td rowspan="2">
             <?php $image = wp_get_attachment_image_url($bc_header['image']); ?>
             <a href="#" class="bc-image-upload button button-primary button-large"><?php
                 echo $image ? '<img src="' . $image . '" class="lbcg-image-uploaded"/>' : 'Upload image';
                 ?></a>
             <a href="#" class="bc-remove-uploaded-image button button-primary button-large" <?php
             echo $image === false ? 'style="display: none;"' : ''; ?>>Remove image</a>
-            <input type="hidden" name="bc_header[image]" value="<?php echo $image !== false ? $bc_header['image'] : 0; ?>">
-        </td>
-        <td>
-            <label for="bci-header-repeat">Image repeat:</label>
-            <input type="checkbox" id="bci-header-repeat"
-                   name="bc_header[repeat]" <?php echo $bc_header['repeat'] === 'repeat' ? 'checked' : ''; ?> value="repeat">
+            <input type="hidden" name="bc_header[image]"
+                   value="<?php echo $image !== false ? $bc_header['image'] : 0; ?>">
         </td>
         <td>
             <label for="bci-header-opacity">Image opacity (%):</label>
             <input type="number" id="bci-header-opacity" name="bc_header[opacity]" min="0" max="100"
                    placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>">
+        </td>
+        <td>
+            <select name="bc_header[repeat]">
+                <option value="no-repeat" <?php echo $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
+                <option value="repeat" <?php echo $bc_header['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                <option value="repeat-x" <?php echo $bc_header['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                <option value="repeat-y" <?php echo $bc_header['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                <option value="no-repeat" <?php echo $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <select name="bc_header[bg_pos]">
+                <option value="0 0" <?php echo $bc_header['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="top left" <?php echo $bc_header['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                <option value="top center" <?php echo $bc_header['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                <option value="top right" <?php echo $bc_header['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                <option value="center left" <?php echo $bc_header['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                <option value="center center" <?php echo $bc_header['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                <option value="center right" <?php echo $bc_header['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                <option value="bottom left" <?php echo $bc_header['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                <option value="bottom center" <?php echo $bc_header['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                <option value="bottom right" <?php echo $bc_header['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+            </select>
+        </td>
+        <td>
+            <select name="bc_header[bg_size]" class="bc-size lbcg-select" data-bct="header">
+                <option value="auto" <?php echo $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                <option value="auto" <?php echo $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                <option value="contain" <?php echo $bc_header['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                <option value="cover" <?php echo $bc_header['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+            </select>
         </td>
     </tr>
     <tr class="white-space">&nbsp;</tr>
@@ -155,11 +188,11 @@ $special_types = array('1-9', '1-75', '1-90');
         </td>
     </tr>
     <tr>
-        <td>
+        <td rowspan="2">
             <label>Grid background color:</label>
             <input type="color" name="bc_grid[color]" value="<?php echo $bc_grid['color']; ?>">
         </td>
-        <td>
+        <td rowspan="2">
             <?php $image = wp_get_attachment_image_url($bc_grid['image']); ?>
             <a href="#" class="bc-image-upload button button-primary button-large"><?php
                 echo $image ? '<img src="' . $image . '" class="lbcg-image-uploaded"/>' : 'Upload image';
@@ -169,14 +202,42 @@ $special_types = array('1-9', '1-75', '1-90');
             <input type="hidden" name="bc_grid[image]" value="<?php echo $image !== false ? $bc_grid['image'] : 0; ?>">
         </td>
         <td>
-            <label for="bci-grid-repeat">Image repeat:</label>
-            <input type="checkbox" id="bci-grid-repeat"
-                   name="bc_grid[repeat]" <?php echo $bc_grid['repeat'] === 'repeat' ? 'checked' : ''; ?> value="repeat">
-        </td>
-        <td>
             <label for="bci-grid-opacity">Image opacity (%):</label>
             <input type="number" id="bci-grid-opacity" name="bc_grid[opacity]" min="0" max="100"
                    placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>">
+        </td>
+        <td>
+            <select name="bc_grid[repeat]">
+                <option value="no-repeat" <?php echo $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
+                <option value="repeat" <?php echo $bc_grid['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                <option value="repeat-x" <?php echo $bc_grid['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                <option value="repeat-y" <?php echo $bc_grid['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                <option value="no-repeat" <?php echo $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <select name="bc_grid[bg_pos]">
+                <option value="0 0" <?php echo $bc_grid['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="top left" <?php echo $bc_grid['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                <option value="top center" <?php echo $bc_grid['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                <option value="top right" <?php echo $bc_grid['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                <option value="center left" <?php echo $bc_grid['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                <option value="center center" <?php echo $bc_grid['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                <option value="center right" <?php echo $bc_grid['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                <option value="bottom left" <?php echo $bc_grid['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                <option value="bottom center" <?php echo $bc_grid['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                <option value="bottom right" <?php echo $bc_grid['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+            </select>
+        </td>
+        <td>
+            <select name="bc_grid[bg_size]">
+                <option value="auto" <?php echo $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                <option value="auto" <?php echo $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                <option value="contain" <?php echo $bc_grid['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                <option value="cover" <?php echo $bc_grid['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+            </select>
         </td>
     </tr>
     <tr class="white-space">&nbsp;</tr>
@@ -186,11 +247,11 @@ $special_types = array('1-9', '1-75', '1-90');
         </td>
     </tr>
     <tr>
-        <td>
+        <td rowspan="2">
             <label>Card background color:</label>
             <input type="color" name="bc_card[color]" value="<?php echo $bc_card['color']; ?>">
         </td>
-        <td>
+        <td rowspan="2">
             <?php $image = wp_get_attachment_image_url($bc_card['image']); ?>
             <a href="#" class="bc-image-upload button button-primary button-large"><?php
                 echo $image ? '<img src="' . $image . '" class="lbcg-image-uploaded"/>' : 'Upload image';
@@ -200,14 +261,42 @@ $special_types = array('1-9', '1-75', '1-90');
             <input type="hidden" name="bc_card[image]" value="<?php echo $image !== false ? $bc_card['image'] : 0; ?>">
         </td>
         <td>
-            <label for="bci-card-repeat">Image repeat:</label>
-            <input type="checkbox" id="bci-card-repeat"
-                   name="bc_card[repeat]" <?php echo $bc_card['repeat'] === 'repeat' ? 'checked' : ''; ?> value="repeat">
-        </td>
-        <td>
             <label for="bci-card-opacity">Image opacity (%):</label>
             <input type="number" id="bci-card-opacity" name="bc_card[opacity]" min="0" max="100"
                    placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>">
+        </td>
+        <td>
+            <select name="bc_card[repeat]">
+                <option value="no-repeat" <?php echo $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
+                <option value="repeat" <?php echo $bc_card['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                <option value="repeat-x" <?php echo $bc_card['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                <option value="repeat-y" <?php echo $bc_card['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                <option value="no-repeat" <?php echo $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <select name="bc_card[bg_pos]">
+                <option value="0 0" <?php echo $bc_card['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="top left" <?php echo $bc_card['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                <option value="top center" <?php echo $bc_card['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                <option value="top right" <?php echo $bc_card['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                <option value="center left" <?php echo $bc_card['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                <option value="center center" <?php echo $bc_card['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                <option value="center right" <?php echo $bc_card['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                <option value="bottom left" <?php echo $bc_card['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                <option value="bottom center" <?php echo $bc_card['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                <option value="bottom right" <?php echo $bc_card['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+            </select>
+        </td>
+        <td>
+            <select name="bc_card[bg_size]">
+                <option value="auto" <?php echo $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                <option value="auto" <?php echo $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                <option value="contain" <?php echo $bc_card['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                <option value="cover" <?php echo $bc_card['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+            </select>
         </td>
     </tr>
     <tr class="white-space">&nbsp;</tr>
