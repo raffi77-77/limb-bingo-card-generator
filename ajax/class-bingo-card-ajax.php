@@ -96,7 +96,7 @@ class BingoCardAjax
             'name' => $_GET['bc'],
             'post_type' => 'bingo_card',
             'posts_per_page' => 1,
-            'post_status' => 'draft',
+            'post_status' => 'publish'//'draft',
         ]);
         if (empty($bc_posts[0]->ID)) {
             print_r(json_encode([
