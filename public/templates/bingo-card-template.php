@@ -11,25 +11,26 @@ get_header();
 
 global $post;
 $data = get_post_meta($post->ID);
-// Type, size, title
-$bingo_card_type = $data['bingo_card_type'][0];
-$bingo_grid_size = $data['bingo_grid_size'][0];
-$bingo_card_title = $data['bingo_card_title'][0];
-// Special title
-if ($bingo_card_type === '1-75') {
-    $bingo_card_spec_title = explode('|', $data['bingo_card_spec_title'][0]);
-}
-// Bingo card words
-$bingo_card_words = explode("\r\n", $data['bingo_card_content'][0]);
-// Header style
-$bc_header = unserialize($data['bc_header'][0]);
-// Grid style
-$bc_grid = unserialize($data['bc_grid'][0]);
-// Card style
-$bc_card = unserialize($data['bc_card'][0]);
-// If include free space
-$bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
-?>
+if (!empty($data['bingo_card_own_content'][0])) {
+    // Type, size, title
+    $bingo_card_type = $data['bingo_card_type'][0];
+    $bingo_grid_size = $data['bingo_grid_size'][0];
+    $bingo_card_title = $data['bingo_card_title'][0];
+    // Special title
+    if ($bingo_card_type === '1-75') {
+        $bingo_card_spec_title = explode('|', $data['bingo_card_spec_title'][0]);
+    }
+    // Bingo card words
+    $bingo_card_words = explode("\r\n", $data['bingo_card_own_content'][0]);
+    // Header style
+    $bc_header = unserialize($data['bc_header'][0]);
+    // Grid style
+    $bc_grid = unserialize($data['bc_grid'][0]);
+    // Card style
+    $bc_card = unserialize($data['bc_card'][0]);
+    // If include free space
+    $bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
+    ?>
     <div class="custom-container" style="width: 900px; margin: 0 auto;">
         <main class="lbcg-parent">
             <div class="lbcg-card-wrap" style="min-width: 350px;">
@@ -66,5 +67,10 @@ $bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
             </div>
         </main>
     </div>
-<?php
+    <?php
+} else {
+    ?>
+    <p>Invalid card.</p>
+    <?php
+}
 get_footer();

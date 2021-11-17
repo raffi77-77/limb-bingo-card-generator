@@ -24,8 +24,8 @@ if (!empty($data['bc_header'][0])) {
         'image' => '',
         'opacity' => 100,
         'repeat' => 'no-repeat',
-        'bg_pos' => '0 0',
-        'bg_size' => 'auto'
+        'bg_pos' => 'center center',
+        'bg_size' => 'cover'
     ];
 }
 if (!empty($data['bc_grid'][0])) {
@@ -36,8 +36,8 @@ if (!empty($data['bc_grid'][0])) {
         'image' => '',
         'opacity' => 100,
         'repeat' => 'no-repeat',
-        'bg_pos' => '0 0',
-        'bg_size' => 'auto'
+        'bg_pos' => 'center center',
+        'bg_size' => 'cover'
     ];
 }
 if (!empty($data['bc_card'][0])) {
@@ -48,13 +48,14 @@ if (!empty($data['bc_card'][0])) {
         'image' => '',
         'opacity' => 100,
         'repeat' => 'no-repeat',
-        'bg_pos' => '0 0',
-        'bg_size' => 'auto'
+        'bg_pos' => 'center center',
+        'bg_size' => 'cover'
     ];
 }
 
 $special_types = array('1-9', '1-75', '1-90');
 ?>
+<input type="hidden" name="lbcg_action" value="save_bc_post">
 <table>
     <tbody>
     <tr>
@@ -160,24 +161,24 @@ $special_types = array('1-9', '1-75', '1-90');
     <tr>
         <td>
             <select name="bc_header[bg_pos]">
-                <option value="0 0" <?php echo $bc_header['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
-                <option value="top left" <?php echo $bc_header['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
-                <option value="top center" <?php echo $bc_header['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
-                <option value="top right" <?php echo $bc_header['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
-                <option value="center left" <?php echo $bc_header['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
-                <option value="center center" <?php echo $bc_header['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
-                <option value="center right" <?php echo $bc_header['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
-                <option value="bottom left" <?php echo $bc_header['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
-                <option value="bottom center" <?php echo $bc_header['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
-                <option value="bottom right" <?php echo $bc_header['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+                <option value="0 0" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="top left" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                <option value="top center" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                <option value="top right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                <option value="center left" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                <option value="center center" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                <option value="center right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                <option value="bottom left" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                <option value="bottom center" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                <option value="bottom right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
             </select>
         </td>
         <td>
             <select name="bc_header[bg_size]" class="bc-size lbcg-select" data-bct="header">
-                <option value="auto" <?php echo $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
-                <option value="auto" <?php echo $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
-                <option value="contain" <?php echo $bc_header['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
-                <option value="cover" <?php echo $bc_header['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+                <option value="auto" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                <option value="auto" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                <option value="contain" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                <option value="cover" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
             </select>
         </td>
     </tr>
@@ -219,24 +220,24 @@ $special_types = array('1-9', '1-75', '1-90');
     <tr>
         <td>
             <select name="bc_grid[bg_pos]">
-                <option value="0 0" <?php echo $bc_grid['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
-                <option value="top left" <?php echo $bc_grid['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
-                <option value="top center" <?php echo $bc_grid['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
-                <option value="top right" <?php echo $bc_grid['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
-                <option value="center left" <?php echo $bc_grid['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
-                <option value="center center" <?php echo $bc_grid['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
-                <option value="center right" <?php echo $bc_grid['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
-                <option value="bottom left" <?php echo $bc_grid['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
-                <option value="bottom center" <?php echo $bc_grid['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
-                <option value="bottom right" <?php echo $bc_grid['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+                <option value="0 0" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="top left" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                <option value="top center" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                <option value="top right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                <option value="center left" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                <option value="center center" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                <option value="center right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                <option value="bottom left" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                <option value="bottom center" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                <option value="bottom right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
             </select>
         </td>
         <td>
             <select name="bc_grid[bg_size]">
-                <option value="auto" <?php echo $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
-                <option value="auto" <?php echo $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
-                <option value="contain" <?php echo $bc_grid['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
-                <option value="cover" <?php echo $bc_grid['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+                <option value="auto" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                <option value="auto" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                <option value="contain" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                <option value="cover" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
             </select>
         </td>
     </tr>
@@ -278,24 +279,24 @@ $special_types = array('1-9', '1-75', '1-90');
     <tr>
         <td>
             <select name="bc_card[bg_pos]">
-                <option value="0 0" <?php echo $bc_card['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
-                <option value="top left" <?php echo $bc_card['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
-                <option value="top center" <?php echo $bc_card['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
-                <option value="top right" <?php echo $bc_card['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
-                <option value="center left" <?php echo $bc_card['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
-                <option value="center center" <?php echo $bc_card['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
-                <option value="center right" <?php echo $bc_card['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
-                <option value="bottom left" <?php echo $bc_card['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
-                <option value="bottom center" <?php echo $bc_card['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
-                <option value="bottom right" <?php echo $bc_card['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
+                <option value="0 0" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="top left" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
+                <option value="top center" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
+                <option value="top right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
+                <option value="center left" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'center left' ? 'selected' : ''; ?>>Center Left</option>
+                <option value="center center" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'center center' ? 'selected' : ''; ?>>Center Center</option>
+                <option value="center right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'center right' ? 'selected' : ''; ?>>Center Right</option>
+                <option value="bottom left" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'bottom left' ? 'selected' : ''; ?>>Bottom Left</option>
+                <option value="bottom center" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'bottom center' ? 'selected' : ''; ?>>Bottom Center</option>
+                <option value="bottom right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
             </select>
         </td>
         <td>
             <select name="bc_card[bg_size]">
-                <option value="auto" <?php echo $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
-                <option value="auto" <?php echo $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
-                <option value="contain" <?php echo $bc_card['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
-                <option value="cover" <?php echo $bc_card['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
+                <option value="auto" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
+                <option value="auto" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
+                <option value="contain" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
+                <option value="cover" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
             </select>
         </td>
     </tr>

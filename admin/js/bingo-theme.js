@@ -33,18 +33,21 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('bc-size').addEventListener('change', function (event) {
         event.preventDefault();
         const value = event.target.value,
-            freeSquareEl = document.getElementById('free-square');
+            freeSquareEl = document.getElementById('free-square'),
+            bingoCardType = document.getElementById('bc-type').value;
         if (value !== null) {
-            document.getElementsByName('bingo_grid_size').value = value;
+            document.getElementsByName('bingo_grid_size')[0].value = value;
             const countEl = document.getElementById('content-items-count');
             if (value === '3x3') {
                 countEl.innerHTML = 36;
-                freeSquareEl.style.display = '';
             } else if (value === '4x4') {
                 countEl.innerHTML = 64;
-                freeSquareEl.style.display = 'none';
             } else {
                 countEl.innerHTML = 100;
+            }
+            if (value === '4x4' || bingoCardType === '1-75' || bingoCardType === '1-90') {
+                freeSquareEl.style.display = 'none';
+            } else {
                 freeSquareEl.style.display = '';
             }
             checkWordsCount();
@@ -62,8 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             gridSizeInput = document.getElementsByName('bingo_grid_size')[0],
             specTitleElements = document.querySelectorAll('td.bc-title-1-75'),
             contentElements = document.querySelectorAll('td.bc-content'),
-            contentItemsCount = document.getElementById('content-items-count'),
-            freeSquareEl = document.getElementById('free-square');
+            contentItemsCount = document.getElementById('content-items-count');
         switch (thisValue) {
             case '1-9':
                 // Only 3x3
@@ -76,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 contentElements.forEach(function (el) {
                     el.style.display = '';
                 });
-                freeSquareEl.style.display = '';
                 contentItemsCount.innerHTML = 36;
                 break;
             case '1-75':
@@ -90,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 contentElements.forEach(function (el) {
                     el.style.display = 'none';
                 });
-                freeSquareEl.style.display = 'none';
                 document.getElementById('bc-free-square').checked = true;
                 break;
             case '1-90':
@@ -104,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 contentElements.forEach(function (el) {
                     el.style.display = 'none';
                 });
-                freeSquareEl.style.display = 'none';
                 break;
             case '1-25':
             case '1-80':
@@ -118,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 contentElements.forEach(function (el) {
                     el.style.display = '';
                 });
-                freeSquareEl.style.display = '';
                 break;
         }
         gridSize.dispatchEvent(new Event('change'));

@@ -89,6 +89,7 @@ if (!empty($bc_posts[0]->ID)) {
                 <div class="lbcg-content-left">
                     <form id="lbcg-bc-invitation" action="<?php echo admin_url('admin-ajax.php'); ?>" method="post">
                         <input type="hidden" name="action" value="lbcg_bc_invitation">
+                        <input type="hidden" name="bingo_card_uid" value="<?php echo $_GET['bc']; ?>">
                         <div class="lbcg-content-form">
                             <div class="lbcg-input-wrap">
                                 <label for="cu-email">Your email:</label>
@@ -142,6 +143,10 @@ if (!empty($bc_posts[0]->ID)) {
             </section>
         </main>
     </div>
+    <?php
+} else {
+    ?>
+    <p>Invalid request</p>
     <?php
 }
 get_footer();

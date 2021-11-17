@@ -132,7 +132,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 // On success
                 const resData = JSON.parse(request.responseText);
                 if (resData.success === true) {
-                    location.replace(resData.redirectTo);
+                    if (resData.failedInvites.length > 0) {
+                        alert('Invitation finished. Failed to invite them: ' + resData.failedInvites.join(', ') + '.');
+                    } else {
+                        alert('Invitation finished successfully.');
+                    }
                 } else {
                     alert(resData.errors.join("\n"));
                 }

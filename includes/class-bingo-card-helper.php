@@ -287,7 +287,7 @@ class BingoCardHelper
             $errors[] = "Bingo card grid size isn't defined.";
         }
         if (($data['bingo_card_type'] !== '1-75' && $data['bingo_card_type'] !== '1-90' && empty($data['bingo_card_content'])) ||
-            ($from_meta && ($data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90' && !empty($data['bingo_card_content'][0])))) {
+            ($from_meta && ($data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90' && empty($data['bingo_card_content'][0])))) {
             $errors[] = "Bingo card words/emojis or numbers are empty.";
         }
         if ((empty($data['bc_header']) || empty($data['bc_grid']) || empty($data['bc_card'])) ||
@@ -316,7 +316,7 @@ class BingoCardHelper
         ];
         foreach ($card_data as $key => $value) {
             if (!empty($data[$key]) || ($from_meta && !empty($data[$key][0]))) {
-                $card_data[$key] = $from_meta ? $data[$key][0] : $data[$key];
+                $card_data[$key] = $from_meta ? maybe_unserialize($data[$key][0]) : $data[$key];
             }
         }
         return [
@@ -348,19 +348,15 @@ class BingoCardHelper
         // 1-75 special title
         if ($data['bingo_card_type'] === '1-75' && !empty($data['bingo_card_spec_title']) && count($data['bingo_card_spec_title']) === 5) {
             update_post_meta($post_id, 'bingo_card_spec_title', implode('|', $data['bingo_card_spec_title']));
-        } else {
-            delete_post_meta($post_id, 'bingo_card_spec_title');
         }
         // Words/emojis or numbers
         if (!in_array($data['bingo_card_type'], $special_cards) && !empty($data['bingo_card_content'])) {
             update_post_meta($post_id, 'bingo_card_content', trim(wp_strip_all_tags($data['bingo_card_content'])));
-        } else {
-            delete_post_meta($post_id, 'bingo_card_content');
         }
         // Header color, image with attributes
         if (!empty($data['bc_header'])) {
             if (!empty($_FILES['bc_header']['size']['image'])) {
-                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_header'], $post_id);
+                $attach_id = self::upload_attachment($_FILES['bc_header'], $post_id);
                 $data['bc_header']['image'] = $attach_id;
             } else if (!empty($theme_meta_data['bc_header'][0])) {
                 $bc_header = unserialize($theme_meta_data['bc_header'][0]);
@@ -379,7 +375,7 @@ class BingoCardHelper
         // Grid color, image with attributes
         if (!empty($data['bc_grid'])) {
             if (!empty($_FILES['bc_grid']['size']['image'])) {
-                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_grid'], $post_id);
+                $attach_id = self::upload_attachment($_FILES['bc_grid'], $post_id);
                 $data['bc_grid']['image'] = $attach_id;
             } else if (!empty($theme_meta_data['bc_grid'][0])) {
                 $bc_grid = unserialize($theme_meta_data['bc_grid'][0]);
@@ -398,7 +394,7 @@ class BingoCardHelper
         // Card color, image with attributes
         if (!empty($data['bc_card'])) {
             if (!empty($_FILES['bc_card']['size']['image'])) {
-                $attach_id = BingoCardHelper::upload_attachment($_FILES['bc_card'], $post_id);
+                $attach_id = self::upload_attachment($_FILES['bc_card'], $post_id);
                 $data['bc_card']['image'] = $attach_id;
             } else if (!empty($theme_meta_data['bc_card'][0])) {
                 $bc_card = unserialize($theme_meta_data['bc_card'][0]);
@@ -446,63 +442,55 @@ class BingoCardHelper
     }
 
     /**
-     *
+     * Invite emails
      *
      * @param $bingo_card_id
      * @param $author_email
      * @param $invite_emails
      * @return array
      */
-    public static function invite_users($bingo_card_id, $author_email, $invite_emails)
+    public static function invite_emails($bingo_card_id, $author_email, $invite_emails)
     {
         $data = get_post_meta($bingo_card_id);
         // Save card content
         if ($data['bingo_card_type'][0] === '1-75') {
-            $content_words = BingoCardHelper::get_1_75_bingo_card_words(true);
+            $content_words = self::get_1_75_bingo_card_words(true);
         } else {
             $content_words = explode("\r\n", $data['bingo_card_content'][0]);
             shuffle($content_words);
         }
-        update_post_meta($bingo_card_id, 'bingo_card_content', join("\r\n", $content_words));
+        update_post_meta($bingo_card_id, 'bingo_card_own_content', join("\r\n", $content_words));
         update_post_meta($bingo_card_id, 'author_email', $author_email);
-        // Publish author bingo card
-        wp_update_post(array('ID' => $bingo_card_id, 'post_status' => 'publish'));
-        // Get author id
-        $author_id = email_exists($author_email);
-        if ($author_id === false) {
-            $author_id = wp_create_user($author_email, wp_generate_password(), $author_email);
-            if (is_wp_error($author_id)) {
-                return [
-                    'success' => false,
-                    'errors' => ["Author registration fail."],
-                    'failed_invites' => []
-                ];
-            }
-        }
+        // Send email
         $subject = "Your Bingo Card";
         // Get email content
-        $email_content = self::get_new_bingo_email_content($subject, $author_id, $author_email, $bingo_card_id);
-        wp_mail($author_email, $subject, $email_content);
+        $email_content = self::get_new_bingo_email_content($subject, $author_email, $bingo_card_id);
+        $sent = wp_mail($author_email, $subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
+        if (!$sent) {
+            return [
+                'success' => false,
+                'errors' => ["Invitation fail. Failed to email your card."],
+                'failed_invites' => []
+            ];
+        }
         // Invite
         $failed_to_invite = [];
         $invite_subject = "Get Your New Bingo Card";
         foreach ($invite_emails as $user_email) {
-            // Get user
-            $user_id = email_exists($user_email);
-            if ($user_id === false) {
-                $user_id = wp_create_user($user_email, wp_generate_password(), $user_email);
-                if (is_wp_error($user_id)) {
-                    $failed_to_invite[] = $user_email;
-                    continue;
-                }
-            }
-            $new_bc = self::create_child_bingo_card($bingo_card_id, $data);
-            if ($new_bc === false) {
+            // Create new child bingo card
+            $new_bc_id = self::create_child_bingo_card($bingo_card_id, $data, $user_email);
+            if ($new_bc_id === false) {
                 $failed_to_invite[] = $user_email;
                 continue;
             }
-            $email_content = self::get_new_bingo_email_content($invite_subject, $user_id, $user_email, $new_bc['id']);
-            wp_mail($user_email, $invite_subject, $email_content);
+            // Get email content
+            $email_content = self::get_new_bingo_email_content($invite_subject, $user_email, $new_bc_id);
+            $sent = wp_mail($user_email, $invite_subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
+            if (!$sent) {
+                // Delete not used bingo card
+                wp_delete_post($new_bc_id);
+                $failed_to_invite[] = $user_email;
+            }
         }
         return [
             'success' => true,
@@ -520,16 +508,8 @@ class BingoCardHelper
      * @param $bc_id
      * @return false|string
      */
-    public static function get_new_bingo_email_content($title, $user_id, $user_email, $bc_id)
+    public static function get_new_bingo_email_content($title, $user_email, $bc_id)
     {
-        // Get user reset password link
-        $user = new WP_User($user_id);
-        $rp_key = get_password_reset_key($user);
-        if (is_wp_error($rp_key)) {
-            $rp_link = '';
-        } else {
-            $rp_link = network_site_url("wp-login.php?action=rp&key=$rp_key&login=" . rawurlencode($user->user_login), 'login');
-        }
         // Get bingo card link
         $bc_link = get_permalink($bc_id);
         /**
@@ -537,15 +517,36 @@ class BingoCardHelper
          * Necessary variables for email template
          *
          * string   $title       Email subject
-         * int      $user_id     User id
          * string   $user_email  User email
          * int      $bc_id       Bingo card id
          * string   $bc_link     Bingo card link
-         * string   $rp_link     Reset password link
          */
         ob_start();
-        include __DIR__ . 'templates/email-new-bingo-card-template.php';
-        return ob_get_clean();
+        include 'templates/email-new-bingo-card-template.php';
+        $content = ob_get_clean();
+        return $content;
+    }
+
+    /**
+     * Get user password reset link
+     *
+     * @param $user_id
+     * @return string
+     */
+    public static function get_password_reset_link($user_id)
+    {
+        try {
+            $user = get_user_by('id', $user_id);
+            if ($user instanceof WP_User) {
+                $rp_key = get_password_reset_key($user);
+                if (!is_wp_error($rp_key)) {
+                    return network_site_url("wp-login.php?action=rp&key=$rp_key&login=" . rawurlencode($user->user_login), 'login');
+                }
+            }
+            return '';
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     /**
@@ -553,9 +554,10 @@ class BingoCardHelper
      *
      * @param $parent_bc_id
      * @param $parent_bc_meta_data
+     * @param $user_email
      * @return false|int
      */
-    public static function create_child_bingo_card($parent_bc_id, $parent_bc_meta_data)
+    public static function create_child_bingo_card($parent_bc_id, $parent_bc_meta_data, $user_email)
     {
         // Collect data
         $result = self::collect_card_data_from($parent_bc_meta_data, true);
@@ -563,13 +565,22 @@ class BingoCardHelper
             return false;
         }
         // Create bingo card post
-        $bc_result = self::insert_bingo_card($result['data']);
+        $bc_result = self::insert_bingo_card($result['data'], 'publish');
         if ($bc_result === false) {
             return false;
         }
         // Save card data
         self::save_bingo_meta_fields($bc_result['id'], $result['data']);
+        // Save card content
+        if ($result['data']['bingo_card_type'] === '1-75') {
+            $content_words = self::get_1_75_bingo_card_words(true);
+        } else {
+            $content_words = explode("\r\n", $result['data']['bingo_card_content']);
+            shuffle($content_words);
+        }
+        update_post_meta($bc_result['id'], 'bingo_card_own_content', join("\r\n", $content_words));
         update_post_meta($bc_result['id'], 'parent_bingo_card_id', $parent_bc_id);
+        update_post_meta($bc_result['id'], 'author_email', $user_email);
         return $bc_result['id'];
     }
 
@@ -579,7 +590,7 @@ class BingoCardHelper
      * @param $data
      * @return array|false
      */
-    public static function insert_bingo_card($data)
+    public static function insert_bingo_card($data, $status = 'draft')
     {
         $title = "Bingo Card {$data['bingo_card_type']} {$data['bingo_grid_size']}";
         $uniq_string = wp_generate_password(16, false);
@@ -590,7 +601,8 @@ class BingoCardHelper
             'post_author' => 0,
             'post_title' => $title,
             'post_type' => 'bingo_card',
-            'post_name' => $uniq_string
+            'post_name' => $uniq_string,
+            'post_status' => $status
         ];
         $id = wp_insert_post($args);
         if (is_wp_error($id) || $id === 0) {

@@ -48,7 +48,7 @@ class BingoCardAjax
             ]));
             die();
         }
-        // Create card
+        // Collect card data
         $result = BingoCardHelper::collect_card_data_from($_POST);
         if ($result['success'] === false) {
             print_r(json_encode([
@@ -58,7 +58,8 @@ class BingoCardAjax
             ]));
             die();
         }
-        $bc_result = BingoCardHelper::insert_bingo_card($result['data']);
+        // Create card
+        $bc_result = BingoCardHelper::insert_bingo_card($result['data'], 'publish');
         if ($bc_result === false) {
             print_r(json_encode([
                 'success' => false,
@@ -83,71 +84,84 @@ class BingoCardAjax
      */
     public function invitation()
     {
-        // Check current parent bingo card
-        if (empty($_GET['bc'])) {
+        try {
+            // Check current parent bingo card
+            if (empty($_POST['bingo_card_uid'])) {
+                print_r(json_encode([
+                    'success' => false,
+                    'errors' => ["Invalid request."],
+                    'failedInvites' => [],
+                    'redirectTo' => ''
+                ]));
+                die();
+            }
+            $bc_posts = get_posts([
+                'name' => $_POST['bingo_card_uid'],
+                'post_type' => 'bingo_card',
+                'posts_per_page' => 1,
+                'post_status' => 'publish'//'draft',
+            ]);
+            if (empty($bc_posts[0]->ID)) {
+                print_r(json_encode([
+                    'success' => false,
+                    'errors' => ["Invalid request."],
+                    'failedInvites' => [],
+                    'redirectTo' => ''
+                ]));
+                die();
+            }
+            $bingo_card = $bc_posts[0];
+            // Get emails
+            $author_email = trim($_POST['author_email']);
+            $invite_emails = explode("\r\n", $_POST['invite_emails']);
+            $invite_emails = array_map('trim', $invite_emails);
+            $invite_emails = array_unique($invite_emails);
+            // Remove author email from invite emails list
+            if ($key = array_search($author_email, $invite_emails) !== false) {
+                unset($invite_emails[$key]);
+            }
+            // Check email validations
+            if (!BingoCardHelper::is_valid_emails($author_email)) {
+                $error_messages[] = "Your email is not valid. Please enter correct email.";
+            }
+            if (!BingoCardHelper::is_valid_emails($invite_emails)) {
+                $error_messages[] = "Please check invitation emails validation and try again.";
+            }
+            if (!empty($error_messages)) {
+                print_r(json_encode([
+                    'success' => false,
+                    'errors' => $error_messages,
+                    'failedInvites' => [],
+                    'redirectTo' => ''
+                ]));
+                die();
+            }
+            // Create bingo cards and invite
+            $result = BingoCardHelper::invite_emails($bingo_card->ID, $author_email, $invite_emails);
+            if ($result['success'] === false) {
+                print_r(json_encode([
+                    'success' => false,
+                    'errors' => $result['errors'],
+                    'failedInvites' => $result['failed_invites'],
+                    'redirectTo' => get_permalink($bingo_card->ID) . 'all'
+                ]));
+                die();
+            }
             print_r(json_encode([
-                'success' => false,
-                'errors' => ["Invalid request."],
-                'redirectTo' => ''
-            ]));
-            die();
-        }
-        $bc_posts = get_posts([
-            'name' => $_GET['bc'],
-            'post_type' => 'bingo_card',
-            'posts_per_page' => 1,
-            'post_status' => 'publish'//'draft',
-        ]);
-        if (empty($bc_posts[0]->ID)) {
-            print_r(json_encode([
-                'success' => false,
-                'errors' => ["Invalid request."],
-                'redirectTo' => ''
-            ]));
-            die();
-        }
-        $bingo_card = $bc_posts[0];
-        // Get emails
-        $author_email = trim($_POST['author_email']);
-        $invite_emails = explode("\r\n", $_POST['invite_emails']);
-        $invite_emails = array_map('trim', $invite_emails);
-        $invite_emails = array_unique($invite_emails);
-        // Remove author email from invite emails list
-        if ($key = array_search($author_email, $invite_emails) !== false) {
-            unset($invite_emails[$key]);
-        }
-        // Check email validations
-        if (!BingoCardHelper::is_valid_emails($author_email)) {
-            $error_messages[] = "Your email is not valid. Please enter correct email.";
-        }
-        if (!BingoCardHelper::is_valid_emails($invite_emails)) {
-            $error_messages[] = "Please check invitation emails validation and try again.";
-        }
-        if (!empty($error_messages)) {
-            print_r(json_encode([
-                'success' => false,
-                'errors' => $error_messages,
-                'redirectTo' => ''
-            ]));
-            die();
-        }
-        // Create bingo cards
-        $result = BingoCardHelper::invite_users($bingo_card->ID, $author_email, $invite_emails);
-        if ($result['success'] === false) {
-            print_r(json_encode([
-                'success' => false,
-                'errors' => $result['errors'],
-                'failed_invites' => $result['failed_invites'],
+                'success' => true,
+                'errors' => [],
+                'failedInvites' => $result['failed_invites'],
                 'redirectTo' => get_permalink($bingo_card->ID) . 'all'
             ]));
             die();
+        } catch (\Exception $e) {
+            print_r(json_encode([
+                'success' => false,
+                'errors' => ["Something went wrong."],
+                'failedInvites' => [],
+                'redirectTo' => ''
+            ]));
+            die();
         }
-        print_r(json_encode([
-            'success' => true,
-            'errors' => [],
-            'failed_invites' => $result['failed_invites'],
-            'redirectTo' => get_permalink($bingo_card->ID) . 'all'
-        ]));
-        die();
     }
 }

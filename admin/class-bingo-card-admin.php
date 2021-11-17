@@ -28,7 +28,7 @@ class BingoCardAdmin
     public function register_dependencies()
     {
         add_action('add_meta_boxes', array($this, 'add_custom_meta_boxes'));
-        add_action('save_post', array($this, 'save_custom_fields'));
+        add_action('save_post', array($this, 'save_custom_fields'), 10, 3);
         add_action('post_updated_messages', array($this, 'show_editor_message'));
         add_action('admin_print_scripts-post-new.php', array($this, 'enqueue_admin_script_and_styles'), 11);
         add_action('admin_print_scripts-post.php', array($this, 'enqueue_admin_script_and_styles'), 11);
@@ -72,12 +72,13 @@ class BingoCardAdmin
     /**
      * Save custom fields
      *
-     * @param $post_id
+     * @param int $post_id
+     * @param WP_Post $post
+     * @param bool $update
      */
-    public function save_custom_fields($post_id)
+    public function save_custom_fields($post_id, $post, $update)
     {
-        global $post_type;
-        if ($post_type === 'bingo_theme' || $post_type === 'bingo_card') {
+        if ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card') {
             $this->save_bingo_custom_fields($post_id);
         }
     }
@@ -89,7 +90,9 @@ class BingoCardAdmin
      */
     private function save_bingo_custom_fields($post_id)
     {
-        BingoCardHelper::save_bingo_meta_fields($post_id, $_POST);
+        if (!empty($_POST['lbcg_action']) && $_POST['lbcg_action'] === 'save_bc_post') {
+            BingoCardHelper::save_bingo_meta_fields($post_id, $_POST);
+        }
     }
 
     /**
