@@ -44,13 +44,6 @@ class BingoCardHelper
      */
     public static $free_space_word = '&#9733;';
 
-    public static $card_default_params = [
-        'bingo_card_type' => '1-9',
-        'bingo_grid_size' => '3x3',
-        'bingo_card_title' => 'Bingo card',
-        'bingo_card_spec_title' => ['B', 'I', 'N', 'G', 'O']
-    ];
-
     /**
      * Register custom post types and hooks
      */
@@ -612,6 +605,37 @@ class BingoCardHelper
             'id' => $id,
             'uniq_id' => $uniq_string
         ];
+    }
+
+    /**
+     * Generate all contents
+     *
+     * @param int $post_id
+     * @param int $count
+     * @return array
+     */
+    public static function generate_all_content_info($post_id, $count)
+    {
+        $data = get_post_meta($post_id);
+        if (!empty($data['all_content'][0])) {
+            return explode('|', $data['all_content'][0]);
+        }
+        $all = [];
+        if ($data['bingo_card_type'][0] === '1-75') {
+            for ($i = 0; $i < $count; $i++) {
+                $content_items = BingoCardHelper::get_1_75_bingo_card_words(true);
+                $all[] = join(';', $content_items);
+            }
+        } else {
+            $content_items = explode("\r\n", $data['bingo_card_content'][0]);
+            $indexes = array_keys($content_items);
+            for ($i = 0; $i < $count; $i++) {
+                shuffle($indexes);
+                $all[] = join(';', $indexes);
+            }
+        }
+        update_post_meta($post_id, 'all_content', join('|', $all));
+        return $all;
     }
 
     /**
