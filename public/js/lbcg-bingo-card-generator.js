@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const loadingElement = document.getElementById('lbcg-loading');
     /**
      * Draw new grid
      */
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         let fontSize = 0;
-        while (spans[maxLengthIndex].offsetHeight < spans[maxLengthIndex].parentNode.offsetHeight && fontSize < spans[maxLengthIndex].offsetHeight) {
+        while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && fontSize < spans[maxLengthIndex].offsetHeight) {
             fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size');
             fontSize = parseFloat(fontSize.split('px')[0]);
             document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize + 0.5) + 'px');
@@ -83,11 +84,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function checkGridFontSize() {
+        /*if (loadingElement.style.display !== 'none') {
+            return;
+        }
+        loadingElement.style.display = '';*/
         const spans = document.getElementsByClassName('lbcg-card-text');
         const result = checkSmallWordInGrid(spans);
         if (result === true) {
             checkWrapWordInGrid(spans);
         }
+        // loadingElement.style.display = 'none';
     }
     window.onload = checkGridFontSize;
 
