@@ -95,8 +95,7 @@ $special_types = array('1-9', '1-75', '1-90');
             <label for="bc-title">Bingo card title:</label>
         </td>
         <td>
-            <textarea id="bc-title"
-                      name="bingo_card_title"><?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?></textarea>
+            <input type="text" id="bc-title" name="bingo_card_title" value="<?php echo !empty($bingo_card_title) ? $bingo_card_title : 'B I N G O'; ?>">
         </td>
         <td class="bc-content" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;"' : ''; ?>>
             <label for="bc-content">Enter words/emojis or numbers:</label>

@@ -40,7 +40,9 @@ if (!empty($bc_posts[0]->ID)) {
     }
     // Bingo card words
     if ($bingo_card_type === '1-75') {
-        $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_words();
+        $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_numbers();
+    } elseif ($bingo_card_type === '1-90') {
+        $bingo_card_words = BingoCardHelper::get_1_90_bingo_card_numbers();
     } else {
         // Get bingo card words
         if (!empty($data['bingo_card_content'][0])) {
@@ -121,11 +123,24 @@ if (!empty($bc_posts[0]->ID)) {
                                 <?php endif; ?>
                             </div>
                             <div class="lbcg-card-body">
-                                <div class="lbcg-card-body-grid lbcg-grid-<?php echo $bingo_grid_size[0]; ?>">
-                                    <?php
-                                    $grid_sq_count = $bingo_grid_size[0] ** 2;
-                                    for ($i = 1; $i <= $grid_sq_count; $i++): ?>
-                                        <div class="lbcg-card-col">
+                                <?php if ($bingo_card_type === '1-90') {
+                                    foreach ($bingo_card_words as $single_card_words) { ?>
+                                        <div class="lbcg-card-body-grid lbcg-grid-9">
+                                            <?php
+                                            foreach ($single_card_words as $number) { ?>
+                                                <div class="lbcg-card-col">
+                                                    <span class="lbcg-card-text"><?php echo $number; ?></span>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                        <?php
+                                    }
+                                } else { ?>
+                                    <div class="lbcg-card-body-grid lbcg-grid-<?php echo $bingo_grid_size[0]; ?>">
+                                        <?php
+                                        $grid_sq_count = $bingo_grid_size[0] ** 2;
+                                        for ($i = 1; $i <= $grid_sq_count; $i++): ?>
+                                            <div class="lbcg-card-col">
                                         <span class="lbcg-card-text"><?php
                                             if ((int)ceil($grid_sq_count / 2) === $i && $bingo_grid_free_square) {
                                                 echo BingoCardHelper::$free_space_word;
@@ -133,9 +148,10 @@ if (!empty($bc_posts[0]->ID)) {
                                                 echo $bingo_card_words[$i - 1];
                                             }
                                             ?></span>
-                                        </div>
-                                    <?php endfor; ?>
-                                </div>
+                                            </div>
+                                        <?php endfor; ?>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

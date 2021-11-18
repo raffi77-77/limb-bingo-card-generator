@@ -44,6 +44,27 @@ class BingoCardHelper
      */
     public static $free_space_word = '&#9733;';
 
+    public static $default_empty_items = [
+        [[4, 5, 2, 7],
+        [2, 7, 5, 4],
+        [2, 1, 7, 3]],
+        [[5, 1, 2, 0],
+        [3, 2, 4, 1],
+        [8, 3, 6, 0]],
+        [[8, 5, 7, 3],
+        [8, 0, 4, 1],
+        [1, 7, 2, 4]],
+        [[7, 3, 6, 0],
+        [2, 6, 4, 3],
+        [0, 1, 5, 6]],
+        [[6, 7, 4, 0],
+        [4, 3, 1, 0],
+        [4, 0, 3, 6]],
+        [[6, 1, 8, 3],
+        [5, 3, 8, 7],
+        [6, 3, 2, 0]]
+    ];
+
     /**
      * Register custom post types and hooks
      */
@@ -235,31 +256,102 @@ class BingoCardHelper
     }
 
     /**
-     * Get 1-75 bingo card random numbers
+     * Get 1-75 bingo card numbers
      *
+     * @param bool $random
      * @return array
      */
-    public static function get_1_75_bingo_card_words($random = false)
+    public static function get_1_75_bingo_card_numbers($random = false)
     {
-        $word_cols = [];
+        $num_cols = [];
         for ($i = 1; $i < 62; $i += 15) {
             $temp_numbers = range($i, $i + 14);
             if ($random === true) {
                 shuffle($temp_numbers);
             }
-            $word_cols[] = $temp_numbers;
+            $num_cols[] = $temp_numbers;
         }
-        $bingo_card_words = [];
+        $bingo_card_numbers = [];
         $i = 0;
         $j = 0;
         while ($j < 5) {
-            $bingo_card_words[] = $word_cols[$i][$j];
+            $bingo_card_numbers[] = $num_cols[$i][$j];
             ++$i;
             if (($i %= 5) === 0) {
                 ++$j;
             }
         }
-        return $bingo_card_words;
+        return $bingo_card_numbers;
+    }
+
+    /**
+     * Get 1-90 bingo card numbers
+     *
+     * @param bool $random
+     * @return array
+     */
+    public static function get_1_90_bingo_card_numbers($random = false)
+    {
+        $card_numbers = [];
+        for ($k = 0; $k < 6; $k++) {
+            $single_card_num = [];
+            $single_card_num[] = self::get_1_90_card_sub_numbers(1, 9, $random);
+            for ($i = 10; $i < 71; $i += 10) {
+                $single_card_num[] = self::get_1_90_card_sub_numbers($i, $i + 9, $random);
+            }
+            $single_card_num[] = self::get_1_90_card_sub_numbers(80, 90, $random);
+            $card_numbers[$k] = $single_card_num;
+            self::empty_each_line_four_items($card_numbers[$k], $k, $random);
+        }
+        $bingo_card_numbers = [];
+        for ($k = 0; $k < 6; $k++) {
+            for ($i = 0; $i < 3; $i++) {
+                for ($j = 0; $j < 9; $j++) {
+                    $bingo_card_numbers[$k][] = $card_numbers[$k][$j][$i];
+                }
+            }
+        }
+        return $bingo_card_numbers;
+    }
+
+    /**
+     * Get card col numbers
+     *
+     * @param int $start
+     * @param int $end
+     * @param bool $random
+     * @return array
+     */
+    public static function get_1_90_card_sub_numbers($start, $end, $random = false)
+    {
+        $temp_num = range($start, $end);
+        if ($random === true) {
+            shuffle($temp_num);
+        }
+        return array_slice($temp_num, 0, 3);
+    }
+
+    /**
+     * Set empty items in card
+     *
+     * @param array $card_numbers
+     * @param int $index
+     * @param bool $random
+     */
+    public static function empty_each_line_four_items(&$card_numbers, $index, $random = false)
+    {
+        $temp_indexes = range(0, 8);
+        for ($i = 0; $i < 3; $i++) {
+            if ($random === true) {
+                shuffle($temp_indexes);
+                $tmp = array_slice($temp_indexes, 0, 4);
+            } else {
+                $tmp = self::$default_empty_items[$index][$i];
+            }
+            foreach ($tmp as $j) {
+                $card_numbers[$j][$i] = '';
+            }
+        }
     }
 
     /**
@@ -279,13 +371,15 @@ class BingoCardHelper
         if (empty($data['bingo_grid_size']) || ($from_meta && empty($data['bingo_grid_size'][0]))) {
             $errors[] = "Bingo card grid size isn't defined.";
         }
-        if (($data['bingo_card_type'] !== '1-75' && $data['bingo_card_type'] !== '1-90' && empty($data['bingo_card_content'])) ||
-            ($from_meta && ($data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90' && empty($data['bingo_card_content'][0])))) {
-            $errors[] = "Bingo card words/emojis or numbers are empty.";
+        if (($data['bingo_card_type'] !== '1-75' && $data['bingo_card_type'] !== '1-90' && empty($data['bingo_card_content']))) {
+            if ($from_meta && ($data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90' && empty($data['bingo_card_content'][0]))) {
+                $errors[] = "Bingo card words/emojis or numbers are empty.";
+            }
         }
-        if ((empty($data['bc_header']) || empty($data['bc_grid']) || empty($data['bc_card'])) ||
-            ($from_meta && (empty($data['bc_header'][0]) || empty($data['bc_grid'][0]) || empty($data['bc_card'][0])))) {
-            $errors[] = "Bingo card styles are not defined.";
+        if ((empty($data['bc_header']) || empty($data['bc_grid']) || empty($data['bc_card']))) {
+            if ($from_meta && (empty($data['bc_header'][0]) || empty($data['bc_grid'][0]) || empty($data['bc_card'][0]))) {
+                $errors[] = "Bingo card styles are not defined.";
+            }
         }
         if (!empty($errors)) {
             return [
@@ -351,10 +445,10 @@ class BingoCardHelper
             if (!empty($_FILES['bc_header']['size']['image'])) {
                 $attach_id = self::upload_attachment($_FILES['bc_header'], $post_id);
                 $data['bc_header']['image'] = $attach_id;
-            } else if (!empty($theme_meta_data['bc_header'][0])) {
+            } elseif (!empty($theme_meta_data['bc_header'][0])) {
                 $bc_header = unserialize($theme_meta_data['bc_header'][0]);
                 $data['bc_header']['image'] = $bc_header['image'];
-            } else if (empty($data['bc_header']['image'])) {
+            } elseif (empty($data['bc_header']['image'])) {
                 $data['bc_header']['image'] = '0';
             }
             if (empty($data['bc_header']['repeat'])) {
@@ -370,10 +464,10 @@ class BingoCardHelper
             if (!empty($_FILES['bc_grid']['size']['image'])) {
                 $attach_id = self::upload_attachment($_FILES['bc_grid'], $post_id);
                 $data['bc_grid']['image'] = $attach_id;
-            } else if (!empty($theme_meta_data['bc_grid'][0])) {
+            } elseif (!empty($theme_meta_data['bc_grid'][0])) {
                 $bc_grid = unserialize($theme_meta_data['bc_grid'][0]);
                 $data['bc_grid']['image'] = $bc_grid['image'];
-            } else if (empty($data['bc_header']['image'])) {
+            } elseif (empty($data['bc_header']['image'])) {
                 $data['bc_grid']['image'] = '0';
             }
             if (empty($data['bc_grid']['repeat'])) {
@@ -389,10 +483,10 @@ class BingoCardHelper
             if (!empty($_FILES['bc_card']['size']['image'])) {
                 $attach_id = self::upload_attachment($_FILES['bc_card'], $post_id);
                 $data['bc_card']['image'] = $attach_id;
-            } else if (!empty($theme_meta_data['bc_card'][0])) {
+            } elseif (!empty($theme_meta_data['bc_card'][0])) {
                 $bc_card = unserialize($theme_meta_data['bc_card'][0]);
                 $data['bc_card']['image'] = $bc_card['image'];
-            } else if (empty($data['bc_header']['image'])) {
+            } elseif (empty($data['bc_header']['image'])) {
                 $data['bc_card']['image'] = 0;
             }
             if (empty($data['bc_card']['repeat'])) {
@@ -447,12 +541,17 @@ class BingoCardHelper
         $data = get_post_meta($bingo_card_id);
         // Save card content
         if ($data['bingo_card_type'][0] === '1-75') {
-            $content_words = self::get_1_75_bingo_card_words(true);
+            $content_words = self::get_1_75_bingo_card_numbers(true);
+        } elseif ($data['bingo_card_type'][0] === '1-90') {
+            $content_words = self::get_1_90_bingo_card_numbers(true);
+            foreach ($content_words as $key => $value) {
+                $content_words[$key] = implode(';', $value);
+            }
         } else {
             $content_words = explode("\r\n", $data['bingo_card_content'][0]);
             shuffle($content_words);
         }
-        update_post_meta($bingo_card_id, 'bingo_card_own_content', join("\r\n", $content_words));
+        update_post_meta($bingo_card_id, 'bingo_card_own_content', implode($data['bingo_card_type'][0] === '1-90' ? ':' : "\r\n", $content_words));
         update_post_meta($bingo_card_id, 'author_email', $author_email);
         // Send email
         $subject = "Your Bingo Card";
@@ -566,12 +665,17 @@ class BingoCardHelper
         self::save_bingo_meta_fields($bc_result['id'], $result['data']);
         // Save card content
         if ($result['data']['bingo_card_type'] === '1-75') {
-            $content_words = self::get_1_75_bingo_card_words(true);
+            $content_words = self::get_1_75_bingo_card_numbers(true);
+        } elseif ($result['data']['bingo_card_type'] === '1-90') {
+            $content_words = self::get_1_90_bingo_card_numbers(true);
+            foreach ($content_words as $key => $value) {
+                $content_words[$key] = implode(';', $value);
+            }
         } else {
             $content_words = explode("\r\n", $result['data']['bingo_card_content']);
             shuffle($content_words);
         }
-        update_post_meta($bc_result['id'], 'bingo_card_own_content', join("\r\n", $content_words));
+        update_post_meta($bc_result['id'], 'bingo_card_own_content', implode($result['data']['bingo_card_type'] === '1-90' ? ':' : "\r\n", $content_words));
         update_post_meta($bc_result['id'], 'parent_bingo_card_id', $parent_bc_id);
         update_post_meta($bc_result['id'], 'author_email', $user_email);
         return $bc_result['id'];
@@ -614,7 +718,7 @@ class BingoCardHelper
      * @param int $count
      * @return array
      */
-    public static function generate_all_content_info($post_id, $count)
+    public static function generate_all_content_info($post_id, $count, $wanted_count)
     {
         $data = get_post_meta($post_id);
         if (!empty($data['all_content'][0])) {
@@ -623,19 +727,28 @@ class BingoCardHelper
         $all = [];
         if ($data['bingo_card_type'][0] === '1-75') {
             for ($i = 0; $i < $count; $i++) {
-                $content_items = BingoCardHelper::get_1_75_bingo_card_words(true);
-                $all[] = join(';', $content_items);
+                $content_items = self::get_1_75_bingo_card_numbers(true);
+                $all[] = implode(';', $content_items);
+            }
+        } elseif ($data['bingo_card_type'][0] === '1-90') {
+            for ($i = 0; $i < $count; $i++) {
+                $content_items = self::get_1_90_bingo_card_numbers(true);
+                foreach ($content_items as $key => $value) {
+                    $content_items[$key] = implode(';', $value);
+                }
+                $all[] = implode(':', $content_items);
             }
         } else {
+            $items_count = $data['bingo_grid_size'][0][0] ** 2;
             $content_items = explode("\r\n", $data['bingo_card_content'][0]);
             $indexes = array_keys($content_items);
             for ($i = 0; $i < $count; $i++) {
                 shuffle($indexes);
-                $all[] = join(';', $indexes);
+                $all[] = implode(';', array_slice($indexes, 0, $items_count));
             }
         }
-        update_post_meta($post_id, 'all_content', join('|', $all));
-        return $all;
+        update_post_meta($post_id, 'all_content', implode('|', $all));
+        return array_slice($all, 0, $wanted_count);
     }
 
     /**

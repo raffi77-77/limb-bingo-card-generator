@@ -180,7 +180,16 @@
         grid-template-columns: repeat(5, 1fr);
       }
 
-      &.lbcg-grid-3, &.lbcg-grid-4, &.lbcg-grid-5 {
+      &.lbcg-grid-9 {
+        grid-template-columns: repeat(9, 1fr);
+        margin-bottom: 20px;
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+      }
+
+      &.lbcg-grid-3, &.lbcg-grid-4, &.lbcg-grid-5, &.lbcg-grid-9 {
         .lbcg-card-col {
           @include aspectR(1, 1);
         }

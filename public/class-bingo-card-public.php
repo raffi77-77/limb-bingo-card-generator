@@ -67,7 +67,7 @@ class BingoCardPublic
             } else {
                 $single_template = $this->attributes['templates_path'] . '/bingo-theme-template.php';
             }
-        } else if ($post_type === 'bingo_card') {
+        } elseif ($post_type === 'bingo_card') {
             if (strpos($_SERVER['REQUEST_URI'], '/all/')) {
                 $single_template = $this->attributes['templates_path'] . '/all-bingo-cards-template.php';
             } else {

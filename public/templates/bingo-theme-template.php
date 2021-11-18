@@ -36,7 +36,9 @@ if (!empty($data['bingo_card_spec_title'][0])) {
 }
 // Bingo card words
 if ($bingo_card_type === '1-75') {
-    $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_words();
+    $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_numbers();
+} elseif ($bingo_card_type === '1-90') {
+    $bingo_card_words = BingoCardHelper::get_1_90_bingo_card_numbers();
 } else {
     // Get bingo card words
     if (!empty($data['bingo_card_content'][0])) {
@@ -394,6 +396,19 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 <?php endif; ?>
                             </div>
                             <div class="lbcg-card-body">
+                                <?php if ($bingo_card_type === '1-90') {
+                                    foreach ($bingo_card_words as $single_card_words) { ?>
+                                        <div class="lbcg-card-body-grid lbcg-grid-9">
+                                        <?php
+                                        foreach ($single_card_words as $number) { ?>
+                                            <div class="lbcg-card-col">
+                                            <span class="lbcg-card-text"><?php echo $number; ?></span>
+                                            </div>
+                                        <?php } ?>
+                                        </div>
+                                        <?php
+                                    }
+                                } else { ?>
                                 <div class="lbcg-card-body-grid lbcg-grid-<?php echo $bingo_grid_size[0]; ?>">
                                     <?php
                                     $grid_sq_count = $bingo_grid_size[0] ** 2;
@@ -409,6 +424,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                         </div>
                                     <?php endfor; ?>
                                 </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

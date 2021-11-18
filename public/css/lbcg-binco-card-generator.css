@@ -504,7 +504,13 @@
         .lbcg-parent .lbcg-card-body-grid.lbcg-grid-5 {
           -ms-grid-columns: (1fr)[5];
               grid-template-columns: repeat(5, 1fr); }
-        .lbcg-parent .lbcg-card-body-grid.lbcg-grid-3 .lbcg-card-col:before, .lbcg-parent .lbcg-card-body-grid.lbcg-grid-4 .lbcg-card-col:before, .lbcg-parent .lbcg-card-body-grid.lbcg-grid-5 .lbcg-card-col:before {
+        .lbcg-parent .lbcg-card-body-grid.lbcg-grid-9 {
+          -ms-grid-columns: (1fr)[9];
+              grid-template-columns: repeat(9, 1fr);
+          margin-bottom: 20px; }
+          .lbcg-parent .lbcg-card-body-grid.lbcg-grid-9:last-of-type {
+            margin-bottom: 0; }
+        .lbcg-parent .lbcg-card-body-grid.lbcg-grid-3 .lbcg-card-col:before, .lbcg-parent .lbcg-card-body-grid.lbcg-grid-4 .lbcg-card-col:before, .lbcg-parent .lbcg-card-body-grid.lbcg-grid-5 .lbcg-card-col:before, .lbcg-parent .lbcg-card-body-grid.lbcg-grid-9 .lbcg-card-col:before {
           content: "";
           display: block;
           height: 0;

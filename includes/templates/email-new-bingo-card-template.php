@@ -1,1 +1,1 @@
-<a href="<?php echo $bc_link; ?>"><?php echo "View bingo card"; ?></a>
+<a href="<?php echo $bc_link; ?>" target="_blank"><?php echo "View bingo card"; ?></a>
