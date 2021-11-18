@@ -460,7 +460,8 @@
       font-family: var(--lbcg-grid-font-family);
       font-size: var(--lbcg-grid-font-size);
       line-height: var(--lbcg-grid-line-height);
-      color: inherit; }
+      color: inherit;
+      overflow-wrap: anywhere; }
     .lbcg-parent .lbcg-card-body {
       position: relative;
       margin-top: 20px;

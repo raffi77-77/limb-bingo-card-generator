@@ -132,6 +132,7 @@
     font-size: var(--lbcg-grid-font-size);
     line-height: var(--lbcg-grid-line-height);
     color: inherit;
+    overflow-wrap: anywhere;
   }
 
   &-body {
