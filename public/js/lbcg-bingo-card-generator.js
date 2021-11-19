@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function checkWrapWordInGrid(spans) {
         let fontSize = 0;
         for (let i = 0; i < spans.length; i++) {
-            while (spans[i].offsetHeight > spans[i].parentNode.offsetHeight && fontSize < spans[i].offsetHeight) {
+            while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) && fontSize < spans[i].offsetHeight) {
                 fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size');
                 fontSize = parseFloat(fontSize.split('px')[0]);
                 document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize - 0.5) + 'px');
@@ -98,9 +98,12 @@ document.addEventListener('DOMContentLoaded', function () {
     window.onload = checkGridFontSize;
 
     document.addEventListener('click', function (event) {
-        if (event.target.matches('div.lbcg-sidebar-header')) {
+        if (event.target.matches('div.lbcg-sidebar-header') || event.target.matches('a.lbcg-sidebar-btn')) {
             // On sidebar header click
-            const sidebarHeader = event.target.parentNode;
+            let sidebarHeader = event.target.parentNode;
+            if (event.target.matches('a.lbcg-sidebar-btn')) {
+                sidebarHeader = sidebarHeader.parentNode;
+            }
             if (sidebarHeader.classList.contains('collapsed')) {
                 sidebarHeader.classList.remove('collapsed')
             } else {

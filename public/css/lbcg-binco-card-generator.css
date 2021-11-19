@@ -462,6 +462,8 @@
       line-height: var(--lbcg-grid-line-height);
       color: inherit;
       overflow-wrap: anywhere; }
+    .lbcg-parent .lbcg-card img.emoji {
+      max-width: 90%; }
     .lbcg-parent .lbcg-card-body {
       position: relative;
       margin-top: 20px;

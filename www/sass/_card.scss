@@ -135,6 +135,10 @@
     overflow-wrap: anywhere;
   }
 
+  & img.emoji {
+    max-width: 90%;
+  }
+
   &-body {
     position: relative;
     margin-top: 20px;
