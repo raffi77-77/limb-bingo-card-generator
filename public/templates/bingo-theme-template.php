@@ -89,37 +89,38 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
     $bingo_grid_free_square = false;
 }
 ?>
-    <div class="custom-container" style="width: 900px; margin: 0 auto;">
+    <div class="custom-container">
         <main class="lbcg-parent">
-            <aside class="lbcg-sidebar">
-                <div class="lbcg-sidebar-in collapsed">
-                    <div class="lbcg-sidebar-header">
-                        <a href="#" class="lbcg-sidebar-btn">Bingo Types</a>
-                        <span class="lbcg-sidebar-arrow"></span>
-                    </div>
-                    <div class="lbcg-sidebar-body">
-                        <?php
-                        $args = array(
-                            'post_type' => 'bingo_theme',
-                            'post_status' => 'publish',
-                            'orderby' => 'title',
-                            'order' => 'ASC'
-                        );
-                        $query = new WP_Query($args);
-                        if ($query->have_posts()) {
-                            while ($query->have_posts()) {
-                                $query->the_post();
-                                ?>
-                                <a href="<?php echo esc_url(get_permalink(get_the_ID())); ?>"
-                                   class="lbcg-sidebar-link <?php echo $current_id === get_the_ID() ? 'active' : ''; ?>"><?php the_title(); ?></a>
-                                <?php
+            <div class="lbcg-main">
+                <aside class="lbcg-sidebar">
+                    <div class="lbcg-sidebar-in collapsed">
+                        <div class="lbcg-sidebar-header">
+                            <a href="#" class="lbcg-sidebar-btn">Bingo Types</a>
+                            <span class="lbcg-sidebar-arrow"></span>
+                        </div>
+                        <div class="lbcg-sidebar-body">
+                            <?php
+                            $args = array(
+                                'post_type' => 'bingo_theme',
+                                'post_status' => 'publish',
+                                'orderby' => 'title',
+                                'order' => 'ASC'
+                            );
+                            $query = new WP_Query($args);
+                            if ($query->have_posts()) {
+                                while ($query->have_posts()) {
+                                    $query->the_post();
+                                    ?>
+                                    <a href="<?php echo esc_url(get_permalink(get_the_ID())); ?>"
+                                       class="lbcg-sidebar-link <?php echo $current_id === get_the_ID() ? 'active' : ''; ?>"><?php the_title(); ?></a>
+                                    <?php
+                                }
+                                wp_reset_postdata();
                             }
-                            wp_reset_postdata();
-                        }
-                        ?>
+                            ?>
+                        </div>
                     </div>
-                </div>
-            </aside>
+                </aside>
 
             <section class="lbcg-content">
                 <div class="lbcg-content-left">
@@ -430,6 +431,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                     </div>
                 </div>
             </section>
+            </div>
         </main>
     </div>
 <?php

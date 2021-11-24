@@ -6,7 +6,7 @@
   align-items: stretch;
   padding: 0 0 20px 0;
 
-  &:before {
+  &:before, &:after {
     content: "";
     position: absolute;
     display: block;
@@ -15,18 +15,29 @@
     bottom: 0;
     left: 0;
     z-index: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &:before {
     background-repeat: var(--lbcg-card-bg-repeat);
     background-size: var(--lbcg-card-bg-size);
     background-position: var(--lbcg-card-bg-pos);
     background-color: var(--lbcg-card-bg-color);
     background-image: var(--lbcg-card-bg-image);
     opacity: var(--lbcg-card-bg-opacity);
-    pointer-events: none;
-    user-select: none;
+    z-index: 1;
   }
 
-  &-wrap {
-
+  &:after {
+    z-index: 1000;
+    opacity: 0;
+    background-color: #F1F2F3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='display: block; shape-rendering: auto;' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid'%3E%3Cg transform='translate(50 50) scale(0.7000000000000001) translate(-50 -50)'%3E%3Cg%3E%3CanimateTransform attributeName='transform' type='rotate' repeatCount='indefinite' calcMode='spline' dur='4s' values='0 50 50;90 50 50;180 50 50;270 50 50;360 50 50' keyTimes='0;0.25;0.5;0.75;1' keySplines='0 1 0 1;0 1 0 1;0 1 0 1;0 1 0 1'%3E%3C/animateTransform%3E%3Cg%3E%3CanimateTransform attributeName='transform' type='scale' dur='1s' repeatCount='indefinite' calcMode='spline' values='1;1;0.5' keyTimes='0;0.5;1' keySplines='1 0 0 1;1 0 0 1'%3E%3C/animateTransform%3E%3Cg transform='translate(25 25)'%3E%3Crect x='-25' y='-25' width='52' height='52' fill='%2393dbe9'%3E%3Canimate attributeName='fill' dur='4s' repeatCount='indefinite' calcMode='spline' values='%2393dbe9;%23689cc5;%235e6fa3;%233b4368;%2393dbe9' keyTimes='0;0.25;0.5;0.75;1' keySplines='0 1 0 1;0 1 0 1;0 1 0 1;0 1 0 1'%3E%3C/animate%3E%3C/rect%3E%3C/g%3E%3Cg transform='translate(25 75)'%3E%3Crect x='-25' y='-25' width='52' height='50' fill='%2393dbe9'%3E%3CanimateTransform attributeName='transform' type='scale' dur='1s' repeatCount='indefinite' calcMode='spline' values='0;1;1' keyTimes='0;0.5;1' keySplines='1 0 0 1;1 0 0 1'%3E%3C/animateTransform%3E%3Canimate attributeName='fill' dur='4s' repeatCount='indefinite' calcMode='spline' values='%2393dbe9;%23689cc5;%235e6fa3;%233b4368;%2393dbe9' keyTimes='0;0.25;0.5;0.75;1' keySplines='0 1 0 1;0 1 0 1;0 1 0 1;0 1 0 1'%3E%3C/animate%3E%3C/rect%3E%3C/g%3E%3Cg transform='translate(75 25)'%3E%3Crect x='-25' y='-25' width='50' height='52' fill='%2393dbe9'%3E%3CanimateTransform attributeName='transform' type='scale' dur='1s' repeatCount='indefinite' calcMode='spline' values='0;1;1' keyTimes='0;0.5;1' keySplines='1 0 0 1;1 0 0 1'%3E%3C/animateTransform%3E%3Canimate attributeName='fill' dur='4s' repeatCount='indefinite' calcMode='spline' values='%2393dbe9;%23689cc5;%235e6fa3;%233b4368;%2393dbe9' keyTimes='0;0.25;0.5;0.75;1' keySplines='0 1 0 1;0 1 0 1;0 1 0 1;0 1 0 1'%3E%3C/animate%3E%3C/rect%3E%3C/g%3E%3Cg transform='translate(75 75)'%3E%3Crect x='-25' y='-25' width='50' height='50' fill='%2393dbe9'%3E%3CanimateTransform attributeName='transform' type='scale' dur='1s' repeatCount='indefinite' calcMode='spline' values='0;1;1' keyTimes='0;0.5;1' keySplines='1 0 0 1;1 0 0 1'%3E%3C/animateTransform%3E%3Canimate attributeName='fill' dur='4s' repeatCount='indefinite' calcMode='spline' values='%2393dbe9;%23689cc5;%235e6fa3;%233b4368;%2393dbe9' keyTimes='0;0.25;0.5;0.75;1' keySplines='0 1 0 1;0 1 0 1;0 1 0 1;0 1 0 1'%3E%3C/animate%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 100px auto;
+    background-position: center center;
+    background-repeat: no-repeat;
+    transition: opacity .3s;
   }
 
   &-subtitle {
@@ -135,7 +146,7 @@
     overflow-wrap: anywhere;
   }
 
-  & img.emoji {
+  img.emoji {
     max-width: 90%;
   }
 
@@ -187,10 +198,9 @@
 
       &.lbcg-grid-9 {
         grid-template-columns: repeat(9, 1fr);
-        margin-bottom: 20px;
 
-        &:last-of-type {
-          margin-bottom: 0;
+        &:not(:first-child) {
+          margin-top: 20px;
         }
       }
 

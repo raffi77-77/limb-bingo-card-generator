@@ -1,5 +1,6 @@
 .lbcg-input, .lbcg-select {
   display: block;
+  min-width: 100%;
   width: 100%;
   font-size: 16px;
   line-height: 20px;
@@ -29,6 +30,7 @@
     position: absolute;
     right: 0;
     top: 0;
+    min-width: 0;
     width: 20px;
     height: 20px;
     padding: 0;
@@ -60,6 +62,7 @@ textarea.lbcg-input {
     right: 0;
     top: -5px;
     width: 100px;
+    min-width: 0;
     padding: 0;
     margin: 0;
     border: 1px solid #000;
@@ -188,6 +191,7 @@ a.lbcg-btn {
   background-repeat: no-repeat;
   border: none;
   outline: none;
+  text-decoration: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -198,6 +202,30 @@ a.lbcg-btn {
     background-repeat: no-repeat;
     border: none;
     outline: none;
+  }
+
+  &--back {
+    padding: 4px 10px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 400;
+    background-color: #000!important;
+    color: #FFF!important;
+    border: 1px solid #000;
+    transition: all .3s;
+
+    &:hover, &:focus {
+      background-color: lighten(#000, 20%) !important;
+      border: 1px solid #000;
+    }
+
+    &.lbcg-btn--lg {
+      width: 100%;
+      height: 40px;
+      font-size: 20px;
+      font-weight: 700;
+    }
   }
 
   &--main {
@@ -238,6 +266,20 @@ a.lbcg-btn {
     transition: opacity .3s;
     &:hover, &:focus {
       opacity: 1;
+    }
+  }
+}
+
+.lbcg-buttons-wrap {
+  justify-content: space-between;
+  align-items: center;
+
+  .lbcg-btn--lg {
+    min-width: 120px;
+    width: auto!important;
+
+    &:only-child {
+      margin-left: auto;
     }
   }
 }

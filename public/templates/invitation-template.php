@@ -62,85 +62,43 @@ if (!empty($bc_posts[0]->ID)) {
     // If include free space
     $bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
     ?>
-    <div class="custom-container" style="width: 900px; margin: 0 auto;">
+    <div class="custom-container">
         <main class="lbcg-parent">
-            <aside class="lbcg-sidebar">
-                <form action="<?php echo $bc_permalink . 'all/'; ?>" method="get" target="_blank">
-                    <div class="lbcg-input-wrap">
-                        <label for="lbcg-cards-count" class="lbcg-label">Cards per page count</label>
-                        <select name="bcc" id="lbcg-cards-count" class="lbcg-select">
-                            <option value="30" selected>30 cards</option>
-                            <option value="100">100 cards</option>
-                            <option value="250">250 cards</option>
-                            <option value="500">500 cards</option>
-                        </select>
-                    </div>
-                    <div class="lbcg-input-wrap">
-                        <label for="lbcg-cards-per-page" class="lbcg-label">Cards per page count</label>
-                        <select name="bcs" id="lbcg-cards-per-page" class="lbcg-select">
-                            <option value="1">1 large card</option>
-                            <option value="2" selected="selected">2 medium cards</option>
-                            <option value="4">4 small cards</option>
-                        </select>
-                    </div>
-                    <input type="submit" value="View">
-                </form>
-            </aside>
-
-            <section class="lbcg-content">
-                <div class="lbcg-content-left">
-                    <form id="lbcg-bc-invitation" action="<?php echo admin_url('admin-ajax.php'); ?>" method="post">
-                        <input type="hidden" name="action" value="lbcg_bc_invitation">
-                        <input type="hidden" name="bingo_card_uid" value="<?php echo $_GET['bc']; ?>">
-                        <div class="lbcg-content-form">
-                            <div class="lbcg-input-wrap">
-                                <label for="cu-email">Your email:</label>
-                                <input type="email" id="cu-email" name="author_email" value="<?php echo $cu_email; ?>"
-                                       placeholder="Enter email">
-                            </div>
-                            <div class="lbcg-input-wrap">
-                                <label for="invite-emails">Invite emails:</label>
-                                <textarea id="invite-emails" name="invite_emails"
-                                          placeholder="Enter invite emails, each in new line"></textarea>
-                            </div>
-                        </div>
-                        <a role="button" href="<?php echo get_permalink(get_the_ID()) . '?bc=' . $_GET['bc']; ?>">Back</a>
-                        <input type="submit" value="Invite">
-                    </form>
-                </div>
-                <div class="lbcg-content-right">
-                    <div class="lbcg-card-wrap">
-                        <?php include __DIR__ . '/props-template.php'; ?>
-                        <div class="lbcg-card">
-                            <div class="lbcg-card-header-holder">
-                                <div class="lbcg-card-header">
-                                    <span class="lbcg-card-header-text"><?php echo $bingo_card_title; ?></span>
-                                </div>
-                                <?php if ($bingo_card_type === '1-75'): ?>
-                                    <div class="lbcg-card-subtitle">
-                                        <span class="lbcg-card-subtitle-text"><span><?php echo implode('</span><span>', $bingo_card_spec_title); ?></span></span>
+            <div class="lbcg-invitation">
+                <section class="lbcg-content">
+                    <div class="lbcg-content-right">
+                        <div class="lbcg-card-wrap">
+                            <?php include __DIR__ . '/props-template.php'; ?>
+                            <div class="lbcg-card">
+                                <div class="lbcg-card-header-holder">
+                                    <div class="lbcg-card-header">
+                                        <span class="lbcg-card-header-text"><?php echo $bingo_card_title; ?></span>
                                     </div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="lbcg-card-body">
-                                <?php if ($bingo_card_type === '1-90') {
-                                    foreach ($bingo_card_words as $single_card_words) { ?>
-                                        <div class="lbcg-card-body-grid lbcg-grid-9">
-                                            <?php
-                                            foreach ($single_card_words as $number) { ?>
-                                                <div class="lbcg-card-col">
-                                                    <span class="lbcg-card-text"><?php echo $number; ?></span>
-                                                </div>
-                                            <?php } ?>
+                                    <?php if ($bingo_card_type === '1-75'): ?>
+                                        <div class="lbcg-card-subtitle">
+                                            <span class="lbcg-card-subtitle-text"><span><?php echo implode('</span><span>', $bingo_card_spec_title); ?></span></span>
                                         </div>
-                                        <?php
-                                    }
-                                } else { ?>
-                                    <div class="lbcg-card-body-grid lbcg-grid-<?php echo $bingo_grid_size[0]; ?>">
-                                        <?php
-                                        $grid_sq_count = $bingo_grid_size[0] ** 2;
-                                        for ($i = 1; $i <= $grid_sq_count; $i++): ?>
-                                            <div class="lbcg-card-col">
+                                    <?php endif; ?>
+                                </div>
+                                <div class="lbcg-card-body">
+                                    <?php if ($bingo_card_type === '1-90') {
+                                        foreach ($bingo_card_words as $single_card_words) { ?>
+                                            <div class="lbcg-card-body-grid lbcg-grid-9">
+                                                <?php
+                                                foreach ($single_card_words as $number) { ?>
+                                                    <div class="lbcg-card-col">
+                                                        <span class="lbcg-card-text"><?php echo $number; ?></span>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                            <?php
+                                        }
+                                    } else { ?>
+                                        <div class="lbcg-card-body-grid lbcg-grid-<?php echo $bingo_grid_size[0]; ?>">
+                                            <?php
+                                            $grid_sq_count = $bingo_grid_size[0] ** 2;
+                                            for ($i = 1; $i <= $grid_sq_count; $i++): ?>
+                                                <div class="lbcg-card-col">
                                         <span class="lbcg-card-text"><?php
                                             if ((int)ceil($grid_sq_count / 2) === $i && $bingo_grid_free_square) {
                                                 echo BingoCardHelper::$free_space_word;
@@ -148,15 +106,65 @@ if (!empty($bc_posts[0]->ID)) {
                                                 echo $bingo_card_words[$i - 1];
                                             }
                                             ?></span>
-                                            </div>
-                                        <?php endfor; ?>
-                                    </div>
-                                <?php } ?>
+                                                </div>
+                                            <?php endfor; ?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+
+                <aside class="lbcg-sidebar">
+                    <div class="lbcg-sidebar-form">
+                        <form action="<?php echo $bc_permalink . 'all/'; ?>" method="get" target="_blank">
+                            <div class="lbcg-input-wrap">
+                                <label for="lbcg-cards-count" class="lbcg-label">Cards per page count</label>
+                                <select name="bcc" id="lbcg-cards-count" class="lbcg-select">
+                                    <option value="30" selected>30 cards</option>
+                                    <option value="100">100 cards</option>
+                                    <option value="250">250 cards</option>
+                                    <option value="500">500 cards</option>
+                                </select>
+                            </div>
+                            <div class="lbcg-input-wrap">
+                                <label for="lbcg-cards-per-page" class="lbcg-label">Cards per page count</label>
+                                <select name="bcs" id="lbcg-cards-per-page" class="lbcg-select">
+                                    <option value="1">1 large card</option>
+                                    <option value="2" selected="selected">2 medium cards</option>
+                                    <option value="4">4 small cards</option>
+                                </select>
+                            </div>
+                            <div class="lbcg-input-wrap lbcg-buttons-wrap">
+                                <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">View</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="lbcg-sidebar-form">
+                        <form id="lbcg-bc-invitation" action="<?php echo admin_url('admin-ajax.php'); ?>" method="post">
+                            <input type="hidden" name="action" value="lbcg_bc_invitation">
+                            <input type="hidden" name="bingo_card_uid" value="<?php echo $_GET['bc']; ?>">
+                            <div class="lbcg-content-form">
+                                <div class="lbcg-input-wrap">
+                                    <label for="cu-email" class="lbcg-label">Your email:</label>
+                                    <input class="lbcg-input" type="email" id="cu-email" name="author_email" value="<?php echo $cu_email; ?>"
+                                           placeholder="Enter email">
+                                </div>
+                                <div class="lbcg-input-wrap">
+                                    <label for="invite-emails" class="lbcg-label">Invite emails:</label>
+                                    <textarea class="lbcg-input" id="invite-emails" name="invite_emails"
+                                              cols="" rows="6" placeholder="Enter invite emails, each in new line"></textarea>
+                                </div>
+                            </div>
+                            <div class="lbcg-input-wrap lbcg-buttons-wrap">
+                                <a class="lbcg-btn lbcg-btn--lg lbcg-btn--back" role="button" role="button" href="<?php echo get_permalink(get_the_ID()) . '?bc=' . $_GET['bc']; ?>">Back</a>
+                                <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Invite</button>
+                            </div>
+                        </form>
+                    </div>
+                </aside>
+            </div>
         </main>
     </div>
     <?php

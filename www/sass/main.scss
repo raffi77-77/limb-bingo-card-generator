@@ -1,19 +1,66 @@
 @charset "UTF-8";
 @import "helpers/helpers";
 
+@media print {
+  header, footer {
+    display: none!important;
+  }
+
+  .lbcg-print-wrap-in {
+    page-break-after: always;
+  }
+}
+
 .lbcg-parent {
+  position: relative;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  @import "helpers/reset";
+
   * {
     -webkit-print-color-adjust: exact !important;   /* Chrome, Safari, Edge */
     color-adjust: exact !important;                 /*Firefox*/
   }
 
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  grid-template-rows: 1fr;
-  grid-column-gap: 20px;
-  grid-row-gap: 0;
-  position: relative;
-  @import "helpers/reset";
+  &.lbcg-loading {
+    &, *, *:before, *:after {
+      pointer-events: none!important;
+      user-select: none;
+    }
+
+    .lbcg-card {
+      &:after {
+        opacity: 1;
+      }
+    }
+  }
+
+  .lbcg-main {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 0;
+  }
+
+  .lbcg-invitation {
+    display: grid;
+    grid-template-columns: 350px 350px;
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 0;
+    justify-content: space-between;
+  }
+
+  .lbcg-card-view {
+    display: grid;
+    grid-template-columns: 350px;
+    grid-template-rows: 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 0;
+    justify-content: center;
+  }
 
   .lbcg-content {
     display: grid;
