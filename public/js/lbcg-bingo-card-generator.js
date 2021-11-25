@@ -1,5 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const loadingElement = document.getElementById('lbcg-loading');
+    /**
+     * Show or hide loading element
+     *
+     * @param show
+     */
+    function toggleLoading(show) {
+        const els = document.getElementsByClassName('lbcg-parent');
+        for (let i = 0; i < els.length; i++) {
+            if (show === true) {
+                els[i].classList.add('lbcg-loading');
+            } else {
+                els[i].classList.remove('lbcg-loading');
+            }
+        }
+    }
+    toggleLoading(true);
+
     /**
      * Draw new grid
      */
@@ -84,16 +100,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function checkGridFontSize() {
-        /*if (loadingElement.style.display !== 'none') {
-            return;
-        }
-        loadingElement.style.display = '';*/
+        toggleLoading(true);
         const spans = document.getElementsByClassName('lbcg-card-text');
         const result = checkSmallWordInGrid(spans);
         if (result === true) {
             checkWrapWordInGrid(spans);
         }
-        // loadingElement.style.display = 'none';
+        toggleLoading(false);
     }
     window.onload = checkGridFontSize;
 
@@ -118,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('div.lbcg-card-header span.lbcg-card-header-text').innerHTML = event.target.value;
         } else if (event.target.matches('#lbcg-body-content')) {
             // On bingo card content change
+            toggleLoading(true);
             const words = event.target.value.split("\n"),
                 gridItems = document.querySelectorAll('div.lbcg-card-body-grid span.lbcg-card-text'),
                 includeFreeSpace = document.getElementById('lbcg-free-space-check').checked;
