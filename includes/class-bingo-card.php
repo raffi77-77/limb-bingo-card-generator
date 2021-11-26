@@ -3,7 +3,7 @@
 /**
  * The core plugin class
  */
-class BingoCard
+class LBCG
 {
     const VERSION = '1.0.0';
     private static $instance = null;
@@ -12,13 +12,13 @@ class BingoCard
     /**
      * Get instance
      *
-     * @return BingoCard
+     * @return LBCG
      */
     public static function get_instance($plugin_dir, $plugin_url)
     {
         if (null == self::$instance) {
             // Create new instance
-            self::$instance = new BingoCard($plugin_dir, $plugin_url);
+            self::$instance = new LBCG($plugin_dir, $plugin_url);
         }
         return self::$instance;
     }
@@ -62,16 +62,16 @@ class BingoCard
      */
     private function init()
     {
-        BingoCardHelper::register_custom_post_types();
+        LBCGHelper::register_custom_post_types();
 
-        if (BingoCardHelper::is_request('admin')) {
-            $admin_obj = new BingoCardAdmin($this->attributes);
+        if (LBCGHelper::is_request('admin')) {
+            $admin_obj = new LBCGAdmin($this->attributes);
             $admin_obj->register_dependencies();
-        } elseif (BingoCardHelper::is_request('ajax')) {
-            $ajax_obj = new BingoCardAjax($this->attributes);
+        } elseif (LBCGHelper::is_request('ajax')) {
+            $ajax_obj = new LBCGAjax($this->attributes);
             $ajax_obj->register_dependencies();
-        } elseif (BingoCardHelper::is_request('public')) {
-            $public_obj = new BingoCardPublic($this->attributes);
+        } elseif (LBCGHelper::is_request('public')) {
+            $public_obj = new LBCGPublic($this->attributes);
             $public_obj->register_dependencies();
         }
     }

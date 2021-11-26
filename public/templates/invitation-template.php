@@ -7,7 +7,17 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-get_header();
+$lbcg_current_theme_name = wp_get_theme()->get('Name');
+if ($lbcg_current_theme_name === 'BNBS') {
+    // For BNBS theme
+    $tpl = 'single-bingo-card';
+    $lyt = 'single-bingo-card';
+    $ftd_pagetyp = 'custom-post';
+    $body_page_class = $tpl;
+    require(get_template_directory() . '/header.php');
+} else {
+    get_header();
+}
 
 $cu_email = '';
 if (is_user_logged_in()) {
@@ -40,15 +50,15 @@ if (!empty($bc_posts[0]->ID)) {
     }
     // Bingo card words
     if ($bingo_card_type === '1-75') {
-        $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_numbers();
+        $bingo_card_words = LBCGHelper::get_1_75_bingo_card_numbers();
     } elseif ($bingo_card_type === '1-90') {
-        $bingo_card_words = BingoCardHelper::get_1_90_bingo_card_numbers();
+        $bingo_card_words = LBCGHelper::get_1_90_bingo_card_numbers();
     } else {
         // Get bingo card words
         if (!empty($data['bingo_card_content'][0])) {
             $bingo_card_content = $data['bingo_card_content'][0];
         } else {
-            $result = BingoCardHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
+            $result = LBCGHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
             $bingo_card_content = $result['words'];
         }
         $bingo_card_words = explode("\r\n", $bingo_card_content);
@@ -63,7 +73,7 @@ if (!empty($bc_posts[0]->ID)) {
     $bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
     ?>
     <div class="custom-container">
-        <main class="lbcg-parent">
+        <main class="lbcg-parent lbcg-loading">
             <div class="lbcg-invitation">
                 <section class="lbcg-content">
                     <div class="lbcg-content-right">
@@ -101,7 +111,7 @@ if (!empty($bc_posts[0]->ID)) {
                                                 <div class="lbcg-card-col">
                                         <span class="lbcg-card-text"><?php
                                             if ((int)ceil($grid_sq_count / 2) === $i && $bingo_grid_free_square) {
-                                                echo BingoCardHelper::$free_space_word;
+                                                echo LBCGHelper::$free_space_word;
                                             } else {
                                                 echo $bingo_card_words[$i - 1];
                                             }
@@ -120,7 +130,7 @@ if (!empty($bc_posts[0]->ID)) {
                     <div class="lbcg-sidebar-form">
                         <form action="<?php echo $bc_permalink . 'all/'; ?>" method="get" target="_blank">
                             <div class="lbcg-input-wrap">
-                                <label for="lbcg-cards-count" class="lbcg-label">Cards per page count</label>
+                                <label for="lbcg-cards-count" class="lbcg-label">Cards count</label>
                                 <select name="bcc" id="lbcg-cards-count" class="lbcg-select">
                                     <option value="30" selected>30 cards</option>
                                     <option value="100">100 cards</option>
@@ -130,7 +140,7 @@ if (!empty($bc_posts[0]->ID)) {
                             </div>
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-cards-per-page" class="lbcg-label">Cards per page count</label>
-                                <select name="bcs" id="lbcg-cards-per-page" class="lbcg-select">
+                                <select name="bcs" id="lbcg-cards-per-page" class="lbcg-select" <?php echo $bingo_card_type === '1-90' ? 'disabled' : ''; ?>>
                                     <option value="1">1 large card</option>
                                     <option value="2" selected="selected">2 medium cards</option>
                                     <option value="4">4 small cards</option>
@@ -173,4 +183,11 @@ if (!empty($bc_posts[0]->ID)) {
     <p>Invalid request</p>
     <?php
 }
-get_footer();
+if ($lbcg_current_theme_name === 'BNBS') {
+    $data = array('footer'=>array());
+    require(get_template_directory() . '/models/m-partials.php');
+    $footer = $data['footer'];
+    require(get_template_directory() . '/footer.php');
+} else {
+    get_footer();
+}

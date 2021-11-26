@@ -9,7 +9,7 @@ if (!empty($data['bingo_card_spec_title'][0])) {
 } else {
     $bingo_card_spec_title = ['B', 'I', 'N', 'G', 'O'];
 }
-$result = BingoCardHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
+$result = LBCGHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
 $words_count = $result['words_count'];
 if (!empty($data['bingo_card_content'][0])) {
     $bingo_card_content = $data['bingo_card_content'][0];
@@ -306,7 +306,7 @@ $special_types = array('1-9', '1-75', '1-90');
         </td>
         <td>
             <select id="bc-font" name="bingo_card_font">
-                <?php foreach (BingoCardHelper::$fonts as $key => $font): ?>
+                <?php foreach (LBCGHelper::$fonts as $key => $font): ?>
                     <option value="<?php echo $key; ?>" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === $key ? 'selected="selected"' : ''; ?>><?php
                         echo $font['name']; ?></option>
                 <?php endforeach; ?>

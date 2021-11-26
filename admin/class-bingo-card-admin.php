@@ -3,7 +3,7 @@
 /**
  * The admin-specific functionality of the plugin
  */
-class BingoCardAdmin
+class LBCGAdmin
 {
     /**
      * Plugin all needed properties in one place
@@ -91,7 +91,7 @@ class BingoCardAdmin
     private function save_bingo_custom_fields($post_id)
     {
         if (!empty($_POST['lbcg_action']) && $_POST['lbcg_action'] === 'save_bc_post') {
-            BingoCardHelper::save_bingo_meta_fields($post_id, $_POST);
+            LBCGHelper::save_bingo_meta_fields($post_id, $_POST);
         }
     }
 
@@ -137,8 +137,8 @@ class BingoCardAdmin
             if (!did_action('wp_enqueue_media')) {
                 wp_enqueue_media();
             }
-            wp_enqueue_script('lbcg-bingo-theme-admin-script', $this->attributes['plugin_url'] . 'admin/js/bingo-theme.js?ver=' . BingoCard::VERSION);
-            wp_enqueue_style('lbcg-bingo-theme-admin-style', $this->attributes['plugin_url'] . 'admin/css/bingo-theme.css?ver=' . BingoCard::VERSION);
+            wp_enqueue_script('lbcg-bingo-theme-admin-script', $this->attributes['plugin_url'] . 'admin/js/bingo-theme.js?ver=' . LBCG::VERSION);
+            wp_enqueue_style('lbcg-bingo-theme-admin-style', $this->attributes['plugin_url'] . 'admin/css/bingo-theme.css?ver=' . LBCG::VERSION);
         }
     }
 }

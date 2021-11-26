@@ -3,7 +3,7 @@
 /**
  * The class the helps with different static methods
  */
-class BingoCardHelper
+class LBCGHelper
 {
     /**
      * Google Fonts
@@ -73,8 +73,8 @@ class BingoCardHelper
         self::register_bingo_theme_post_type();
         self::register_bingo_card_post_type();
 
-        add_filter('post_type_link', array('BingoCardHelper', 'check_post_link'), 10, 2);
-        add_filter('query_vars', array('BingoCardHelper', 'query_vars'));
+        add_filter('post_type_link', array('LBCGHelper', 'check_post_link'), 10, 2);
+        add_filter('query_vars', array('LBCGHelper', 'query_vars'));
     }
 
     /**
@@ -84,17 +84,17 @@ class BingoCardHelper
     {
         // Custom post type settings
         $labels = array(
-            'name' => __('Bingo themes', 'textdomain'),
-            'singular_name' => __('Bingo theme', 'textdomain'),
-            'menu_name' => __('Bingo themes', 'textdomain'),
-            'name_admin_bar' => __('Bingo theme', 'textdomain'),
+            'name' => __('LBingo themes', 'textdomain'),
+            'singular_name' => __('LBingo theme', 'textdomain'),
+            'menu_name' => __('LBingo themes', 'textdomain'),
+            'name_admin_bar' => __('LBingo theme', 'textdomain'),
             'add_new' => __('Add new', 'textdomain'),
             'add_new_item' => __('Add new bingo theme', 'textdomain'),
             'new_item' => __('New bingo theme', 'textdomain'),
             'edit_item' => __('Edit bingo theme', 'textdomain'),
             'view_item' => __('View bingo theme', 'textdomain'),
             'all_items' => __('All bingo themes', 'textdomain'),
-            'search_items' => __('Search Bingo themes', 'textdomain'),
+            'search_items' => __('Search LBingo themes', 'textdomain'),
             'not_found' => __('No themes found.', 'textdomain')
         );
         $supports = array('title', 'editor', 'author');
@@ -102,7 +102,7 @@ class BingoCardHelper
         register_post_type('bingo_theme',
             array(
                 'labels' => $labels,
-                'description' => 'Bingo theme ...',
+                'description' => 'LBingo theme ...',
                 'public' => true,
                 'publicly_queryable' => true,
                 'query_var' => true,
@@ -111,13 +111,13 @@ class BingoCardHelper
                 'capability_type' => 'post',
                 'has_archive' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => '/category/%bt-cat%/bingo-theme'),
+                'rewrite' => array('slug' => '/category/%bt-cat%/lbingo-theme'),
                 'supports' => $supports,
                 'taxonomies' => array('category'),
             )
         );
         add_rewrite_rule(
-            'category/([^/]+)/bingo-theme/([^/]+)/?(([^/]+)/?)?$',
+            'category/([^/]+)/lbingo-theme/([^/]+)/?(([^/]+)/?)?$',
             'index.php?post_type=bingo_theme&name=$matches[2]',
             'top'
         );
@@ -130,17 +130,17 @@ class BingoCardHelper
     {
         // Custom post type settings
         $labels = array(
-            'name' => __('Bingo cards', 'textdomain'),
-            'singular_name' => __('Bingo card', 'textdomain'),
-            'menu_name' => __('Bingo cards', 'textdomain'),
-            'name_admin_bar' => __('Bingo card', 'textdomain'),
+            'name' => __('LBingo cards', 'textdomain'),
+            'singular_name' => __('LBingo card', 'textdomain'),
+            'menu_name' => __('LBingo cards', 'textdomain'),
+            'name_admin_bar' => __('LBingo card', 'textdomain'),
             'add_new' => __('Add new', 'textdomain'),
             'add_new_item' => __('Add new card', 'textdomain'),
             'new_item' => __('New card', 'textdomain'),
             'edit_item' => __('Edit card', 'textdomain'),
             'view_item' => __('View card', 'textdomain'),
             'all_items' => __('All cards', 'textdomain'),
-            'search_items' => __('Search Bingo cards', 'textdomain'),
+            'search_items' => __('Search LBingo cards', 'textdomain'),
             'not_found' => __('No cards found.', 'textdomain')
         );
         $supports = array('title', 'editor', 'author');
@@ -148,7 +148,7 @@ class BingoCardHelper
         register_post_type('bingo_card',
             array(
                 'labels' => $labels,
-                'description' => 'Bingo card ...',
+                'description' => 'LBingo card ...',
                 'public' => true,
                 'publicly_queryable' => true,
                 'query_var' => true,
@@ -157,13 +157,13 @@ class BingoCardHelper
                 'capability_type' => 'post',
                 'has_archive' => true,
                 'hierarchical' => false,
-                'rewrite' => array('slug' => 'bingo-card'),
+                'rewrite' => array('slug' => 'lbingo-card'),
                 'supports' => $supports,
 //                'taxonomies' => array('category', 'post_tag'),
             )
         );
         add_rewrite_rule(
-            'bingo-card/([^/]+)/?(([^/]+)/?)?$',
+            'lbingo-card/([^/]+)/?(([^/]+)/?)?$',
             'index.php?post_type=bingo_card&name=$matches[1]',
             'top'
         );

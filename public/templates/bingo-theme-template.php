@@ -7,7 +7,17 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-get_header();
+$lbcg_current_theme_name = wp_get_theme()->get('Name');
+if ($lbcg_current_theme_name === 'BNBS') {
+    // For BNBS theme
+    $tpl = 'single-bingo-card';
+    $lyt = 'single-bingo-card';
+    $ftd_pagetyp = 'custom-post';
+    $body_page_class = $tpl;
+    require(get_template_directory() . '/header.php');
+} else {
+    get_header();
+}
 
 global $post;
 $current_id = $post->ID;
@@ -36,15 +46,15 @@ if (!empty($data['bingo_card_spec_title'][0])) {
 }
 // Bingo card words
 if ($bingo_card_type === '1-75') {
-    $bingo_card_words = BingoCardHelper::get_1_75_bingo_card_numbers();
+    $bingo_card_words = LBCGHelper::get_1_75_bingo_card_numbers();
 } elseif ($bingo_card_type === '1-90') {
-    $bingo_card_words = BingoCardHelper::get_1_90_bingo_card_numbers();
+    $bingo_card_words = LBCGHelper::get_1_90_bingo_card_numbers();
 } else {
     // Get bingo card words
     if (!empty($data['bingo_card_content'][0])) {
         $bingo_card_content = $data['bingo_card_content'][0];
     } else {
-        $result = BingoCardHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
+        $result = LBCGHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
         $bingo_card_content = $result['words'];
     }
     $bingo_card_words = explode("\r\n", $bingo_card_content);
@@ -90,7 +100,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
 }
 ?>
     <div class="custom-container">
-        <main class="lbcg-parent">
+        <main class="lbcg-parent lbcg-loading">
             <div class="lbcg-main">
                 <aside class="lbcg-sidebar">
                     <div class="lbcg-sidebar-in collapsed">
@@ -186,7 +196,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-font" class="lbcg-label">Select Font Family</label>
                                 <select name="bingo_card_font" id="lbcg-font" class="lbcg-select">
-                                    <?php foreach (BingoCardHelper::$fonts as $key => $font): ?>
+                                    <?php foreach (LBCGHelper::$fonts as $key => $font): ?>
                                         <option value="<?php echo $key; ?>" <?php echo !empty($data['bingo_card_font'][0]) && $data['bingo_card_font'][0] === $key ? 'selected="selected"' : ''; ?>><?php
                                             echo $font['name']; ?></option>
                                     <?php endforeach; ?>
@@ -403,7 +413,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                         <?php
                                         foreach ($single_card_words as $number) { ?>
                                             <div class="lbcg-card-col">
-                                            <span class="lbcg-card-text"><?php echo $number; ?></span>
+                                                <span class="lbcg-card-text"><?php echo $number; ?></span>
                                             </div>
                                         <?php } ?>
                                         </div>
@@ -415,12 +425,12 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                     $grid_sq_count = $bingo_grid_size[0] ** 2;
                                     for ($i = 1; $i <= $grid_sq_count; $i++): ?>
                                         <div class="lbcg-card-col">
-                                        <span class="lbcg-card-text"><?php
-                                            if ((int)ceil($grid_sq_count / 2) === $i && $bingo_grid_free_square) {
-                                                echo BingoCardHelper::$free_space_word;
-                                            } else {
-                                                echo $bingo_card_words[$i - 1];
-                                            }
+                                            <span class="lbcg-card-text"><?php
+                                                if ((int)ceil($grid_sq_count / 2) === $i && $bingo_grid_free_square) {
+                                                    echo LBCGHelper::$free_space_word;
+                                                } else {
+                                                    echo $bingo_card_words[$i - 1];
+                                                }
                                             ?></span>
                                         </div>
                                     <?php endfor; ?>
@@ -435,4 +445,11 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
         </main>
     </div>
 <?php
-get_footer();
+if ($lbcg_current_theme_name === 'BNBS') {
+    $data = array('footer'=>array());
+    require(get_template_directory() . '/models/m-partials.php');
+    $footer = $data['footer'];
+    require(get_template_directory() . '/footer.php');
+} else {
+    get_footer();
+}

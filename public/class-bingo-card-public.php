@@ -3,7 +3,7 @@
 /**
  * The public-facing functionality of the plugin
  */
-class BingoCardPublic
+class LBCGPublic
 {
     /**
      * Plugin all needed properties in one place
@@ -42,13 +42,13 @@ class BingoCardPublic
             /*if (!did_action('wp_enqueue_media')) {
                 wp_enqueue_media();
             }*/
-            wp_enqueue_script('lbcg-bingo-card-generator-js', $this->attributes['plugin_url'] . 'public/js/lbcg-bingo-card-generator.js?ver=' . BingoCard::VERSION);
+            wp_enqueue_script('lbcg-bingo-card-generator-js', $this->attributes['plugin_url'] . 'public/js/lbcg-bingo-card-generator.js?ver=' . LBCG::VERSION);
             wp_localize_script('lbcg-bingo-card-generator-js', 'LBCG', [
-                'fonts' => BingoCardHelper::$fonts,
-                'freeSquareWord' => BingoCardHelper::$free_space_word,
+                'fonts' => LBCGHelper::$fonts,
+                'freeSquareWord' => LBCGHelper::$free_space_word,
                 'ajaxUrl' => admin_url('admin-ajax.php')
             ]);
-            wp_enqueue_style('lbcg-bingo-card-generator-css', $this->attributes['plugin_url'] . 'public/css/lbcg-binco-card-generator.min.css?ver=' . BingoCard::VERSION);
+            wp_enqueue_style('lbcg-bingo-card-generator-css', $this->attributes['plugin_url'] . 'public/css/lbcg-binco-card-generator.min.css?ver=' . LBCG::VERSION);
         }
     }
 
@@ -85,9 +85,9 @@ class BingoCardPublic
         ?>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <?php foreach (BingoCardHelper::$fonts as $font): ?>
+        <?php foreach (LBCGHelper::$fonts as $font): ?>
         <link href="<?php echo $font['url'] ?>" rel="stylesheet">
-    <?php endforeach; ?>
+        <?php endforeach; ?>
         <?php
         global $post;
         if ($post instanceof WP_Post && ($post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card')) {

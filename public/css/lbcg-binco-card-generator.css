@@ -14,8 +14,7 @@
 .lbcg-parent {
   position: relative;
   max-width: 900px;
-  margin-left: auto;
-  margin-right: auto; }
+  margin: 10px auto; }
   .lbcg-parent div, .lbcg-parent span, .lbcg-parent object, .lbcg-parent iframe, .lbcg-parent img, .lbcg-parent table, .lbcg-parent caption, .lbcg-parent thead, .lbcg-parent tbody,
   .lbcg-parent tfoot, .lbcg-parent tr, .lbcg-parent tr, .lbcg-parent td, .lbcg-parent article, .lbcg-parent aside, .lbcg-parent canvas, .lbcg-parent details, .lbcg-parent figure, .lbcg-parent hgroup, .lbcg-parent menu,
   .lbcg-parent nav, .lbcg-parent footer, .lbcg-parent header, .lbcg-parent section, .lbcg-parent summary, .lbcg-parent mark, .lbcg-parent audio, .lbcg-parent video {
@@ -596,7 +595,7 @@
       z-index: 2;
       font-family: var(--lbcg-grid-font-family);
       font-size: var(--lbcg-grid-font-size);
-      line-height: var(--lbcg-grid-line-height);
+      line-height: inherit;
       color: inherit;
       overflow-wrap: anywhere; }
     .lbcg-parent .lbcg-card img.emoji {

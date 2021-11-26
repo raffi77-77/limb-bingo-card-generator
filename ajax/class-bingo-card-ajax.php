@@ -3,7 +3,7 @@
 /**
  * The ajax related functionality of the plugin
  */
-class BingoCardAjax
+class LBCGAjax
 {
     /**
      * Plugin all needed properties in one place
@@ -49,7 +49,7 @@ class BingoCardAjax
             die();
         }
         // Collect card data
-        $result = BingoCardHelper::collect_card_data_from($_POST);
+        $result = LBCGHelper::collect_card_data_from($_POST);
         if ($result['success'] === false) {
             print_r(json_encode([
                 'success' => false,
@@ -59,7 +59,7 @@ class BingoCardAjax
             die();
         }
         // Create card
-        $bc_result = BingoCardHelper::insert_bingo_card($result['data'], 'publish');
+        $bc_result = LBCGHelper::insert_bingo_card($result['data'], 'publish');
         if ($bc_result === false) {
             print_r(json_encode([
                 'success' => false,
@@ -69,7 +69,7 @@ class BingoCardAjax
             die();
         }
         // Save card data
-        BingoCardHelper::save_bingo_meta_fields($bc_result['id'], $result['data'], $_POST['bingo_theme_id']);
+        LBCGHelper::save_bingo_meta_fields($bc_result['id'], $result['data'], $_POST['bingo_theme_id']);
         update_post_meta($bc_result['id'], 'bingo_theme_id', $_POST['bingo_theme_id']);
         print_r(json_encode([
             'success' => true,
@@ -121,10 +121,10 @@ class BingoCardAjax
                 unset($invite_emails[$key]);
             }
             // Check email validations
-            if (!BingoCardHelper::is_valid_emails($author_email)) {
+            if (!LBCGHelper::is_valid_emails($author_email)) {
                 $error_messages[] = "Your email is not valid. Please enter correct email.";
             }
-            if (!BingoCardHelper::is_valid_emails($invite_emails)) {
+            if (!LBCGHelper::is_valid_emails($invite_emails)) {
                 $error_messages[] = "Please check invitation emails validation and try again.";
             }
             if (!empty($error_messages)) {
@@ -137,7 +137,7 @@ class BingoCardAjax
                 die();
             }
             // Create bingo cards and invite
-            $result = BingoCardHelper::invite_emails($bingo_card->ID, $author_email, $invite_emails);
+            $result = LBCGHelper::invite_emails($bingo_card->ID, $author_email, $invite_emails);
             if ($result['success'] === false) {
                 print_r(json_encode([
                     'success' => false,

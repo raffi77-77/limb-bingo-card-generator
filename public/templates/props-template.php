@@ -13,7 +13,7 @@
 
         --lbcg-header-font-size: 16px;
         --lbcg-header-height: 48px;
-        --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
+        --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCGHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
         --lbcg-header-text-color: #FFF;
         --lbcg-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
         --lbcg-header-bg-pos: <?php echo !empty($bc_header['bg_pos']) ? $bc_header['bg_pos'] : '0 0'; ?>;
@@ -24,9 +24,9 @@
 
         /* body styles */
 
-        --lbcg-grid-font-size: 16px; /* esi Vah jan gtnumes es <span class="lbcg-card-text"> srancic amenamec heightov@ U HAMEL amena erkar u dnumes es variable-i mej */
-        --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? BingoCardHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
-        --lbcg-grid-line-height: <?php echo $data['bingo_card_type'][0] === '1-90' ? '34.3px' : '61.8px'; ?>; /* esi Vah jan vercnum es <div class="lbcg-card-col"> sra height@ u dnumes es variable-i mej */
+        --lbcg-grid-font-size: 16px;
+        --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCGHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
+        --lbcg-grid-line-height: <?php echo $data['bingo_card_type'][0] === '1-90' ? '34.3px' : '61.8px'; ?>;
         --lbcg-grid-text-color: #79ffd3;
         --lbcg-grid-border-color: #45ffbf;
         --lbcg-grid-bg-image: <?php echo !empty($bc_grid['image']) ? 'url(' . wp_get_attachment_image_url($bc_grid['image'], 'large') . ')' : 'none'; ?>;

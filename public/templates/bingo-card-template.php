@@ -7,7 +7,17 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-get_header();
+$lbcg_current_theme_name = wp_get_theme()->get('Name');
+if ($lbcg_current_theme_name === 'BNBS') {
+    // For BNBS theme
+    $tpl = 'single-bingo-card';
+    $lyt = 'single-bingo-card';
+    $ftd_pagetyp = 'custom-post';
+    $body_page_class = $tpl;
+    require(get_template_directory() . '/header.php');
+} else {
+    get_header();
+}
 
 global $post;
 $data = get_post_meta($post->ID);
@@ -39,7 +49,7 @@ if (!empty($data['bingo_card_own_content'][0])) {
     $bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
     ?>
     <div class="custom-container">
-        <main class="lbcg-parent">
+        <main class="lbcg-parent lbcg-loading">
             <div class="lbcg-card-view">
                 <div class="lbcg-card-wrap" style="min-width: 350px;">
                     <?php include __DIR__ . '/props-template.php'; ?>
@@ -75,7 +85,7 @@ if (!empty($data['bingo_card_own_content'][0])) {
                                         <div class="lbcg-card-col">
                                         <span class="lbcg-card-text"><?php
                                             if ((int)ceil($grid_sq_count / 2) === $i && $bingo_grid_free_square) {
-                                                echo BingoCardHelper::$free_space_word;
+                                                echo LBCGHelper::$free_space_word;
                                             } else {
                                                 echo $bingo_card_words[$i - 1];
                                             }
@@ -96,4 +106,11 @@ if (!empty($data['bingo_card_own_content'][0])) {
     <p>Invalid card.</p>
     <?php
 }
-get_footer();
+if ($lbcg_current_theme_name === 'BNBS') {
+    $data = array('footer'=>array());
+    require(get_template_directory() . '/models/m-partials.php');
+    $footer = $data['footer'];
+    require(get_template_directory() . '/footer.php');
+} else {
+    get_footer();
+}
