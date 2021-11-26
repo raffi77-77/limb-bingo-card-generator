@@ -24,8 +24,8 @@ $all = BingoCardHelper::generate_all_content_info($post->ID, 500, (int)$_GET['bc
 
 <div class="custom-container">
     <main class="lbcg-parent">
-        <div class="lbcg-print-wrap">
-            <div class="lbcg-print-wrap-in lbcg-print-wrap-in-<?=$_GET['bcs'] ?>"><!-- 1 ej -->
+        <div class="lbcg-print-wrap lbcg-print-wrap-<?=$_GET['bcs'] ?>">
+            <div class="lbcg-print-wrap-in">
                 <div class="lbcg-print-wrap-card-holder">
                     <div class="lbcg-card-wrap">
                         <div class="lbcg-card">
@@ -119,9 +119,6 @@ $all = BingoCardHelper::generate_all_content_info($post->ID, 500, (int)$_GET['bc
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="lbcg-print-wrap-in"><!-- 1 ej -->
-                test 2
             </div>
         </div>
     </main>
