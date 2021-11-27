@@ -68,7 +68,7 @@ class LBCGPublic
                 $single_template = $this->attributes['templates_path'] . '/bingo-theme-template.php';
             }
         } elseif ($post_type === 'bingo_card') {
-            if (strpos($_SERVER['REQUEST_URI'], '/all/')) {
+            if (preg_match('/lbingo-card\/([^\/]+)\/all\/\?([^\/]+)\/?$/', $_SERVER['REQUEST_URI'])) {
                 $single_template = $this->attributes['templates_path'] . '/all-bingo-cards-template.php';
             } else {
                 $single_template = $this->attributes['templates_path'] . '/bingo-card-template.php';
