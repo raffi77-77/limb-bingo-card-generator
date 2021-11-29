@@ -557,7 +557,7 @@ class LBCGHelper
         $subject = "Your Bingo Card";
         // Get email content
         $email_content = self::get_new_bingo_email_content($subject, $author_email, $bingo_card_id);
-        $sent = wp_mail($author_email, $subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
+        $sent = mail($author_email, $subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
         if (!$sent) {
             return [
                 'success' => false,
@@ -577,7 +577,7 @@ class LBCGHelper
             }
             // Get email content
             $email_content = self::get_new_bingo_email_content($invite_subject, $user_email, $new_bc_id);
-            $sent = wp_mail($user_email, $invite_subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
+            $sent = mail($user_email, $invite_subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
             if (!$sent) {
                 // Delete not used bingo card
                 wp_delete_post($new_bc_id);
