@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // On font change
             document.documentElement.style.setProperty('--lbcg-header-font-family', LBCG['fonts'][event.target.value]['name'] + ', sans-serif');
             document.documentElement.style.setProperty('--lbcg-grid-font-family', LBCG['fonts'][event.target.value]['name'] + ', sans-serif');
+            checkGridFontSize();
         } else if (event.target.matches('#lbcg-free-space-check')) {
             // On free space checkbox change
             changeFreeSpaceItem(event.target.checked);
