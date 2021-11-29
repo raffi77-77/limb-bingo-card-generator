@@ -595,7 +595,7 @@
       z-index: 2;
       font-family: var(--lbcg-grid-font-family);
       font-size: var(--lbcg-grid-font-size);
-      line-height: inherit;
+      line-height: var(--lbcg-grid-line-height);
       color: inherit;
       overflow-wrap: anywhere; }
     .lbcg-parent .lbcg-card img.emoji {

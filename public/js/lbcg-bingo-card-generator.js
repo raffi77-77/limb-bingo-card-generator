@@ -59,15 +59,25 @@ document.addEventListener('DOMContentLoaded', function () {
      * @param spans
      */
     function checkWrapWordInGrid(spans) {
-        let fontSize = 0;
+        let madeChange = false,
+            fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
+            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
+            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.9;
+        fontSize = parseFloat(fontSize.split('px')[0]);
         for (let i = 0; i < spans.length; i++) {
-            while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) && fontSize < spans[i].offsetHeight) {
-                fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size');
-                fontSize = parseFloat(fontSize.split('px')[0]);
-                document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize - 0.5) + 'px');
+            while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
+                document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+                madeChange = true;
             }
+            // Wait for new changes
+            setTimeout(() => {
+                while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
+                    document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+                    madeChange = true;
+                }
+            }, 10);
         }
-        return fontSize !== 0;
+        return madeChange;
     }
 
     /**
@@ -86,13 +96,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 bigWordExists = true;
             }
         }
-        let fontSize = 0;
-        while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && fontSize < spans[maxLengthIndex].offsetHeight) {
-            fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size');
-            fontSize = parseFloat(fontSize.split('px')[0]);
-            document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize + 0.5) + 'px');
+        let madeChange = false,
+            fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
+            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
+            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.9;
+        fontSize = parseFloat(fontSize.split('px')[0]);
+        while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && fontSize < maxFontSize) {
+            madeChange = true;
+            document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize += 0.5) + 'px');
         }
-        if (fontSize !== 0) {
+        if (madeChange) {
             document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize - 0.5) + 'px');
             return true;
         }
@@ -159,7 +172,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 freeSpaceEl.checked = window.LBCIncludeFreeSpace;
                 freeSpaceEl.parentNode.style.display = '';
             }
+            document.documentElement.style.setProperty('--lbcg-grid-line-height', gridSize === '3x3' ? '102px' : (gridSize === '4x4' ? '76.25px' : '60.8px'));
             drawNewGrid();
+            checkGridFontSize();
         } else if (event.target.matches('#lbcg-font')) {
             // On font change
             document.documentElement.style.setProperty('--lbcg-header-font-family', LBCG['fonts'][event.target.value]['name'] + ', sans-serif');

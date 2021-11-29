@@ -26,7 +26,7 @@
 
         --lbcg-grid-font-size: 16px;
         --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCGHelper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
-        --lbcg-grid-line-height: <?php echo $data['bingo_card_type'][0] === '1-90' ? '34.3px' : '61.8px'; ?>;
+        --lbcg-grid-line-height: <?php echo $data['bingo_card_type'][0] === '1-90' ? '33.3px' : ($data['bingo_grid_size'][0] === '3x3' ? '102px' : ($data['bingo_grid_size'][0] === '4x4' ? '76.25px' : '60.8px')); ?>;
         --lbcg-grid-text-color: #79ffd3;
         --lbcg-grid-border-color: #45ffbf;
         --lbcg-grid-bg-image: <?php echo !empty($bc_grid['image']) ? 'url(' . wp_get_attachment_image_url($bc_grid['image'], 'large') . ')' : 'none'; ?>;
