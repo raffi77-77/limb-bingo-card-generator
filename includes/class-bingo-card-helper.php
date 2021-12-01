@@ -44,27 +44,6 @@ class LBCGHelper
      */
     public static $free_space_word = '&#9733;';
 
-    public static $default_empty_items = [
-        [[4, 5, 2, 7],
-        [2, 7, 5, 4],
-        [2, 1, 7, 3]],
-        [[5, 1, 2, 0],
-        [3, 2, 4, 1],
-        [8, 3, 6, 0]],
-        [[8, 5, 7, 3],
-        [8, 0, 4, 1],
-        [1, 7, 2, 4]],
-        [[7, 3, 6, 0],
-        [2, 6, 4, 3],
-        [0, 1, 5, 6]],
-        [[6, 7, 4, 0],
-        [4, 3, 1, 0],
-        [4, 0, 3, 6]],
-        [[6, 1, 8, 3],
-        [5, 3, 8, 7],
-        [6, 3, 2, 0]]
-    ];
-
     /**
      * Register custom post types and hooks
      */
@@ -287,66 +266,73 @@ class LBCGHelper
      */
     public static function get_1_90_bingo_card_numbers($random = false)
     {
-        $card_numbers = [];
-        for ($k = 0; $k < 6; $k++) {
-            $single_card_num = [];
-            $single_card_num[] = self::get_1_90_card_sub_numbers(1, 9, $random);
-            for ($i = 10; $i < 71; $i += 10) {
-                $single_card_num[] = self::get_1_90_card_sub_numbers($i, $i + 9, $random);
+        if (!$random) {
+            // Return card default numbers
+            return [
+                [6, 17, '', 35, 44, 53, '', '', '', 3, '', 28, '', '', 54, 65, '', 81, '', 10, 25, 30, '', '', '', 73, 83],
+                [4, '', '', '', '', 57, 61, 71, 82, 1, '', '', 38, '', 56, '', 75, 80, '', 15, 24, '', 47, '', 68, 70, ''],
+                ['', 12, 29, '', 46, 59, 66, '', '', '', '', 20, 32, 40, '', '', 79, 85, 2, 14, 26, '', 49, 55, '', '', ''],
+                ['', 13, '', 33, '', 52, 63, '', 90, 7, '', '', 39, '', '', 64, 76, 86, '', 19, 22, 34, 42, '', '', 74, ''],
+                ['', 16, 23, 31, '', 50, '', '', 87, 9, 11, 21, '', 41, '', '', '', 84, 8, '', '', '', 43, '', 62, 77, 89],
+                ['', '', '', 37, 45, 51, 67, 78, '', 5, '', 27, '', 48, 58, 60, '', '', '', 18, '', 36, '', '', 69, 72, 88]
+            ];
+        }
+        // Collect random card numbers
+        $cols = [];
+        $tmp = range(1, 9);
+        shuffle($tmp);
+        $cols[] = $tmp;
+        for ($i = 10; $i < 71; $i += 10) {
+            $tmp = range($i, $i + 9);
+            shuffle($tmp);
+            $cols[] = $tmp;
+        }
+        $tmp = range(80, 90);
+        shuffle($tmp);
+        $cols[] = $tmp;
+        for ($i = 0; $i < 18; $i++) {
+            $tmp = range(0, 8);
+            shuffle($tmp);
+            for ($j = 0, $k = 0; $k < 9 && $j < 4; $k++) {
+                if (self::empty_item_added($cols, $tmp[$k], $i)) {
+                    $j++;
+                }
             }
-            $single_card_num[] = self::get_1_90_card_sub_numbers(80, 90, $random);
-            $card_numbers[$k] = $single_card_num;
-            self::empty_each_line_four_items($card_numbers[$k], $k, $random);
         }
         $bingo_card_numbers = [];
-        for ($k = 0; $k < 6; $k++) {
-            for ($i = 0; $i < 3; $i++) {
-                for ($j = 0; $j < 9; $j++) {
-                    $bingo_card_numbers[$k][] = $card_numbers[$k][$j][$i];
-                }
+        for ($i = 0; $i < 18; $i++) {
+            for ($j = 0; $j < 9; $j++) {
+                $bingo_card_numbers[floor($i / 3)][] = $cols[$j][$i];
             }
         }
         return $bingo_card_numbers;
     }
 
     /**
-     * Get card col numbers
+     * Add empty item in the column of 1-90 card
      *
-     * @param int $start
-     * @param int $end
-     * @param bool $random
-     * @return array
+     * @param $cols
+     * @param $col
+     * @param $offset
+     * @return bool
      */
-    public static function get_1_90_card_sub_numbers($start, $end, $random = false)
+    public static function empty_item_added(&$cols, $col, $offset)
     {
-        $temp_num = range($start, $end);
-        if ($random === true) {
-            shuffle($temp_num);
+        $z = 0;
+        for ($j = 0; $j < count($cols[$col]); $j++) {
+            if ($cols[$col][$j] === '') {
+                $z++;
+            }
         }
-        return array_slice($temp_num, 0, 3);
-    }
-
-    /**
-     * Set empty items in card
-     *
-     * @param array $card_numbers
-     * @param int $index
-     * @param bool $random
-     */
-    public static function empty_each_line_four_items(&$card_numbers, $index, $random = false)
-    {
-        $temp_indexes = range(0, 8);
-        for ($i = 0; $i < 3; $i++) {
-            if ($random === true) {
-                shuffle($temp_indexes);
-                $tmp = array_slice($temp_indexes, 0, 4);
+        if ($col === 0 && $z < 9 || $col === 8 && $z < 7 || $col !== 0 && $col !== 8 && $z < 8) {
+            if ($offset >= count($cols[$col])) {
+                $cols[$col][] = '';
             } else {
-                $tmp = self::$default_empty_items[$index][$i];
+                array_splice($cols[$col], $offset, 0, '');
             }
-            foreach ($tmp as $j) {
-                $card_numbers[$j][$i] = '';
-            }
+            return true;
         }
+        return false;
     }
 
     /**
