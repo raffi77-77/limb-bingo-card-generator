@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     /**
      * Check words count in container
+     *
+     * @param event
+     * @returns {boolean}
      */
     function checkWordsCount(event) {
         let $this;
@@ -12,17 +15,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const words = $this.value.split("\n"),
             bingoGridSize = document.getElementById('bc-size').value;
-        let needWordsCount = 100;
+        let needWordsCount = 25;
         if (bingoGridSize === '3x3') {
-            needWordsCount = 36;
+            needWordsCount = 9;
         } else if (bingoGridSize === '4x4') {
-            needWordsCount = 64;
+            needWordsCount = 16;
         }
-        if (words.length !== needWordsCount) {
+        if (words.filter(word => word !== '').length < needWordsCount) {
             $this.style.border = '2px solid #b32d2e';
-        } else {
-            $this.style.border = '1px solid #8c8f94';
+            return false;
         }
+        $this.style.border = '1px solid #8c8f94';
+        return true;
     }
 
     document.getElementById('bc-content').addEventListener('input', checkWordsCount);
@@ -39,11 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementsByName('bingo_grid_size')[0].value = value;
             const countEl = document.getElementById('content-items-count');
             if (value === '3x3') {
-                countEl.innerHTML = 36;
+                countEl.innerHTML = 9;
             } else if (value === '4x4') {
-                countEl.innerHTML = 64;
+                countEl.innerHTML = 16;
             } else {
-                countEl.innerHTML = 100;
+                countEl.innerHTML = 25;
             }
             if (value === '4x4' || bingoCardType === '1-75' || bingoCardType === '1-90') {
                 freeSquareEl.style.display = 'none';
@@ -64,22 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
             gridSize = document.getElementById('bc-size'),
             gridSizeInput = document.getElementsByName('bingo_grid_size')[0],
             specTitleElements = document.querySelectorAll('td.bc-title-1-75'),
-            contentElements = document.querySelectorAll('td.bc-content'),
-            contentItemsCount = document.getElementById('content-items-count');
+            contentElements = document.querySelectorAll('td.bc-content');
         switch (thisValue) {
-            case '1-9':
-                // Only 3x3
-                gridSize.value = '3x3';
-                gridSizeInput.value = '3x3';
-                gridSize.setAttribute('disabled', 'disabled');
-                specTitleElements.forEach(function (el) {
-                    el.style.display = 'none';
-                });
-                contentElements.forEach(function (el) {
-                    el.style.display = '';
-                });
-                contentItemsCount.innerHTML = 36;
-                break;
             case '1-75':
                 // Only 5x5
                 gridSize.value = '5x5';
@@ -105,11 +95,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     el.style.display = 'none';
                 });
                 break;
-            case '1-25':
-            case '1-80':
-            case '1-100':
+            case 'generic':
                 // All grids
-                gridSize.value = '5x5';
+                gridSize.value = '3x3';
                 gridSize.removeAttribute('disabled');
                 specTitleElements.forEach(function (el) {
                     el.style.display = 'none';
@@ -130,6 +118,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!cardType.length) {
             event.preventDefault();
             alert("Please select bingo card type before save the post.");
+        } else if (!checkWordsCount()) {
+            event.preventDefault();
+            alert("Please provide a minimum words/emojis or numbers quantity.");
         }
     });
 

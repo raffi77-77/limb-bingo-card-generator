@@ -1,5 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
     /**
+     * Check words count in container
+     *
+     * @returns {string}
+     */
+    function checkWordsCount() {
+        const words = document.getElementById('lbcg-body-content').value.split("\n"),
+            bingoGridSize = document.getElementById('lbcg-grid-size').value;
+        let needWordsCount = 25;
+        if (bingoGridSize === '3x3') {
+            needWordsCount = 9;
+        } else if (bingoGridSize === '4x4') {
+            needWordsCount = 16;
+        }
+        if (words.filter(word => word !== '').length < needWordsCount) {
+            return "Please fill minimum " + needWordsCount + " words/emojis or numbers, each in new line.";
+        }
+        return "";
+    }
+
+    /**
      * Show or hide loading element
      *
      * @param show
@@ -20,17 +40,22 @@ document.addEventListener('DOMContentLoaded', function () {
      * Draw new grid
      */
     function drawNewGrid() {
-        const gridColsCount = document.getElementById('lbcg-grid-size').value.replace('grid-', '')[0],
+        const words_count_message = checkWordsCount(),
+            gridColsCount = document.getElementById('lbcg-grid-size').value[0],
             words = document.getElementById('lbcg-body-content').value.split("\n"),
             includeFreeSpace = document.getElementById('lbcg-free-space-check').checked,
             newItemsCount = gridColsCount ** 2;
         let gridItems = '';
-        for (let i = 1; i <= newItemsCount; i++) {
+        for (let i = 1, j = 1; i <= newItemsCount; j++) {
+            if (words_count_message === '' && (typeof words[j - 1] === 'undefined' || words[j - 1] === '')) {
+                continue;
+            }
             gridItems += '<div class="lbcg-card-col">' +
                 '<span class="lbcg-card-text">' +
-                (Math.round(newItemsCount / 2) === i && includeFreeSpace ? LBCG['freeSquareWord'] : words[i - 1]) +
+                (Math.round(newItemsCount / 2) === i && includeFreeSpace ? LBCG['freeSquareWord'] : (typeof words[j - 1] === 'undefined' ? '' : words[j - 1])) +
                 '</span>' +
-                '</div>'
+                '</div>';
+            i++;
         }
         const gridBodyEl = document.querySelector('div.lbcg-card-body-grid'),
             currentGridSize = Math.sqrt(document.querySelectorAll('div.lbcg-card-body-grid span.lbcg-card-text').length);
@@ -62,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let madeChange = false,
             fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
             lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
-            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.9;
+            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
         fontSize = parseFloat(fontSize.split('px')[0]);
         for (let i = 0; i < spans.length; i++) {
             while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
@@ -99,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let madeChange = false,
             fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
             lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
-            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.9;
+            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
         fontSize = parseFloat(fontSize.split('px')[0]);
         while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && fontSize < maxFontSize) {
             madeChange = true;
@@ -145,14 +170,19 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (event.target.matches('#lbcg-body-content')) {
             // On bingo card content change
             toggleLoading(true);
+            const words_count_message = checkWordsCount();
             const words = event.target.value.split("\n"),
                 gridItems = document.querySelectorAll('div.lbcg-card-body-grid span.lbcg-card-text'),
                 includeFreeSpace = document.getElementById('lbcg-free-space-check').checked;
-            for (let i = 1; i <= gridItems.length; i++) {
+            for (let i = 1, j = 1; i <= gridItems.length; j++) {
                 if (Math.round(gridItems.length / 2) === i && includeFreeSpace) {
                     gridItems[i - 1].innerHTML = LBCG['freeSquareWord'];
                 } else {
-                    gridItems[i - 1].innerHTML = words[i - 1];
+                    if (words_count_message === '' && (typeof words[j - 1] === 'undefined' || words[j - 1] === '')) {
+                        continue;
+                    }
+                    gridItems[i - 1].innerHTML = typeof words[j - 1] === 'undefined' ? '' : words[j - 1];
+                    i++;
                 }
             }
             checkGridFontSize();
@@ -203,6 +233,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.matches('#lbcg-bc-generation')) {
             // On card generation button click
             event.preventDefault();
+            const words_count_message = checkWordsCount();
+            if (words_count_message !== '') {
+                alert(words_count_message);
+                return false;
+            }
             const data = new FormData(event.target);
             const request = new XMLHttpRequest();
             request.onreadystatechange = function () {

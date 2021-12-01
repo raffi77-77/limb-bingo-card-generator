@@ -35,7 +35,7 @@ if (!empty($_GET['bc'])) {
 if (empty($data)) {
     $data = get_post_meta($current_id);
 }
-$bingo_card_type = !empty($data['bingo_card_type'][0]) ? $data['bingo_card_type'][0] : '1-9';
+$bingo_card_type = !empty($data['bingo_card_type'][0]) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size = !empty($data['bingo_grid_size'][0]) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = !empty($data['bingo_card_title'][0]) ? $data['bingo_card_title'][0] : '';
 // Special title
@@ -54,7 +54,7 @@ if ($bingo_card_type === '1-75') {
     if (!empty($data['bingo_card_content'][0])) {
         $bingo_card_content = $data['bingo_card_content'][0];
     } else {
-        $result = LBCGHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
+        $result = LBCGHelper::get_bg_default_content($bingo_grid_size);
         $bingo_card_content = $result['words'];
     }
     $bingo_card_words = explode("\r\n", $bingo_card_content);
@@ -179,7 +179,7 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 <textarea class="lbcg-input" id="lbcg-body-content" name="bingo_card_content" cols=""
                                           rows="11"><?php echo !empty($data['bingo_card_content'][0]) ? $data['bingo_card_content'][0] : ''; ?></textarea>
                             </div>
-                            <div class="lbcg-input-wrap" <?php echo !($bingo_card_type !== '1-9' && $bingo_card_type !== '1-75' && $bingo_card_type !== '1-90') ? 'style="display: none;"' : ''; ?>>
+                            <div class="lbcg-input-wrap" <?php echo !($bingo_card_type !== '1-75' && $bingo_card_type !== '1-90') ? 'style="display: none;"' : ''; ?>>
                                 <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
                                 <select name="bingo_grid_size" id="lbcg-grid-size" class="lbcg-select">
                                     <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>

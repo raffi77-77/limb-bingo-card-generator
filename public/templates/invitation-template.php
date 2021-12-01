@@ -58,7 +58,7 @@ if (!empty($bc_posts[0]->ID)) {
         if (!empty($data['bingo_card_content'][0])) {
             $bingo_card_content = $data['bingo_card_content'][0];
         } else {
-            $result = LBCGHelper::get_bg_default_content($bingo_card_type, $bingo_grid_size);
+            $result = LBCGHelper::get_bg_default_content($bingo_grid_size);
             $bingo_card_content = $result['words'];
         }
         $bingo_card_words = explode("\r\n", $bingo_card_content);

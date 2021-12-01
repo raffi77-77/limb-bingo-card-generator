@@ -236,22 +236,17 @@ class LBCGHelper
      * @param string $size
      * @return array
      */
-    public static function get_bg_default_content($type, $size)
+    public static function get_bg_default_content($size)
     {
-        if (empty($type) || empty($size)) {
-            $type = '1-9';
-            $size = '3x3';
-        }
+        $min_count = 25;
         if ($size === '3x3') {
-            $to = 36;
+            $min_count = 9;
         } elseif ($size === '4x4') {
-            $to = 64;
-        } else {
-            $to = 100;
+            $min_count = 16;
         }
         return [
-            'words_count' => $to,
-            'words' => implode("\n", range(1, $to))
+            'words_count' => $min_count,
+            'words' => implode("\n", range(1, $min_count))
         ];
     }
 
@@ -438,6 +433,7 @@ class LBCGHelper
         }
         // Words/emojis or numbers
         if (!in_array($data['bingo_card_type'], $special_cards) && !empty($data['bingo_card_content'])) {
+            $data['bingo_card_content'] = preg_replace("/(\r?\n){2,}/", "\r\n", $data['bingo_card_content']);
             update_post_meta($post_id, 'bingo_card_content', trim(wp_strip_all_tags($data['bingo_card_content'])));
         }
         // Header color, image with attributes
