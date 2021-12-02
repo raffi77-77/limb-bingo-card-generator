@@ -26,7 +26,7 @@ if (!empty($_GET['bc'])) {
         'name' => $_GET['bc'],
         'post_type' => 'bingo_card',
         'posts_per_page' => 1,
-        'post_status' => 'draft',
+        'post_status' => 'publish',
     ]);
     if (!empty($bc_posts[0]->ID)) {
         $data = get_post_meta($bc_posts[0]->ID);
@@ -138,6 +138,9 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                         <input type="hidden" name="action" value="lbcg_bc_generation">
                         <input type="hidden" name="bingo_theme_id" value="<?php echo $current_id; ?>">
                         <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
+                        <?php if (!empty($bc_posts[0]->ID)): ?>
+                        <input type="hidden" name="bc" value="<?php echo $_GET['bc']; ?>">
+                        <?php endif; ?>
                         <div class="lbcg-content-form">
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-title" class="lbcg-label">Enter a Title</label>

@@ -687,6 +687,20 @@ class LBCGHelper
      */
     public static function insert_bingo_card($data, $status = 'draft')
     {
+        if (!empty($_POST['bc'])) {
+            $bc_posts = get_posts([
+                'name' => $_POST['bc'],
+                'post_type' => 'bingo_card',
+                'posts_per_page' => 1,
+                'post_status' => 'publish'
+            ]);
+            if (isset($bc_posts[0]) && !empty($bc_posts[0]->ID)) {
+                return [
+                    'id' => $bc_posts[0]->ID,
+                    'uniq_id' => $_POST['bc']
+                ];
+            }
+        }
         $title = "Bingo Card {$data['bingo_card_type']} {$data['bingo_grid_size']}";
         $uniq_string = wp_generate_password(16, false);
 //        $uniq_string = wp_generate_uuid4();

@@ -99,7 +99,7 @@ class LBCGAjax
                 'name' => $_POST['bingo_card_uid'],
                 'post_type' => 'bingo_card',
                 'posts_per_page' => 1,
-                'post_status' => 'publish'//'draft',
+                'post_status' => 'publish'
             ]);
             if (empty($bc_posts[0]->ID)) {
                 print_r(json_encode([

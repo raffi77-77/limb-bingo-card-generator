@@ -6,7 +6,11 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function checkWordsCount() {
         const words = document.getElementById('lbcg-body-content').value.split("\n"),
-            bingoGridSize = document.getElementById('lbcg-grid-size').value;
+            bingoGridSize = document.getElementById('lbcg-grid-size').value,
+            bingoCardType = document.getElementsByName('bingo_card_type')[0].value;
+        if (bingoCardType === '1-75' || bingoCardType === '1-90') {
+            return "";
+        }
         let needWordsCount = 25;
         if (bingoGridSize === '3x3') {
             needWordsCount = 9;
@@ -160,6 +164,21 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 sidebarHeader.classList.add('collapsed')
             }
+        } else if (event.target.matches('.remove-bc-image')) {
+            event.preventDefault();
+            const type = event.target.getAttribute('data-bct');
+            document.getElementById('bc-' + type + '-image').value = '';
+            document.getElementsByName('bc_' + type + '[remove_image]')[0].value = 1;
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
+        } else if (event.target.matches('#lbcg-view-all-cards')) {
+            event.preventDefault();
+            const ccEl = document.getElementById('lbcg-cards-custom-count');
+            const bcc = parseInt(ccEl.value);
+            if (isNaN(bcc) || bcc <= 0) {
+                ccEl.disabled = true;
+            }
+            document.forms['lbcg-view-all-cards-form'].submit();
+            ccEl.disabled = false;
         }
     });
 
@@ -213,6 +232,9 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (event.target.matches('#lbcg-free-space-check')) {
             // On free space checkbox change
             changeFreeSpaceItem(event.target.checked);
+        } else if (event.target.matches('#lbcg-cards-custom-count')) {
+            const bcc = parseInt(event.target.value);
+            document.getElementById('lbcg-cards-count').disabled = bcc > 0;
         }
     });
 
@@ -306,16 +328,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // On opacity change
             const type = event.target.getAttribute('data-bct');
             document.documentElement.style.setProperty('--lbcg-' + type + '-bg-opacity', event.target.value / 100);
-        }
-    });
-    // Remove image
-    document.addEventListener('click', function (event) {
-        if (event.target.matches('.remove-bc-image')) {
-            event.preventDefault();
-            const type = event.target.getAttribute('data-bct');
-            document.getElementById('bc-' + type + '-image').value = '';
-            document.getElementsByName('bc_' + type + '[remove_image]')[0].value = 1;
-            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
         }
     });
 });

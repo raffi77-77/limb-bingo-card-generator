@@ -30,7 +30,7 @@ if (isset($_GET['bc'])) {
         'name' => $_GET['bc'],
         'post_type' => 'bingo_card',
         'posts_per_page' => 1,
-        'post_status' => 'publish'// 'draft'
+        'post_status' => 'publish'
     ]);
 } else {
     $bc_posts = [];
@@ -128,7 +128,7 @@ if (!empty($bc_posts[0]->ID)) {
 
                 <aside class="lbcg-sidebar">
                     <div class="lbcg-sidebar-form">
-                        <form action="<?php echo $bc_permalink . 'all/'; ?>" method="get" target="_blank">
+                        <form id="lbcg-view-all-cards-form" action="<?php echo $bc_permalink . 'all/'; ?>" method="get" target="_blank">
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-cards-count" class="lbcg-label">Cards count</label>
                                 <select name="bcc" id="lbcg-cards-count" class="lbcg-select">
@@ -139,6 +139,10 @@ if (!empty($bc_posts[0]->ID)) {
                                 </select>
                             </div>
                             <div class="lbcg-input-wrap">
+                                <label for="lbcg-cards-custom-count" class="lbcg-label">Cards custom count</label>
+                                <input type="number" id="lbcg-cards-custom-count" class="lbcg-input" name="bcc" value="" min="0">
+                            </div>
+                            <div class="lbcg-input-wrap">
                                 <label for="lbcg-cards-per-page" class="lbcg-label">Cards per page count</label>
                                 <select name="bcs" id="lbcg-cards-per-page" class="lbcg-select" <?php echo $bingo_card_type === '1-90' ? 'disabled' : ''; ?>>
                                     <option value="1">1 large card</option>
@@ -147,7 +151,7 @@ if (!empty($bc_posts[0]->ID)) {
                                 </select>
                             </div>
                             <div class="lbcg-input-wrap lbcg-buttons-wrap">
-                                <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">View</button>
+                                <button id="lbcg-view-all-cards" class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">View</button>
                             </div>
                         </form>
                     </div>

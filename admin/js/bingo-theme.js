@@ -14,7 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
             $this = document.getElementById('bc-content');
         }
         const words = $this.value.split("\n"),
-            bingoGridSize = document.getElementById('bc-size').value;
+            bingoGridSize = document.getElementById('bc-size').value,
+            bingoCardType = document.getElementById('bc-type').value;
+        if (bingoCardType === '1-75' || bingoCardType === '1-90') {
+            return true;
+        }
         let needWordsCount = 25;
         if (bingoGridSize === '3x3') {
             needWordsCount = 9;
