@@ -277,78 +277,58 @@ class LBCGHelper
                 ['', '', '', 37, 45, 51, 67, 78, '', 5, '', 27, '', 48, 58, 60, '', '', '', 18, '', 36, '', '', 69, 72, 88]
             ];
         }
-        // Collect random card numbers
-        $cols = [];
-        $tmp = range(1, 9);
-        shuffle($tmp);
-        $cols[] = $tmp;
-        for ($i = 10; $i < 71; $i += 10) {
-            $tmp = range($i, $i + 9);
-            shuffle($tmp);
-            $cols[] = $tmp;
-        }
-        $tmp = range(80, 90);
-        shuffle($tmp);
-        $cols[] = $tmp;
-        // Set four empty items in the line
+        $sub_cards = array_fill(0, 18, array_fill(0, 9, 0));
+        $num_counts_in_columns = [9, 10, 10, 10, 10, 10, 10, 10, 11];
+        // Set numbers indexes
         for ($i = 0; $i < 18; $i++) {
-            $tmp = range(0, 8);
-            shuffle($tmp);
-            for ($j = 0, $k = 0; $k < 9 && $j < 4; $k++) {
-                // Add empty item if possible
-                $added = self::empty_item_added($cols, $tmp[$k], $i);
-                if ($added) {
-                    $j++;
+            $possibilities = [];
+            $forced = [];
+            $needs_count = 5;
+            // Get possibility and forced indexes
+            for ($c = 0; $c < 9; $c++) {
+                if ($num_counts_in_columns[$c] === 18 - $i) {
+                    $forced[] = $c;
+                    $needs_count--;
+                } else if ($num_counts_in_columns[$c]) {
+                    $possibilities[] = $c;
                 }
             }
+            shuffle($possibilities);
+            // Set possibilities indexes
+            for ($j = 0; $j < $needs_count; $j++) {
+                --$num_counts_in_columns[$possibilities[$j]];
+                ++$sub_cards[$i][$possibilities[$j]];
+            }
+            // Set forced indexes
+            for ($j = 0; $j < 5 - $needs_count; $j++) {
+                --$num_counts_in_columns[$forced[$j]];
+                ++$sub_cards[$i][$forced[$j]];
+            }
+        }
+        $numbers = range(1, 90);
+        shuffle($numbers);
+        $line_in_column = array_fill(0, 9, 0);
+        // Fill with numbers
+        for ($i = 0; $i < 90; $i++) {
+            if ($numbers[$i] === 90) {
+                $column = 8;
+            } else {
+                $column = (int)($numbers[$i] / 10);
+            }
+            while ($sub_cards[$line_in_column[$column]][$column] === 0) {
+                ++$line_in_column[$column];
+            }
+            $sub_cards[$line_in_column[$column]][$column] = $numbers[$i];
+            ++$line_in_column[$column];
         }
         // Collect card items
         $bingo_card_numbers = [];
         for ($i = 0; $i < 18; $i++) {
             for ($j = 0; $j < 9; $j++) {
-                $bingo_card_numbers[(int)($i / 3)][] = $cols[$j][$i];
+                $bingo_card_numbers[(int)($i / 3)][] = $sub_cards[$i][$j] ?: '';
             }
         }
         return $bingo_card_numbers;
-    }
-
-    /**
-     * Add empty item in the column of 1-90 card
-     *
-     * @param $cols
-     * @param $col
-     * @param $offset
-     * @return bool
-     */
-    public static function empty_item_added(&$cols, $col, $offset)
-    {
-        $length = count($cols[$col]);
-        $z = 0;
-        for ($j = 0; $j < $length; $j++) {
-            if ($cols[$col][$j] === '') {
-                $z++;
-            }
-        }
-        if ($col === 0 && $z < 9 || $col === 8 && $z < 7 || $col % 8 !== 0 && $z < 8) {
-            if ($offset >= $length) {
-                $cols[$col][] = '';
-                // Fix line
-                $z = [];
-                for ($k = 0; $k < 9; $k++) {
-                    if ($cols[$k][$length] === '') {
-                        $z[] = $k;
-                    }
-                }
-                while (count($z) > 4) {
-                    shuffle($z);
-                    unset($cols[array_pop($z)][$length]);
-                }
-            } else {
-                array_splice($cols[$col], $offset, 0, '');
-            }
-            return true;
-        }
-        return false;
     }
 
     /**
