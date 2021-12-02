@@ -290,19 +290,34 @@ class LBCGHelper
         $tmp = range(80, 90);
         shuffle($tmp);
         $cols[] = $tmp;
+        // Set four empty items in the line
         for ($i = 0; $i < 18; $i++) {
             $tmp = range(0, 8);
             shuffle($tmp);
             for ($j = 0, $k = 0; $k < 9 && $j < 4; $k++) {
-                if (self::empty_item_added($cols, $tmp[$k], $i)) {
+                // Add empty item if possible
+                $added = self::empty_item_added($cols, $tmp[$k], $i);
+                if ($added) {
                     $j++;
                 }
             }
+            // Fix issues
+            $z = [];
+            for ($k = 0; $k < 9; $k++) {
+                if ($cols[$k][$i] === '') {
+                    $z[] = $k;
+                }
+            }
+            while (count($z) > 4) {
+                shuffle($z);
+                unset($cols[array_pop($z)][$i]);
+            }
         }
+        // Collect card items
         $bingo_card_numbers = [];
         for ($i = 0; $i < 18; $i++) {
             for ($j = 0; $j < 9; $j++) {
-                $bingo_card_numbers[floor($i / 3)][] = $cols[$j][$i];
+                $bingo_card_numbers[(int)($i / 3)][] = $cols[$j][$i];
             }
         }
         return $bingo_card_numbers;
@@ -318,14 +333,15 @@ class LBCGHelper
      */
     public static function empty_item_added(&$cols, $col, $offset)
     {
+        $length = count($cols[$col]);
         $z = 0;
-        for ($j = 0; $j < count($cols[$col]); $j++) {
+        for ($j = 0; $j < $length; $j++) {
             if ($cols[$col][$j] === '') {
                 $z++;
             }
         }
-        if ($col === 0 && $z < 9 || $col === 8 && $z < 7 || $col !== 0 && $col !== 8 && $z < 8) {
-            if ($offset >= count($cols[$col])) {
+        if ($col === 0 && $z < 9 || $col === 8 && $z < 7 || $col % 8 !== 0 && $z < 8) {
+            if ($offset >= $length) {
                 $cols[$col][] = '';
             } else {
                 array_splice($cols[$col], $offset, 0, '');
