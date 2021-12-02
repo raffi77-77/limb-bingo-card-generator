@@ -301,17 +301,6 @@ class LBCGHelper
                     $j++;
                 }
             }
-            // Fix issues
-            $z = [];
-            for ($k = 0; $k < 9; $k++) {
-                if ($cols[$k][$i] === '') {
-                    $z[] = $k;
-                }
-            }
-            while (count($z) > 4) {
-                shuffle($z);
-                unset($cols[array_pop($z)][$i]);
-            }
         }
         // Collect card items
         $bingo_card_numbers = [];
@@ -343,6 +332,17 @@ class LBCGHelper
         if ($col === 0 && $z < 9 || $col === 8 && $z < 7 || $col % 8 !== 0 && $z < 8) {
             if ($offset >= $length) {
                 $cols[$col][] = '';
+                // Fix line
+                $z = [];
+                for ($k = 0; $k < 9; $k++) {
+                    if ($cols[$k][$length] === '') {
+                        $z[] = $k;
+                    }
+                }
+                while (count($z) > 4) {
+                    shuffle($z);
+                    unset($cols[array_pop($z)][$length]);
+                }
             } else {
                 array_splice($cols[$col], $offset, 0, '');
             }
