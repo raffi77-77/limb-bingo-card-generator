@@ -62,7 +62,7 @@ class LBCGPublic
     {
         global $post_type;
         if ($post_type === 'bingo_theme') {
-            if (strpos($_SERVER['REQUEST_URI'], '/invitation/') !== false) {
+            if (preg_match('/bingo-card-generator\/([^\/]+)\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'])) {
                 $single_template = $this->attributes['templates_path'] . '/invitation-template.php';
             } else {
                 $single_template = $this->attributes['templates_path'] . '/bingo-theme-template.php';

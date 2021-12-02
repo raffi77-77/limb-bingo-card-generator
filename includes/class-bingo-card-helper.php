@@ -90,13 +90,13 @@ class LBCGHelper
                 'capability_type' => 'post',
                 'has_archive' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => '/category/%bt-cat%/lbingo-theme'),
+                'rewrite' => array('slug' => '/bingo-card-generator/%bt-cat%'),
                 'supports' => $supports,
                 'taxonomies' => array('category'),
             )
         );
         add_rewrite_rule(
-            'category/([^/]+)/lbingo-theme/([^/]+)/?(([^/]+)/?)?$',
+            'bingo-card-generator/([^/]+)/([^/]+)/?(([^/]+)/?)?$',
             'index.php?post_type=bingo_theme&name=$matches[2]',
             'top'
         );

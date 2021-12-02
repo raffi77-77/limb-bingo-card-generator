@@ -255,6 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.matches('#lbcg-bc-generation')) {
             // On card generation button click
             event.preventDefault();
+            toggleLoading(true);
             const words_count_message = checkWordsCount();
             if (words_count_message !== '') {
                 alert(words_count_message);
@@ -270,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     location.replace(resData.redirectTo);
                 } else {
                     alert(resData.errors.join("\n"));
+                    toggleLoading(false);
                 }
             }
             request.open(event.target.method, LBCG['ajaxUrl'], true);
@@ -277,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (event.target.matches('#lbcg-bc-invitation')) {
             // On card invite button click
             event.preventDefault();
+            toggleLoading(true);
             const data = new FormData(event.target);
             const request = new XMLHttpRequest();
             request.onreadystatechange = function () {
@@ -292,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     alert(resData.errors.join("\n"));
                 }
+                toggleLoading(false);
             }
             request.open(event.target.method, LBCG['ajaxUrl'], true);
             request.send(data);
