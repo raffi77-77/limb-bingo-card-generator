@@ -42,13 +42,13 @@ class LBCGPublic
             /*if (!did_action('wp_enqueue_media')) {
                 wp_enqueue_media();
             }*/
-            wp_enqueue_script('lbcg-bingo-card-generator-js', $this->attributes['plugin_url'] . 'public/js/lbcg-bingo-card-generator.js?ver=' . LBCG::VERSION);
+            wp_enqueue_script('lbcg-bingo-card-generator-js', $this->attributes['plugin_url'] . 'public/js/lbcg-bingo-card-generator.js', [], LBCG::VERSION);
             wp_localize_script('lbcg-bingo-card-generator-js', 'LBCG', [
                 'fonts' => LBCGHelper::$fonts,
                 'freeSquareWord' => LBCGHelper::$free_space_word,
                 'ajaxUrl' => admin_url('admin-ajax.php')
             ]);
-            wp_enqueue_style('lbcg-bingo-card-generator-css', $this->attributes['plugin_url'] . 'public/css/lbcg-binco-card-generator.min.css?ver=' . LBCG::VERSION);
+            wp_enqueue_style('lbcg-bingo-card-generator-css', $this->attributes['plugin_url'] . 'public/css/lbcg-binco-card-generator.min.css?', [], LBCG::VERSION);
         }
     }
 

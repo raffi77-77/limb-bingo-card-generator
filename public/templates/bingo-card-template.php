@@ -50,9 +50,6 @@ if (!empty($data['bingo_card_own_content'][0])) {
     ?>
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
-            <div class="lbcg-post-header">
-                <h1><?php the_title(); ?></h1>
-            </div>
             <div class="lbcg-card-view">
                 <div class="lbcg-card-wrap" style="min-width: 350px;">
                     <?php include __DIR__ . '/props-template.php'; ?>

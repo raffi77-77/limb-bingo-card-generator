@@ -137,8 +137,8 @@ class LBCGAdmin
             if (!did_action('wp_enqueue_media')) {
                 wp_enqueue_media();
             }
-            wp_enqueue_script('lbcg-bingo-theme-admin-script', $this->attributes['plugin_url'] . 'admin/js/bingo-theme.js?ver=' . LBCG::VERSION);
-            wp_enqueue_style('lbcg-bingo-theme-admin-style', $this->attributes['plugin_url'] . 'admin/css/bingo-theme.css?ver=' . LBCG::VERSION);
+            wp_enqueue_script('lbcg-bingo-theme-admin-script', $this->attributes['plugin_url'] . 'admin/js/bingo-theme.js', [], LBCG::VERSION);
+            wp_enqueue_style('lbcg-bingo-theme-admin-style', $this->attributes['plugin_url'] . 'admin/css/bingo-theme.css', [], LBCG::VERSION);
         }
     }
 }

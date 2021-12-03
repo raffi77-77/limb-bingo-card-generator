@@ -31,9 +31,9 @@ class LBCGHelper
             'name' => 'Holtwood One SC',
             'url' => 'https://fonts.googleapis.com/css2?family=Holtwood+One+SC&display=swap'
         ],
-        'henny-penny' => [
-            'name' => 'Henny Penny',
-            'url' => 'https://fonts.googleapis.com/css2?family=Henny+Penny&display=swap'
+        'sofadi-one' => [
+            'name' => 'Sofadi One',
+            'url' => 'https://fonts.googleapis.com/css2?family=Sofadi+One&display=swap'
         ]
     ];
 
