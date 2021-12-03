@@ -187,7 +187,7 @@ a.lbcg-btn {
   justify-content: center;
   align-items: center;
   height: 30px;
-  background-color: transparent!important;
+  background-color: transparent !important;
   background-repeat: no-repeat;
   border: none;
   outline: none;
@@ -202,22 +202,29 @@ a.lbcg-btn {
     background-repeat: no-repeat;
     border: none;
     outline: none;
+    text-decoration: none !important;
   }
 
   &--back {
     padding: 4px 10px;
     height: 30px;
     font-size: 16px;
-    line-height: 1;
     font-weight: 400;
-    background-color: #000!important;
-    color: #FFF!important;
-    border: 1px solid #000;
+    font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
+    line-height: 2.5;
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+    border-radius: .3rem;
     transition: all .3s;
 
     &:hover, &:focus {
-      background-color: lighten(#000, 20%) !important;
-      border: 1px solid #000;
+      color: #fff;
+      background-color: #6c757d !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, .5);
     }
 
     &.lbcg-btn--lg {
@@ -232,16 +239,22 @@ a.lbcg-btn {
     padding: 4px 10px;
     height: 30px;
     font-size: 16px;
-    line-height: 1;
     font-weight: 400;
-    background-color: #fff!important;
-    color: #000!important;
-    border: 1px solid #000;
+    font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
+    line-height: 2.5;
+    color: #212529 !important;
+    background-color: #ffc107 !important;
+    border: 1px solid #ffc107;
+    border-radius: .3rem;
     transition: all .3s;
 
     &:hover, &:focus {
-      background-color: darken(#fff, 20%) !important;
-      border: 1px solid #000;
+      background-color: #e0a800 !important;
+      border-color: #d39e00;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(222, 170, 12, .5);
     }
 
     &.lbcg-btn--lg {
@@ -264,6 +277,7 @@ a.lbcg-btn {
     z-index: 1;
     opacity: 0.65;
     transition: opacity .3s;
+
     &:hover, &:focus {
       opacity: 1;
     }
@@ -276,7 +290,7 @@ a.lbcg-btn {
 
   .lbcg-btn--lg {
     min-width: 120px;
-    width: auto!important;
+    width: auto !important;
 
     &:only-child {
       margin-left: auto;

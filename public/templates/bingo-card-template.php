@@ -48,7 +48,7 @@ if (!empty($data['bingo_card_own_content'][0])) {
     // If include free space
     $bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
     ?>
-    <div class="custom-container">
+    <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
             <div class="lbcg-card-view">
                 <div class="lbcg-card-wrap" style="min-width: 350px;">

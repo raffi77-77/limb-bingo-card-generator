@@ -102,14 +102,17 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
     $bingo_grid_free_square = false;
 }
 ?>
-    <div class="custom-container">
+    <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
+            <div class="lbcg-post-header">
+                <h1><?php the_title(); ?></h1>
+            </div>
             <div class="lbcg-main">
                 <aside class="lbcg-sidebar">
                     <div class="lbcg-sidebar-in collapsed">
                         <div class="lbcg-sidebar-header">
                             <a href="#" class="lbcg-sidebar-btn">Bingo Types</a>
-                            <span class="lbcg-sidebar-arrow"></span>
+                            <span class="lbcg-sidebar-arrow">&#8250;</span>
                         </div>
                         <div class="lbcg-sidebar-body">
                             <?php

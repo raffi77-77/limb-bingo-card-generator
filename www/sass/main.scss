@@ -19,10 +19,18 @@
   }
 }
 
+.lbcg-custom-container {
+  padding: 10px 0;
+  background-color: #e4dcf3;
+}
+
 .lbcg-parent {
   position: relative;
   max-width: 900px;
-  margin: 10px auto;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 5px 5px 0 0;
   @import "helpers/reset";
 
   * {
@@ -40,6 +48,17 @@
       &:after {
         opacity: 1;
       }
+    }
+  }
+
+  .lbcg-post-header {
+    h1 {
+      margin-bottom: .5rem;
+      color: #fc155c;
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: 1.35;
+      font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
     }
   }
 

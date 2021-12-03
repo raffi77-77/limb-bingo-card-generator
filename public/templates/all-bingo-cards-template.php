@@ -70,7 +70,7 @@ $card_header_html = ob_get_clean();
 
 <?php include __DIR__ . '/props-template.php'; ?>
 
-<div class="custom-container">
+<div class="lbcg-custom-container">
     <main class="lbcg-parent lbcg-loading">
         <?php
         $all_k = 0;

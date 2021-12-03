@@ -72,8 +72,11 @@ if (!empty($bc_posts[0]->ID)) {
     // If include free space
     $bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
     ?>
-    <div class="custom-container">
+    <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
+            <div class="lbcg-post-header">
+                <h1><?php the_title(); ?></h1>
+            </div>
             <div class="lbcg-invitation">
                 <section class="lbcg-content">
                     <div class="lbcg-content-right">
