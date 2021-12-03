@@ -50,6 +50,9 @@ if (!empty($data['bingo_card_own_content'][0])) {
     ?>
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
+            <div class="lbcg-post-header">
+                <h1><?php the_title(); ?></h1>
+            </div>
             <div class="lbcg-card-view">
                 <div class="lbcg-card-wrap" style="min-width: 350px;">
                     <?php include __DIR__ . '/props-template.php'; ?>
@@ -98,13 +101,18 @@ if (!empty($data['bingo_card_own_content'][0])) {
                     </div>
                 </div>
             </div>
+            <div class="lbcg-post-content">
+                <?php the_content(); ?>
+            </div>
         </main>
     </div>
     <?php
 } else {
-    ?>
-    <p>Invalid card.</p>
-    <?php
+    global $wp_query;
+    $wp_query->set_404();
+    status_header(404);
+    get_template_part(404);
+    exit();
 }
 if ($lbcg_current_theme_name === 'BNBS') {
     $data = array('footer'=>array());

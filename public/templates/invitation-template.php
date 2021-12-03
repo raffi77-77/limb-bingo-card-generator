@@ -182,13 +182,18 @@ if (!empty($bc_posts[0]->ID)) {
                     </div>
                 </aside>
             </div>
+            <div class="lbcg-post-content">
+                <?php the_content(); ?>
+            </div>
         </main>
     </div>
     <?php
 } else {
-    ?>
-    <p>Invalid request</p>
-    <?php
+    global $wp_query;
+    $wp_query->set_404();
+    status_header(404);
+    get_template_part(404);
+    exit();
 }
 if ($lbcg_current_theme_name === 'BNBS') {
     $data = array('footer'=>array());

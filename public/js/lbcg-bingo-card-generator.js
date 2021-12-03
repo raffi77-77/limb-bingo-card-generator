@@ -155,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('click', function (event) {
         if (event.target.matches('div.lbcg-sidebar-header') || event.target.matches('a.lbcg-sidebar-btn')) {
             // On sidebar header click
+            event.preventDefault();
             let sidebarHeader = event.target.parentNode;
             if (event.target.matches('a.lbcg-sidebar-btn')) {
                 sidebarHeader = sidebarHeader.parentNode;

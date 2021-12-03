@@ -463,6 +463,9 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                 </div>
             </section>
             </div>
+            <div class="lbcg-post-content">
+                <?php the_content(); ?>
+            </div>
         </main>
     </div>
 <?php
