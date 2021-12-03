@@ -412,8 +412,13 @@ class LBCGHelper
             update_post_meta($post_id, 'bingo_card_title', $title);
         }
         // 1-75 special title
-        if ($data['bingo_card_type'] === '1-75' && !empty($data['bingo_card_spec_title']) && count($data['bingo_card_spec_title']) === 5) {
-            update_post_meta($post_id, 'bingo_card_spec_title', implode('|', $data['bingo_card_spec_title']));
+        if ($data['bingo_card_type'] === '1-75' && !empty($data['bingo_card_spec_title'])) {
+            if (is_string($data['bingo_card_spec_title'])) {
+                $data['bingo_card_spec_title'] = explode('|', $data['bingo_card_spec_title']);
+            }
+            if (count($data['bingo_card_spec_title']) === 5) {
+                update_post_meta($post_id, 'bingo_card_spec_title', implode('|', $data['bingo_card_spec_title']));
+            }
         }
         // Words/emojis or numbers
         if (!in_array($data['bingo_card_type'], $special_cards) && !empty($data['bingo_card_content'])) {
@@ -535,9 +540,11 @@ class LBCGHelper
         update_post_meta($bingo_card_id, 'author_email', $author_email);
         // Send email
         $subject = "Your Bingo Card";
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         // Get email content
         $email_content = self::get_new_bingo_email_content($subject, $author_email, $bingo_card_id);
-        $sent = mail($author_email, $subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
+        $sent = mail($author_email, $subject, $email_content, $headers);
         if (!$sent) {
             return [
                 'success' => false,
@@ -557,7 +564,7 @@ class LBCGHelper
             }
             // Get email content
             $email_content = self::get_new_bingo_email_content($invite_subject, $user_email, $new_bc_id);
-            $sent = mail($user_email, $invite_subject, $email_content, ['Content-Type: text/html; charset=UTF-8']);
+            $sent = mail($user_email, $invite_subject, $email_content, $headers);
             if (!$sent) {
                 // Delete not used bingo card
                 wp_delete_post($new_bc_id);
@@ -683,7 +690,7 @@ class LBCGHelper
                 ];
             }
         }
-        $title = "Bingo Card {$data['bingo_card_type']} {$data['bingo_grid_size']}";
+        $title = "Bingo Card: " . trim($data['bingo_card_title']);
         $uniq_string = wp_generate_password(16, false);
 //        $uniq_string = wp_generate_uuid4();
 //        $uniq_string = str_replace('-', '', $uniq_string);
