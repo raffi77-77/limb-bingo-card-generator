@@ -321,6 +321,8 @@ class LBCGHelper
             $sub_cards[$line_in_column[$column]][$column] = $numbers[$i];
             ++$line_in_column[$column];
         }
+        // Random move all rows
+        shuffle($sub_cards);
         // Collect card items
         $bingo_card_numbers = [];
         for ($i = 0; $i < 18; $i++) {

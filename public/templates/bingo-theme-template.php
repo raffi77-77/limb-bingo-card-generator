@@ -64,6 +64,7 @@ if (!empty($data['bc_header'][0])) {
     $bc_header = unserialize($data['bc_header'][0]);
 } else {
     $bc_header = [
+        'font_color' => '#ffffff',
         'color' => '#d6be89',
         'image' => '',
         'opacity' => 0,
@@ -75,6 +76,8 @@ if (!empty($data['bc_grid'][0])) {
     $bc_grid = unserialize($data['bc_grid'][0]);
 } else {
     $bc_grid = [
+        'font_color' => '#000',
+        'border_color' => '#000',
         'color' => '#997d3c',
         'image' => '',
         'opacity' => 0,
@@ -218,6 +221,10 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 <label for="lbcg-header-bg-check" class="lbcg-label">Header Background</label>
                                 <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
                                     <div class="lbcg-input-wrap">
+                                        <label for="bc-header-font-color" class="lbcg-label">Font Color</label>
+                                        <input type="color" id="bc-header-font-color" class="bc-font-color lbcg-input" name="bc_header[font_color]" value="<?php echo $bc_header['font_color'] ?? '#ffffff'; ?>" data-bct="header">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
                                         <label for="bc-header-color" class="lbcg-label">Background Color</label>
                                         <input type="color" id="bc-header-color" class="bc-color lbcg-input" name="bc_header[color]" value="<?php echo $bc_header['color']; ?>" data-bct="header">
                                     </div>
@@ -276,6 +283,14 @@ if (!empty($data['bingo_card_free_square'][0]) && $data['bingo_card_free_square'
                                 <label for="lbcg-grid-bg-check" class="lbcg-checkbox-holder"></label>
                                 <label for="lbcg-grid-bg-check" class="lbcg-label">Grid Background</label>
                                 <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-grid-font-color" class="lbcg-label">Font Color</label>
+                                        <input type="color" id="bc-grid-font-color" class="bc-font-color lbcg-input" name="bc_grid[font_color]" value="<?php echo $bc_grid['font_color'] ?? '#000'; ?>" data-bct="grid">
+                                    </div>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="bc-grid-border-color" class="lbcg-label">Border Color</label>
+                                        <input type="color" id="bc-grid-border-color" class="bc-border-color lbcg-input" name="bc_grid[border_color]" value="<?php echo $bc_grid['border_color'] ?? '#000'; ?>" data-bct="grid">
+                                    </div>
                                     <div class="lbcg-input-wrap">
                                         <label for="bc-grid-color" class="lbcg-label">Background Color</label>
                                         <input type="color" id="bc-grid-color" class="bc-color lbcg-input" name="bc_grid[color]" value="<?php echo $bc_grid['color']; ?>" data-bct="grid">

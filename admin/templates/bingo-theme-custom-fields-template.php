@@ -20,6 +20,7 @@ if (!empty($data['bc_header'][0])) {
     $bc_header = unserialize($data['bc_header'][0]);
 } else {
     $bc_header = [
+        'font_color' => '#ffffff',
         'color' => '#d6be89',
         'image' => '',
         'opacity' => 100,
@@ -32,6 +33,8 @@ if (!empty($data['bc_grid'][0])) {
     $bc_grid = unserialize($data['bc_grid'][0]);
 } else {
     $bc_grid = [
+        'font_color' => '#000',
+        'border_color' => '#000',
         'color' => '#997d3c',
         'image' => '',
         'opacity' => 100,
@@ -119,7 +122,7 @@ $special_types = array('1-75', '1-90');
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td>
             <label>Header background color:</label>
             <input type="color" name="bc_header[color]" value="<?php echo $bc_header['color']; ?>">
         </td>
@@ -134,24 +137,11 @@ $special_types = array('1-75', '1-90');
                    value="<?php echo $image !== false ? $bc_header['image'] : 0; ?>">
         </td>
         <td>
-            <label for="bci-header-opacity">Image opacity (%):</label>
-            <input type="number" id="bci-header-opacity" name="bc_header[opacity]" min="0" max="100"
-                   placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>">
+            <label>Background Position:</label>
         </td>
-        <td>
-            <select name="bc_header[repeat]">
-                <option value="no-repeat" <?php echo $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
-                <option value="repeat" <?php echo $bc_header['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
-                <option value="repeat-x" <?php echo $bc_header['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
-                <option value="repeat-y" <?php echo $bc_header['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
-                <option value="no-repeat" <?php echo $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
         <td>
             <select name="bc_header[bg_pos]">
-                <option value="0 0" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="0 0" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Default</option>
                 <option value="top left" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
                 <option value="top center" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
                 <option value="top right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
@@ -163,9 +153,36 @@ $special_types = array('1-75', '1-90');
                 <option value="bottom right" <?php echo !empty($bc_header['bg_pos']) && $bc_header['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
             </select>
         </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            <label>Background Repeat:</label>
+        </td>
+        <td>
+            <select name="bc_header[repeat]">
+                <option value="repeat" <?php echo $bc_header['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                <option value="repeat-x" <?php echo $bc_header['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                <option value="repeat-y" <?php echo $bc_header['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                <option value="no-repeat" <?php echo $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Header font color:</label>
+            <input type="color" name="bc_header[font_color]" value="<?php echo $bc_header['font_color'] ?? '#ffffff'; ?>">
+        </td>
+        <td>
+            <label for="bci-header-opacity">Image opacity (%):</label>
+            <input type="number" id="bci-header-opacity" name="bc_header[opacity]" min="0" max="100"
+                   placeholder="0-100" value="<?php echo $bc_header['opacity']; ?>">
+        </td>
+        <td>
+            <label>Background Size:</label>
+        </td>
         <td>
             <select name="bc_header[bg_size]" class="bc-size lbcg-select" data-bct="header">
-                <option value="auto" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
                 <option value="auto" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
                 <option value="contain" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
                 <option value="cover" <?php echo !empty($bc_header['bg_size']) && $bc_header['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
@@ -179,7 +196,7 @@ $special_types = array('1-75', '1-90');
         </td>
     </tr>
     <tr>
-        <td rowspan="2">
+        <td>
             <label>Grid background color:</label>
             <input type="color" name="bc_grid[color]" value="<?php echo $bc_grid['color']; ?>">
         </td>
@@ -193,24 +210,11 @@ $special_types = array('1-75', '1-90');
             <input type="hidden" name="bc_grid[image]" value="<?php echo $image !== false ? $bc_grid['image'] : 0; ?>">
         </td>
         <td>
-            <label for="bci-grid-opacity">Image opacity (%):</label>
-            <input type="number" id="bci-grid-opacity" name="bc_grid[opacity]" min="0" max="100"
-                   placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>">
+            <label>	Background Position:</label>
         </td>
-        <td>
-            <select name="bc_grid[repeat]">
-                <option value="no-repeat" <?php echo $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
-                <option value="repeat" <?php echo $bc_grid['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
-                <option value="repeat-x" <?php echo $bc_grid['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
-                <option value="repeat-y" <?php echo $bc_grid['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
-                <option value="no-repeat" <?php echo $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
         <td>
             <select name="bc_grid[bg_pos]">
-                <option value="0 0" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="0 0" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Default</option>
                 <option value="top left" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
                 <option value="top center" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
                 <option value="top right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
@@ -222,9 +226,38 @@ $special_types = array('1-75', '1-90');
                 <option value="bottom right" <?php echo !empty($bc_grid['bg_pos']) && $bc_grid['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
             </select>
         </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Grid font color:</label>
+            <input type="color" name="bc_grid[font_color]" value="<?php echo $bc_grid['font_color'] ?? '#000'; ?>">
+        </td>
+        <td>
+            <label>Background Repeat:</label>
+        </td>
+        <td>
+            <select name="bc_grid[repeat]">
+                <option value="repeat-x" <?php echo $bc_grid['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                <option value="repeat-y" <?php echo $bc_grid['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                <option value="no-repeat" <?php echo $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Grid border color:</label>
+            <input type="color" name="bc_grid[border_color]" value="<?php echo $bc_grid['border_color'] ?? '#000'; ?>">
+        </td>
+        <td>
+            <label for="bci-grid-opacity">Image opacity (%):</label>
+            <input type="number" id="bci-grid-opacity" name="bc_grid[opacity]" min="0" max="100"
+                   placeholder="0-100" value="<?php echo $bc_grid['opacity']; ?>">
+        </td>
+        <td>
+            <label>Background Size:</label>
+        </td>
         <td>
             <select name="bc_grid[bg_size]">
-                <option value="auto" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
                 <option value="auto" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
                 <option value="contain" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
                 <option value="cover" <?php echo !empty($bc_grid['bg_size']) && $bc_grid['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>
@@ -252,24 +285,11 @@ $special_types = array('1-75', '1-90');
             <input type="hidden" name="bc_card[image]" value="<?php echo $image !== false ? $bc_card['image'] : 0; ?>">
         </td>
         <td>
-            <label for="bci-card-opacity">Image opacity (%):</label>
-            <input type="number" id="bci-card-opacity" name="bc_card[opacity]" min="0" max="100"
-                   placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>">
+            <label>Background Position:</label>
         </td>
-        <td>
-            <select name="bc_card[repeat]">
-                <option value="no-repeat" <?php echo $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
-                <option value="repeat" <?php echo $bc_card['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
-                <option value="repeat-x" <?php echo $bc_card['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
-                <option value="repeat-y" <?php echo $bc_card['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
-                <option value="no-repeat" <?php echo $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
         <td>
             <select name="bc_card[bg_pos]">
-                <option value="0 0" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Background Position</option>
+                <option value="0 0" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === '0 0' ? 'selected' : ''; ?>>Default</option>
                 <option value="top left" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top left' ? 'selected' : ''; ?>>Top Left</option>
                 <option value="top center" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top center' ? 'selected' : ''; ?>>Top Center</option>
                 <option value="top right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'top right' ? 'selected' : ''; ?>>Top Right</option>
@@ -281,9 +301,32 @@ $special_types = array('1-75', '1-90');
                 <option value="bottom right" <?php echo !empty($bc_card['bg_pos']) && $bc_card['bg_pos'] === 'bottom right' ? 'selected' : ''; ?>>Bottom Right</option>
             </select>
         </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Background Repeat:</label>
+        </td>
+        <td>
+            <select name="bc_card[repeat]">
+                <option value="repeat" <?php echo $bc_card['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
+                <option value="repeat-x" <?php echo $bc_card['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
+                <option value="repeat-y" <?php echo $bc_card['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
+                <option value="no-repeat" <?php echo $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            <label for="bci-card-opacity">Image opacity (%):</label>
+            <input type="number" id="bci-card-opacity" name="bc_card[opacity]" min="0" max="100"
+                   placeholder="0-100" value="<?php echo $bc_card['opacity']; ?>">
+        </td>
+        <td>
+            <label>Background Size:</label>
+        </td>
         <td>
             <select name="bc_card[bg_size]">
-                <option value="auto" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Background Size</option>
                 <option value="auto" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'auto' ? 'selected' : ''; ?>>Auto</option>
                 <option value="contain" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'contain' ? 'selected' : ''; ?>>Contain</option>
                 <option value="cover" <?php echo !empty($bc_card['bg_size']) && $bc_card['bg_size'] === 'cover' ? 'selected' : ''; ?>>Cover</option>

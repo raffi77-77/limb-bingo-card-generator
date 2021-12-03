@@ -306,7 +306,15 @@ document.addEventListener('DOMContentLoaded', function () {
      * Header/Grid/Card background
      */
     document.addEventListener('change', function (event) {
-        if (event.target.matches('.bc-color')) {
+        if (event.target.matches('.bc-font-color')) {
+            // On font color change
+            const type = event.target.getAttribute('data-bct');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-text-color', event.target.value);
+        } else if (event.target.matches('.bc-border-color')) {
+            // On grid border color change
+            const type = event.target.getAttribute('data-bct');
+            document.documentElement.style.setProperty('--lbcg-' + type + '-border-color', event.target.value);
+        } else if (event.target.matches('.bc-color')) {
             // On color change
             const type = event.target.getAttribute('data-bct');
             document.documentElement.style.setProperty('--lbcg-' + type + '-bg-color', event.target.value);
