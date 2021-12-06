@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+
     toggleLoading(true);
 
     /**
@@ -150,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         toggleLoading(false);
     }
+
     window.onload = checkGridFontSize;
 
     document.addEventListener('click', function (event) {

@@ -1,7 +1,7 @@
 Read me
 ==============
 
-lbcg-binco-card-generator
+limb-bingo-card-generator
 ==============
 
 The package is including:

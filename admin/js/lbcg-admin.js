@@ -140,22 +140,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 button = event.target.parentNode;
             }
             const custom_uploader = wp.media({
-                    title: 'Insert image',
-                    library: {
-                        type: 'image'
-                    },
-                    button: {
-                        text: 'Use this image'
-                    },
-                    multiple: false
-                }).on('select', function () {
-                    const attachment = custom_uploader.state().get('selection').first().toJSON();
-                    button.innerHTML = '<img src="' + attachment.sizes.thumbnail.url + '" class="lbcg-image-uploaded">';
-                    let next = button.nextElementSibling;
-                    next.style.display = '';
-                    next = next.nextElementSibling;
-                    next.value = attachment.id;
-                }).open();
+                title: 'Insert image',
+                library: {
+                    type: 'image'
+                },
+                button: {
+                    text: 'Use this image'
+                },
+                multiple: false
+            }).on('select', function () {
+                const attachment = custom_uploader.state().get('selection').first().toJSON();
+                button.innerHTML = '<img src="' + attachment.sizes.thumbnail.url + '" class="lbcg-image-uploaded">';
+                let next = button.nextElementSibling;
+                next.style.display = '';
+                next = next.nextElementSibling;
+                next.value = attachment.id;
+            }).open();
         } else if (event.target.matches('.bc-remove-uploaded-image')) {
             // Remove image
             event.preventDefault();

@@ -14,7 +14,7 @@
         .lbcg-email-content h3 {
             margin: 1rem 0;
             font-size: 1.3rem;
-            font-family: arvo,SFMono-Regular,Menlo,Monaco,Consolas,liberation mono,courier new,monospace;
+            font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
             font-weight: 500;
             line-height: 1.35;
             color: #fc155c;
@@ -22,7 +22,7 @@
 
         .lbcg-email-content p {
             margin: 0 0 1rem 0;
-            font-family: arvo,SFMono-Regular,Menlo,Monaco,Consolas,liberation mono,courier new,monospace;
+            font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
         }
 
         .lbcg-email-content a {
@@ -32,8 +32,8 @@
             border-color: #ffc107;
             line-height: 2.5;
             border-radius: .3rem;
-            text-align: center!important;
-            font-family: arvo,SFMono-Regular,Menlo,Monaco,Consolas,liberation mono,courier new,monospace;
+            text-align: center !important;
+            font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
             width: 100%;
             max-width: 175px;
             font-size: 95%;
