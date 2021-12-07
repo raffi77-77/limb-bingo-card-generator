@@ -68,6 +68,38 @@
     grid-template-rows: 1fr;
     grid-column-gap: 20px;
     grid-row-gap: 0;
+
+    @media all and (max-width: 920px) {
+      grid-template-columns: 1fr;
+      grid-row-gap: 20px;
+
+      .lbcg-sidebar {
+        position: static;
+      }
+
+      .lbcg-content {
+        grid-template-columns: 1fr 350px;
+      }
+    }
+
+    @media all and (max-width: 680px) {
+      .lbcg-content {
+        grid-template-columns: 1fr;
+        grid-row-gap: 20px;
+
+        &-right {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-width: 320px;
+        }
+
+        .lbcg-card-wrap {
+          width: 350px;
+          max-width: 100%;
+        }
+      }
+    }
   }
 
   .lbcg-invitation {
@@ -77,6 +109,34 @@
     grid-column-gap: 20px;
     grid-row-gap: 0;
     justify-content: space-between;
+
+    @media all and (max-width: 770px) {
+      grid-template-columns: 350px 1fr;
+    }
+
+    @media all and (max-width: 680px) {
+      grid-template-columns: 1fr;
+      grid-row-gap: 20px;
+
+      .lbcg-content {
+        grid-template-columns: 1fr;
+        &-right {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-width: 320px;
+        }
+      }
+
+      .lbcg-card-wrap {
+        width: 100%;
+        max-width: 350px;
+      }
+
+      .lbcg-sidebar {
+        position: static;
+      }
+    }
   }
 
   .lbcg-card-view {
@@ -86,6 +146,17 @@
     grid-column-gap: 20px;
     grid-row-gap: 0;
     justify-content: center;
+
+    .lbcg-card-wrap {
+      min-width: 350px;
+    }
+
+    @media all and (max-width: 400px) {
+      grid-template-columns: 1fr;
+      .lbcg-card-wrap {
+        min-width: 320px;
+      }
+    }
   }
 
   .lbcg-print-wrap {
@@ -94,6 +165,12 @@
     grid-column-gap: 20px;
     grid-row-gap: 20px;
     justify-content: space-between;
+
+    &:not(:first-child) {
+      .lbcg-print-wrap-card-holder {
+        margin-top: 20px;
+      }
+    }
 
     &-in, &-card-holder {
       display: flex;
@@ -128,6 +205,27 @@
 
       .lbcg-card-wrap {
         min-width: 310px;
+      }
+    }
+
+    @media all and (min-width: 711px) and (max-width: 860px),
+    all and (max-width: 440px) {
+      &-card-holder, .lbcg-card-wrap {
+        min-width: 320px;
+      }
+    }
+
+    @media all and (max-width: 710px) {
+      &:not(:first-child) {
+        margin-top: 20px;
+        .lbcg-print-wrap-card-holder:first-child {
+          margin-top: 0;
+        }
+      }
+
+      &-1, &-2, &-4 {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
       }
     }
   }

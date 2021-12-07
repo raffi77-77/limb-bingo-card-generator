@@ -109,7 +109,7 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                     <div class="lbcg-sidebar-in collapsed">
                         <div class="lbcg-sidebar-header">
                             <a href="#" class="lbcg-sidebar-btn">Bingo Types</a>
-                            <span class="lbcg-sidebar-arrow">&#8250;</span>
+                            <span class="lbcg-sidebar-arrow"></span>
                         </div>
                         <div class="lbcg-sidebar-body">
 							<?php

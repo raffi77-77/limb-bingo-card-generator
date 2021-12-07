@@ -48,7 +48,7 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
             <div class="lbcg-card-view">
-                <div class="lbcg-card-wrap" style="min-width: 350px;">
+                <div class="lbcg-card-wrap">
 					<?php include __DIR__ . '/lbcg-public-properties.php'; ?>
                     <div class="lbcg-card">
                         <div class="lbcg-card-header-holder">

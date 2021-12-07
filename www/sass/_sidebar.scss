@@ -23,10 +23,11 @@
         }
       }
 
-      /*.lbcg-sidebar-arrow {
-        right: 5px;
-        transform: rotate(90deg);
-      }*/
+      .lbcg-sidebar-arrow {
+        &:before {
+          transform: rotate(-90deg);
+        }
+      }
     }
   }
 
@@ -67,17 +68,35 @@
 
   &-arrow {
     position: absolute;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 0;
-    right: 15px;
+    right: 0;
+    width: 38px;
     height: 38px;
     pointer-events: none;
     z-index: 1;
     color: #fc155c;
-    font-size: 1.5rem;
     font-weight: 500;
     transition: all .3s;
-    transform: rotate(-90deg); /*TODO*/
+
+    &:before {
+      content: "›";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 38px;
+      height: 38px;
+      font-size: 26px;
+      line-height: 38px;
+      transform: rotate(90deg);
+      transform-origin: center center;
+      text-align: center;
+      transition: all .3s;
+      z-index: 1;
+    }
   }
 
   &-body {
