@@ -46,19 +46,19 @@ class LBCG {
 	private function __construct( $version, $plugin_dir, $plugin_url ) {
 		// Set plugin path and url params
 		$this->attributes = [
-			'plugin_version'       => $version,
-			'plugin_path'          => $plugin_dir,
-			'plugin_url'           => $plugin_url,
-			'logs_path'            => $plugin_dir . 'logs',
-			'admin_path'           => $plugin_dir . 'admin',
-			'admin_url'            => $plugin_url . 'admin/',
-			'admin_templates_path' => $plugin_dir . 'admin/partials',
-			'ajax_path'            => $plugin_dir . 'ajax',
-			'includes_path'        => $plugin_dir . 'includes',
-			'includes_url'         => $plugin_url . 'includes/',
-			'public_path'          => $plugin_dir . 'public',
-			'public_url'           => $plugin_url . 'public/',
-			'templates_path'       => $plugin_dir . 'public/partials'
+			'plugin_version'        => $version,
+			'plugin_path'           => $plugin_dir,
+			'plugin_url'            => $plugin_url,
+			'logs_path'             => $plugin_dir . 'logs',
+			'admin_path'            => $plugin_dir . 'admin',
+			'admin_url'             => $plugin_url . 'admin/',
+			'admin_templates_path'  => $plugin_dir . 'admin/partials',
+			'ajax_path'             => $plugin_dir . 'ajax',
+			'includes_path'         => $plugin_dir . 'includes',
+			'includes_url'          => $plugin_url . 'includes/',
+			'public_path'           => $plugin_dir . 'public',
+			'public_url'            => $plugin_url . 'public/',
+			'public_templates_path' => $plugin_dir . 'public/partials'
 		];
 		// Start
 		$this->load_dependencies();

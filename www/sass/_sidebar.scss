@@ -23,11 +23,11 @@
         }
       }
 
-      .lbcg-sidebar-arrow {
+      /*.lbcg-sidebar-arrow {
         &:before {
           transform: rotate(-90deg);
         }
-      }
+      }*/
     }
   }
 
@@ -91,7 +91,7 @@
       height: 38px;
       font-size: 26px;
       line-height: 38px;
-      transform: rotate(90deg);
+      transform: rotate(-90deg);
       transform-origin: center center;
       text-align: center;
       transition: all .3s;

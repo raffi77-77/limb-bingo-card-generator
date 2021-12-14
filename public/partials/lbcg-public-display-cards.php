@@ -17,27 +17,24 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 	get_header();
 }
 global $post;
-$single_page_count = isset( $_GET['bcs'] ) && get_post_meta( $post->ID, 'bingo_card_type', true ) !== '1-90' ? (int) $_GET['bcs'] : 2;
+// Get bingo card data
+$data              = get_post_meta( $post->ID );
+$title             = $data['bingo_card_title'][0];
+$type              = $data['bingo_card_type'][0];
+$single_page_count = isset( $_GET['bcs'] ) && $type !== '1-90' ? (int) $_GET['bcs'] : 2;
 $cards_count       = (int) $_GET['bcc'];
 // Get generated contents
-$all             = LBCG_Helper::generate_all_content_info( $post->ID, 500, $cards_count );
-$needed_contents = array_slice( $all, 0, $cards_count );
-// Get bingo card data
-$data  = get_post_meta( $post->ID );
-$title = $data['bingo_card_title'][0];
-$type  = $data['bingo_card_type'][0];
+$all             = LBCG_Helper::generate_all_content_info( $post->ID, 500, $cards_count, $data );
+//$needed_contents = array_slice( $all, 0, $cards_count );
 if ( $type === '1-75' ) {
 	$spec_title = $data['bingo_card_spec_title'][0];
 }
-$bc_header = unserialize( $data['bc_header'][0] );
-$bc_grid   = unserialize( $data['bc_grid'][0] );
-$bc_card   = unserialize( $data['bc_card'][0] );
 if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $data['bingo_grid_size'][0] !== '4x4' || $type === '1-75' ) {
 	$bingo_grid_free_square = true;
 } else {
 	$bingo_grid_free_square = false;
 }
-if ( $type !== '1-90' ) {
+if ( $type !== '1-75' && $type !== '1-90' ) {
 	$bingo_card_content = explode( "\r\n", $data['bingo_card_content'][0] );
 }
 // Create bingo card header
@@ -62,9 +59,7 @@ $card_header_html = ob_get_clean();
             size: <?php echo $single_page_count === 2 && $type !== '1-90' ? 'A4 landscape' : 'A4 portrait'; ?>;
         }
     </style>
-
-<?php include __DIR__ . '/lbcg-public-properties.php'; ?>
-
+    <input type="hidden" name="bingo_card_type" value="<?php echo $type; ?>">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
 			<?php
@@ -82,7 +77,7 @@ $card_header_html = ob_get_clean();
                                         <div class="lbcg-card-body">
 											<?php
 											if ( $type === '1-90' ) {
-												$bingo_card_words = explode( ':', $needed_contents[ $all_k ] );
+												$bingo_card_words = explode( ':', $all[ $all_k ] );
 												foreach ( $bingo_card_words as $single_card_words ) {
 													$single_card_words = explode( ';', $single_card_words );
 													?>
@@ -97,7 +92,7 @@ $card_header_html = ob_get_clean();
 													<?php
 												}
 											} else {
-												$bingo_card_words = explode( ';', $needed_contents[ $all_k ] );
+												$bingo_card_words = explode( ';', $all[ $all_k ] );
 												?>
                                                 <div class="lbcg-card-body-grid lbcg-grid-<?php echo $data['bingo_grid_size'][0][0]; ?>">
 													<?php
@@ -108,7 +103,7 @@ $card_header_html = ob_get_clean();
 	                                                if ( (int) ceil( $grid_sq_count / 2 ) === $i && $bingo_grid_free_square ) {
 		                                                echo LBCG_Helper::$free_space_word;
 	                                                } else {
-		                                                echo $bingo_card_content[ $bingo_card_words[ $i - 1 ] ];
+		                                                echo isset($bingo_card_content) ? $bingo_card_content[ $bingo_card_words[ $i - 1 ] ] : $bingo_card_words[ $i - 1 ];
 	                                                }
 	                                                ?></span>
                                                         </div>

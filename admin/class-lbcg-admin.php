@@ -29,6 +29,8 @@ class LBCG_Admin {
 		add_action( 'post_updated_messages', array( $this, 'show_editor_message' ) );
 		add_action( 'admin_print_scripts-post-new.php', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
 		add_action( 'admin_print_scripts-post.php', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
+		add_action( 'admin_head', array( $this, 'add_custom_css' ) );
+		$this->disable_emojy_print();
 	}
 
 	/**
@@ -116,11 +118,95 @@ class LBCG_Admin {
 		global $post_type;
 		if ( $post_type === 'bingo_theme' || $post_type === 'bingo_card' ) {
 			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
+			wp_enqueue_script( 'html2canvas-js', $this->attributes['admin_url'] . 'js/html2canvas.min.js', [], $this->attributes['plugin_version'] );
 			if ( ! did_action( 'wp_enqueue_media' ) ) {
 				wp_enqueue_media();
 			}
 			wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.js', [], $this->attributes['plugin_version'] );
-			wp_enqueue_style( 'lbcg-admin-css', $this->attributes['admin_url'] . 'css/lbcg-admin.css', [], $this->attributes['plugin_version'] );
+			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.js', [], $this->attributes['plugin_version'] );
+			wp_localize_script( 'lbcg-public-js', 'LBCG', [
+				'fonts'          => LBCG_Helper::$fonts,
+				'freeSquareWord' => LBCG_Helper::$free_space_word,
+				'ajaxUrl'        => admin_url( 'admin-ajax.php' )
+			] );
+            wp_enqueue_style( 'lbcg-admin-css', $this->attributes['admin_url'] . 'css/lbcg-admin.css', [], $this->attributes['plugin_version'] );
+			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css', [], $this->attributes['plugin_version'] );
+		}
+	}
+
+	/**
+	 * Disable emoji prints
+	 *
+	 * @return void
+	 */
+	public function disable_emojy_print() {
+		remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+		remove_action( 'admin_print_styles', 'print_emoji_styles' );
+	}
+
+	/**
+	 * Add custom css
+	 */
+	public function add_custom_css() {
+		global $post;
+		if ( $post instanceof WP_Post && ( $post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card' ) ) {
+			// Load google fonts
+			?>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<?php foreach ( LBCG_Helper::$fonts as $font ): ?>
+                <link href="<?php echo $font['url'] ?>" rel="stylesheet">
+			<?php endforeach;
+			$data = get_post_meta( $post->ID );
+			// Load attributes
+			if ( ! empty( $data['bc_header'][0] ) ) {
+				$bc_header = unserialize( $data['bc_header'][0] );
+			} else {
+				$bc_header = [
+					'font_color' => '#ffffff',
+					'color'      => '#d6be89',
+					'image'      => '',
+					'opacity'    => 100,
+					'repeat'     => 'no-repeat',
+					'bg_pos'     => 'center center',
+					'bg_size'    => 'cover'
+				];
+			}
+			if ( ! empty( $data['bc_grid'][0] ) ) {
+				$bc_grid = unserialize( $data['bc_grid'][0] );
+			} else {
+				$bc_grid = [
+					'font_color'   => '#000',
+					'border_color' => '#000',
+					'color'        => '#997d3c',
+					'image'        => '',
+					'opacity'      => 100,
+					'repeat'       => 'no-repeat',
+					'bg_pos'       => 'center center',
+					'bg_size'      => 'cover'
+				];
+			}
+			if ( ! empty( $data['bc_card'][0] ) ) {
+				$bc_card = unserialize( $data['bc_card'][0] );
+			} else {
+				$bc_card = [
+					'color'   => '#d6be89',
+					'image'   => '',
+					'opacity' => 100,
+					'repeat'  => 'no-repeat',
+					'bg_pos'  => 'center center',
+					'bg_size' => 'cover'
+				];
+			}
+			include_once $this->attributes['public_templates_path'] . '/lbcg-public-properties.php';
+			// Load custom css
+			if ( ! empty( $data['bingo_card_custom_css'][0] ) ) {
+				?>
+                <style type="text/css">
+                    <?php echo trim( wp_strip_all_tags( $data['bingo_card_custom_css'][0] ) ); ?>
+                </style>
+				<?php
+			}
 		}
 	}
 }

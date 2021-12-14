@@ -68,8 +68,10 @@ if ( ! empty( $bc_posts[0]->ID ) ) {
 	// If include free space
 	$bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
 	?>
+    <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
+			<?php LBCG_Helper::show_bingo_theme_breadcrumb( $lbcg_current_theme_name, get_the_ID() ); ?>
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>
@@ -77,7 +79,6 @@ if ( ! empty( $bc_posts[0]->ID ) ) {
                 <section class="lbcg-content">
                     <div class="lbcg-content-right">
                         <div class="lbcg-card-wrap">
-							<?php include __DIR__ . '/lbcg-public-properties.php'; ?>
                             <div class="lbcg-card">
                                 <div class="lbcg-card-header-holder">
                                     <div class="lbcg-card-header">

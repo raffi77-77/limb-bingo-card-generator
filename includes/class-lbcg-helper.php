@@ -51,33 +51,56 @@ class LBCG_Helper {
 		self::register_bingo_theme_post_type();
 		self::register_bingo_card_post_type();
 		add_filter( 'post_type_link', array( 'LBCG_Helper', 'check_post_link' ), 10, 2 );
-		add_filter( 'query_vars', array( 'LBCG_Helper', 'query_vars' ) );
 	}
 
 	/**
 	 * Register custom post types for Bingo Theme
 	 */
 	public static function register_bingo_theme_post_type() {
-		// Custom post type settings
-		$labels   = array(
-			'name'           => __( 'Limb Bingo themes', 'textdomain' ),
-			'singular_name'  => __( 'Limb Bingo theme', 'textdomain' ),
-			'menu_name'      => __( 'Limb Bingo themes', 'textdomain' ),
-			'name_admin_bar' => __( 'Limb Bingo theme', 'textdomain' ),
-			'add_new'        => __( 'Add new', 'textdomain' ),
-			'add_new_item'   => __( 'Add new Limb Bingo theme', 'textdomain' ),
-			'new_item'       => __( 'New Limb Bingo theme', 'textdomain' ),
-			'edit_item'      => __( 'Edit Limb Bingo theme', 'textdomain' ),
-			'view_item'      => __( 'View Limb Bingo theme', 'textdomain' ),
-			'all_items'      => __( 'All Limb Bingo themes', 'textdomain' ),
-			'search_items'   => __( 'Search Limb Bingo themes', 'textdomain' ),
-			'not_found'      => __( 'No Limb Bingo Themes found.', 'textdomain' )
+		// Custom taxonomy settings
+		$labels = array(
+			'name'              => __( 'UBUD Categories', 'textdomain' ),
+			'singular_name'     => __( 'UBUD Category', 'textdomain' ),
+			'search_items'      => __( 'Search UBUD Categories', 'textdomain' ),
+			'all_items'         => __( 'All UBUD Categories', 'textdomain' ),
+			'parent_item'       => __( 'Parent UBUD Category', 'textdomain' ),
+			'parent_item_colon' => __( 'Parent UBUD Category:', 'textdomain' ),
+			'edit_item'         => __( 'Edit UBUD Category', 'textdomain' ),
+			'update_item'       => __( 'Update UBUD Category', 'textdomain' ),
+			'add_new_item'      => __( 'Add New UBUD Category', 'textdomain' ),
+			'new_item_name'     => __( 'New UBUD Category Name', 'textdomain' ),
+			'menu_name'         => __( 'UBUD Categories', 'textdomain' ),
 		);
-		$supports = array( 'title', 'editor', 'author' );
+		// Register bingo_theme custom taxonomy
+		register_taxonomy( 'ubud-category', array( 'bingo_theme' ), array(
+			'hierarchical'      => true,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'show_in_rest'      => true,
+			'show_admin_column' => true,
+			'query_var'         => true,
+			'rewrite'           => array( 'slug' => 'bingo-card-generator' ),
+		) );
+		add_rewrite_rule( 'bingo-card-generator/([^/]+)/?$', 'index.php?taxonomy=ubud-category&post_type=bingo_theme&ubud-category=$matches[0]', 'top' );
+		// Custom post type settings
+		$labels = array(
+			'name'           => __( 'UBUD Bingo themes', 'textdomain' ),
+			'singular_name'  => __( 'UBUD Bingo theme', 'textdomain' ),
+			'menu_name'      => __( 'UBUD Bingo themes', 'textdomain' ),
+			'name_admin_bar' => __( 'UBUD Bingo theme', 'textdomain' ),
+			'add_new'        => __( 'Add new', 'textdomain' ),
+			'add_new_item'   => __( 'Add new UBUD Bingo theme', 'textdomain' ),
+			'new_item'       => __( 'New UBUD Bingo theme', 'textdomain' ),
+			'edit_item'      => __( 'Edit UBUD Bingo theme', 'textdomain' ),
+			'view_item'      => __( 'View UBUD Bingo theme', 'textdomain' ),
+			'all_items'      => __( 'All UBUD Bingo themes', 'textdomain' ),
+			'search_items'   => __( 'Search UBUD Bingo themes', 'textdomain' ),
+			'not_found'      => __( 'No UBUD Bingo Themes found.', 'textdomain' )
+		);
 		// Register bingo_card custom post type
 		register_post_type( 'bingo_theme', array(
 			'labels'             => $labels,
-			'description'        => 'Limb Bingo Theme',
+			'description'        => 'UBUD Bingo Theme',
 			'public'             => true,
 			'publicly_queryable' => true,
 			'query_var'          => true,
@@ -86,9 +109,9 @@ class LBCG_Helper {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'hierarchical'       => true,
-			'rewrite'            => array( 'slug' => '/bingo-card-generator/%bt-cat%' ),
-			'supports'           => $supports,
-			'taxonomies'         => array( 'category' ),
+			'rewrite'            => array( 'slug' => '/bingo-card-generator/%ubud-category%' ),
+			'supports'           => array( 'title', 'editor', 'author' ),
+			'taxonomies'         => array( 'ubud-category' ),
 		) );
 		add_rewrite_rule( 'bingo-card-generator/([^/]+)/([^/]+)/?(([^/]+)/?)?$', 'index.php?post_type=bingo_theme&name=$matches[2]', 'top' );
 	}
@@ -99,24 +122,24 @@ class LBCG_Helper {
 	public static function register_bingo_card_post_type() {
 		// Custom post type settings
 		$labels   = array(
-			'name'           => __( 'Limb Bingo Cards', 'textdomain' ),
-			'singular_name'  => __( 'Limb Bingo Card', 'textdomain' ),
-			'menu_name'      => __( 'Limb Bingo Cards', 'textdomain' ),
-			'name_admin_bar' => __( 'Limb Bingo Card', 'textdomain' ),
+			'name'           => __( 'UBUD Bingo Cards', 'textdomain' ),
+			'singular_name'  => __( 'UBUD Bingo Card', 'textdomain' ),
+			'menu_name'      => __( 'UBUD Bingo Cards', 'textdomain' ),
+			'name_admin_bar' => __( 'UBUD Bingo Card', 'textdomain' ),
 			'add_new'        => __( 'Add new', 'textdomain' ),
-			'add_new_item'   => __( 'Add new Limb Bingo Card', 'textdomain' ),
-			'new_item'       => __( 'New Limb Bingo Card', 'textdomain' ),
-			'edit_item'      => __( 'Edit Limb Bingo Card', 'textdomain' ),
-			'view_item'      => __( 'View Limb Bingo Card', 'textdomain' ),
-			'all_items'      => __( 'All Limb Bingo Cards', 'textdomain' ),
-			'search_items'   => __( 'Search Limb Bingo Cards', 'textdomain' ),
-			'not_found'      => __( 'No Limb Bingo Cards found.', 'textdomain' )
+			'add_new_item'   => __( 'Add new UBUD Bingo Card', 'textdomain' ),
+			'new_item'       => __( 'New UBUD Bingo Card', 'textdomain' ),
+			'edit_item'      => __( 'Edit UBUD Bingo Card', 'textdomain' ),
+			'view_item'      => __( 'View UBUD Bingo Card', 'textdomain' ),
+			'all_items'      => __( 'All UBUD Bingo Cards', 'textdomain' ),
+			'search_items'   => __( 'Search UBUD Bingo Cards', 'textdomain' ),
+			'not_found'      => __( 'No UBUD Bingo Cards found.', 'textdomain' )
 		);
 		$supports = array( 'title', 'editor', 'author' );
 		// Register bingo_card custom post type
 		register_post_type( 'bingo_card', array(
 			'labels'             => $labels,
-			'description'        => 'Limb Bingo Card',
+			'description'        => 'UBUD Bingo Card',
 			'public'             => true,
 			'publicly_queryable' => true,
 			'query_var'          => true,
@@ -125,24 +148,10 @@ class LBCG_Helper {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'hierarchical'       => false,
-			'rewrite'            => array( 'slug' => 'lbingo-card' ),
+			'rewrite'            => array( 'slug' => 'ubud-bingo-card' ),
 			'supports'           => $supports,
-			//            'taxonomies' => array('category', 'post_tag'),
 		) );
-		add_rewrite_rule( 'lbingo-card/([^/]+)/?(([^/]+)/?)?$', 'index.php?post_type=bingo_card&name=$matches[1]', 'top' );
-	}
-
-	/**
-	 * Add bingo theme category to query
-	 *
-	 * @param   array  $query_vars
-	 *
-	 * @return array
-	 */
-	public static function query_vars( $query_vars ) {
-		$query_vars[] = 'bt-cat';
-
-		return $query_vars;
+		add_rewrite_rule( 'ubud-bingo-card/([^/]+)/?(([^/]+)/?)?$', 'index.php?post_type=bingo_card&name=$matches[1]', 'top' );
 	}
 
 	/**
@@ -156,15 +165,15 @@ class LBCG_Helper {
 	public static function check_post_link( $post_link, $post = null ) {
 		$post = get_post( $post );
 		if ( $post instanceof WP_Post && $post->post_type === 'bingo_theme' ) {
-			$terms = wp_get_object_terms( $post->ID, 'category' );
+			$terms = wp_get_object_terms( $post->ID, 'ubud-category' );
 			if ( $terms ) {
 				foreach ( $terms as $term ) {
 					if ( 0 === $term->parent ) {
-						return str_replace( '%bt-cat%', $term->slug, $post_link );
+						return str_replace( '%ubud-category%', $term->slug, $post_link );
 					}
 				}
 			} else {
-				return str_replace( '%bt-cat%', 'uncategorized', $post_link );
+				return str_replace( '%ubud-category%', 'uncategorized', $post_link );
 			}
 		}
 
@@ -392,6 +401,11 @@ class LBCG_Helper {
 			$theme_meta_data = get_post_meta( $theme_id );
 		}
 		$special_cards = array( '1-75', '1-90' );
+		$post_type     = get_post_type( $post_id );
+		// Custom intro text for generation page
+		if ( $post_type === 'bingo_theme' ) {
+			update_post_meta( $post_id, 'bt_intro_text', $data['bt_intro_text'] );
+		}
 		// Type and size
 		update_post_meta( $post_id, 'bingo_card_type', $data['bingo_card_type'] );
 		update_post_meta( $post_id, 'bingo_grid_size', $data['bingo_grid_size'] );
@@ -399,6 +413,17 @@ class LBCG_Helper {
 		if ( ! empty( $data['bingo_card_title'] ) ) {
 			$title = trim( wp_strip_all_tags( $data['bingo_card_title'] ) );
 			update_post_meta( $post_id, 'bingo_card_title', $title );
+		}
+		// Set thumbnail
+		if ( ! empty( $data['bingo_card_thumbnail'] ) ) {
+			if ( ! is_numeric( $data['bingo_card_thumbnail'] ) ) {
+				if ( isset( $title ) ) {
+					$thumb_name = str_replace( ' ', '-', $title ) . '-' . wp_generate_password( 12, false );
+				} else {
+					$thumb_name = 'lbcg-thumb-name-' . wp_generate_password( 12, false );
+				}
+				self::attach_image( $data['bingo_card_thumbnail'], $post_id, $thumb_name . '.png' );
+			}
 		}
 		// 1-75 special title
 		if ( $data['bingo_card_type'] === '1-75' && ! empty( $data['bingo_card_spec_title'] ) ) {
@@ -708,14 +733,14 @@ class LBCG_Helper {
 	/**
 	 * Generate all contents
 	 *
-	 * @param   int  $post_id
-	 * @param   int  $count
-	 * @param   int  $wanted_count
+	 * @param   int    $post_id
+	 * @param   int    $count
+	 * @param   int    $wanted_count
+	 * @param   array  $data
 	 *
 	 * @return array
 	 */
-	public static function generate_all_content_info( $post_id, $count, $wanted_count ) {
-		$data = get_post_meta( $post_id );
+	public static function generate_all_content_info( $post_id, $count, $wanted_count, $data ) {
 		if ( ! empty( $data['all_content'][0] ) ) {
 			return explode( '|', $data['all_content'][0] );
 		}
@@ -745,6 +770,55 @@ class LBCG_Helper {
 		update_post_meta( $post_id, 'all_content', implode( '|', $all ) );
 
 		return array_slice( $all, 0, $wanted_count );
+	}
+
+	/**
+	 * Show bingo theme breadcrumb
+	 *
+	 * @param   string  $wp_theme_name
+	 * @param   int     $bingo_theme_id
+	 *
+	 * @return void
+	 */
+	public static function show_bingo_theme_breadcrumb( $wp_theme_name, $bingo_theme_id ) {
+		if ( ! function_exists( 'link_trk' ) || $wp_theme_name !== 'BNBS' ) {
+			return;
+		}
+		$current_bt_category = get_the_terms( $bingo_theme_id, 'ubud-category' );
+		$bt_post_title       = get_the_title( $bingo_theme_id );
+		$links               = [
+			'Home'                        => SITEURL,
+			$current_bt_category[0]->name => SITEURL . '/bingo-card-generator/' . $current_bt_category[0]->slug . '/',
+			$bt_post_title                => ''
+		];
+		?>
+        <nav aria-label="lbcg-breadcrumb">
+            <ol class="lbcg-breadcrumb">
+				<?php
+				$i   = 1;
+				$cnt = count( $links );
+				foreach ( $links as $name => $link ) {
+					if ( $i === $cnt ) {
+						echo '<li class="breadcrumb-item active" aria-current="page">' . $name . '</li>';
+					} else {
+						$attributes = array(
+							"echo_title" => $name,
+							"class"      => '',
+							"link"       => $link,
+							"display"    => '',
+							"place"      => 'breadcrumbs',
+							"element"    => 'text',
+							"idx"        => - 1
+						);
+						$link_track = link_trk( $attributes );
+						echo '<li class="breadcrumb-item">' . $link_track . '</li>';
+					}
+					$i ++;
+				}
+				?>
+            </ol>
+        </nav>
+		<?php
 	}
 
 	/**
@@ -780,5 +854,42 @@ class LBCG_Helper {
 		}
 
 		return $upload_id;
+	}
+
+	/**
+	 * Save base64 image as post thumbnail
+	 *
+	 * @param $base64
+	 * @param $post_id
+	 * @param $filename
+	 *
+	 * @return bool
+	 */
+	public static function attach_image( $base64, $post_id, $filename ) {
+		if ( empty( $base64 ) ) {
+			return false;
+		}
+		$upload_dir   = wp_upload_dir();
+		$upload_path  = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
+		$img          = str_replace( 'data:image/png;base64,', '', $base64 );
+		$img          = str_replace( ' ', '+', $img );
+		$decoded      = base64_decode( $img );
+		$image_upload = file_put_contents( $upload_path . $filename, $decoded );
+		if ( ! function_exists( 'wp_handle_sideload' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+		$wp_filetype = wp_check_filetype( basename( $filename ), null );
+		$attachment  = array(
+			'post_mime_type' => $wp_filetype['type'],
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+			'post_content'   => '',
+			'post_status'    => 'inherit'
+		);
+		$attach_id   = wp_insert_attachment( $attachment, wp_upload_dir()['path'] . '/' . $filename, $post_id );
+		$attach_data = wp_generate_attachment_metadata( $attach_id, wp_upload_dir()['path'] . '/' . $filename );
+		wp_update_attachment_metadata( $attach_id, $attach_data );
+		update_post_meta( $post_id, '_thumbnail_id', $attach_id, true );
+
+		return true;
 	}
 }

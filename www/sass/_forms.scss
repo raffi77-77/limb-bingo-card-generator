@@ -15,10 +15,16 @@
   }
 
   &:not([type="file"]) {
-    height: 30px;
-    padding: 4px 10px;
-    background-color: #FFF;
-    border: 1px solid #000;
+    height: 2.25rem;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #CED4DA;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 
     &:focus {
       outline: none;

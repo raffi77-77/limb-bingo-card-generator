@@ -1,5 +1,41 @@
 document.addEventListener('DOMContentLoaded', function () {
     /**
+     * Get card content
+     *
+     * @param type
+     * @param size
+     * @param freeSquare
+     * @param title
+     * @param specTitle
+     * @param content
+     */
+    function getCardContent(type, size = '', freeSquare = false, title = '', specTitle = [], content = '') {
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (request.readyState !== 4 || request.status !== 200) return;
+            // On success
+            document.getElementsByClassName('lbcg-card')[0].innerHTML = request.responseText;
+            document.documentElement.style.setProperty('--lbcg-grid-line-height', type === '1-90' ? '33.3px' : (size === '3x3' ? '102px' : (size === '4x4' ? '76.25px' : '60.8px')));
+            if (type !== '1-75' && type !== '1-90') {
+                checkGridFontSize();
+            } else {
+                document.documentElement.style.setProperty('--lbcg-grid-font-size', type === '1-90' ? '16px' : (type === '1-75' ? '31.5px' : '16px'));
+            }
+            toggleLoading(false);
+        }
+        request.open('post', LBCG['ajaxUrl'], true);
+        let reqData = new FormData();
+        reqData.append('action', 'lbcg_get_card_content');
+        reqData.append('card_type', type);
+        reqData.append('card_grid_size', size);
+        reqData.append('free_square', freeSquare ? 'true' : 'false');
+        reqData.append('card_title', title);
+        reqData.append('spec_title', specTitle.join(';'));
+        reqData.append('card_content', content);
+        request.send(reqData);
+    }
+
+    /**
      * Check words count in container
      *
      * @param event
@@ -11,11 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             $this = event.target;
         } else {
-            $this = document.getElementById('bc-content');
+            $this = document.getElementById('lbcg-body-content');
         }
         const words = $this.value.split("\n"),
-            bingoGridSize = document.getElementById('bc-size').value,
-            bingoCardType = document.getElementById('bc-type').value;
+            bingoGridSize = document.getElementsByName('bingo_grid_size')[0].value,
+            bingoCardType = document.getElementById('lbcg-bc-type').value;
         if (bingoCardType === '1-75' || bingoCardType === '1-90') {
             return true;
         }
@@ -33,16 +69,36 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
-    document.getElementById('bc-content').addEventListener('input', checkWordsCount);
+    document.getElementById('lbcg-body-content').addEventListener('input', checkWordsCount);
+
+    /**
+     * On custom CSS change
+     */
+    document.getElementById('bc-custom-css').addEventListener('change', function (event) {
+        event.preventDefault();
+        let styleEl = document.getElementById('lbcg-custom-css');
+        if (styleEl === null) {
+            styleEl = document.createElement('style');
+            styleEl.setAttribute('id', 'lbcg-custom-css');
+            styleEl.setAttribute('type', 'text/css');
+            const head = document.head || document.getElementsByTagName('head')[0];
+            head.appendChild(styleEl);
+        }
+        if (styleEl.styleSheet) {
+            styleEl.styleSheet.cssText = event.target.value;
+        } else {
+            styleEl.innerHTML = event.target.value;
+        }
+    });
 
     /**
      * Grid size value changed
      */
-    document.getElementById('bc-size').addEventListener('change', function (event) {
+    document.getElementById('lbcg-grid-size').addEventListener('change', function (event) {
         event.preventDefault();
         const value = event.target.value,
-            freeSquareEl = document.getElementById('free-square'),
-            bingoCardType = document.getElementById('bc-type').value;
+            freeSquareEl = document.getElementById('lbcg-free-space-check'),
+            bingoCardType = document.getElementById('lbcg-bc-type').value;
         if (value !== null) {
             document.getElementsByName('bingo_grid_size')[0].value = value;
             const countEl = document.getElementById('content-items-count');
@@ -54,77 +110,75 @@ document.addEventListener('DOMContentLoaded', function () {
                 countEl.innerHTML = 25;
             }
             if (value === '4x4' || bingoCardType === '1-75' || bingoCardType === '1-90') {
-                freeSquareEl.style.display = 'none';
+                freeSquareEl.parentNode.style.display = 'none';
             } else {
-                freeSquareEl.style.display = '';
+                freeSquareEl.parentNode.style.display = '';
             }
             checkWordsCount();
         }
     });
 
     /**
-     * Card type is changed
+     * On card type change
      */
-    document.getElementById('bc-type').addEventListener('change', function (event) {
+    document.getElementById('lbcg-bc-type').addEventListener('change', function (event) {
         event.preventDefault();
-        const $this = event.target,
-            thisValue = $this.value,
-            gridSize = document.getElementById('bc-size'),
+        toggleLoading(true);
+        const title = document.getElementById('lbcg-title').value,
+            gridSize = document.getElementById('lbcg-grid-size'),
             gridSizeInput = document.getElementsByName('bingo_grid_size')[0],
-            specTitleElements = document.querySelectorAll('td.bc-title-1-75'),
-            contentElements = document.querySelectorAll('td.bc-content');
-        switch (thisValue) {
+            specTitleElement = document.getElementsByClassName('lbcg-input-wrap--subtitle')[0],
+            contentElement = document.getElementById('lbcg-body-content'),
+            freeSquareElement = document.getElementById('lbcg-free-space-check');
+        switch (event.target.value) {
             case '1-75':
                 // Only 5x5
-                gridSize.value = '5x5';
                 gridSizeInput.value = '5x5';
-                gridSize.setAttribute('disabled', 'disabled');
-                specTitleElements.forEach(function (el) {
-                    el.style.display = '';
-                });
-                contentElements.forEach(function (el) {
-                    el.style.display = 'none';
-                });
-                document.getElementById('bc-free-square').checked = true;
+                gridSize.parentNode.style.display = 'none';
+                specTitleElement.parentNode.style.display = 'flex';
+                contentElement.parentNode.style.display = 'none';
+                freeSquareElement.parentNode.style.display = 'none';
+                getCardContent('1-75', '5x5', true, title, [...document.querySelectorAll('.lbcg-input-wrap--subtitle .lbcg-input')].map(item => item.value));
                 break;
             case '1-90':
                 // Only 9x3
-                gridSize.value = '9x3';
                 gridSizeInput.value = '9x3';
-                gridSize.setAttribute('disabled', 'disabled');
-                specTitleElements.forEach(function (el) {
-                    el.style.display = 'none';
-                });
-                contentElements.forEach(function (el) {
-                    el.style.display = 'none';
-                });
+                gridSize.parentNode.style.display = 'none';
+                specTitleElement.parentNode.style.display = 'none';
+                contentElement.parentNode.style.display = 'none';
+                freeSquareElement.parentNode.style.display = 'none';
+                getCardContent('1-90', '9x3', false, title);
                 break;
             case 'generic':
                 // All grids
+                gridSizeInput.value = '3x3';
                 gridSize.value = '3x3';
-                gridSize.removeAttribute('disabled');
-                specTitleElements.forEach(function (el) {
-                    el.style.display = 'none';
-                });
-                contentElements.forEach(function (el) {
-                    el.style.display = '';
-                });
+                gridSize.parentNode.style.display = 'flex';
+                specTitleElement.parentNode.style.display = 'none';
+                contentElement.parentNode.style.display = 'flex';
+                freeSquareElement.parentNode.style.display = 'flex';
+                getCardContent('generic', '3x3', freeSquareElement.checked, title, [], contentElement.value);
                 break;
         }
-        gridSize.dispatchEvent(new Event('change'));
     });
 
     /**
      * Check custom fields before save the post
      */
     document.getElementById('publish').addEventListener('click', function (event) {
-        const cardType = document.querySelectorAll('[name^=bingo_card_type]')[0].value;
+        const cardType = document.getElementById('lbcg-bc-type').value;
         if (!cardType.length) {
             event.preventDefault();
             alert("Please select bingo card type before save the post.");
         } else if (!checkWordsCount()) {
             event.preventDefault();
             alert("Please provide a minimum words/emojis or numbers quantity.");
+        } else {
+            event.preventDefault();
+            html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
+                document.getElementsByName('bingo_card_thumbnail')[0].value = canvas.toDataURL();
+                document.getElementById('post').submit();
+            });
         }
     });
 
@@ -132,13 +186,10 @@ document.addEventListener('DOMContentLoaded', function () {
      * WP Media Uploader
      */
     document.addEventListener('click', function (event) {
-        if (event.target.matches('.bc-image-upload') || event.target.matches('.lbcg-image-uploaded')) {
+        if (event.target.matches('.bc-image-admin')) {
             // Set image
             event.preventDefault();
-            let button = event.target;
-            if (event.target.matches('.lbcg-image-uploaded')) {
-                button = event.target.parentNode;
-            }
+            const type = event.target.getAttribute('data-bct');
             const custom_uploader = wp.media({
                 title: 'Insert image',
                 library: {
@@ -150,19 +201,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 multiple: false
             }).on('select', function () {
                 const attachment = custom_uploader.state().get('selection').first().toJSON();
-                button.innerHTML = '<img src="' + attachment.sizes.thumbnail.url + '" class="lbcg-image-uploaded">';
-                let next = button.nextElementSibling;
-                next.style.display = '';
-                next = next.nextElementSibling;
-                next.value = attachment.id;
+                document.getElementById('bc-' + type + '-image').value = attachment.id;
+                document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'url(' + attachment.url + ')');
             }).open();
-        } else if (event.target.matches('.bc-remove-uploaded-image')) {
+        } else if (event.target.matches('.remove-bc-image-admin')) {
             // Remove image
             event.preventDefault();
-            const button = event.target;
-            button.nextElementSibling.value = 0;
-            button.style.display = 'none';
-            button.previousElementSibling.innerHTML = 'Upload image';
+            const type = event.target.getAttribute('data-bct');
+            document.getElementById('bc-' + type + '-image').value = '';
+            document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
         }
     }, false);
 }, false);

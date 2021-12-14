@@ -24,11 +24,25 @@
   background-color: #e4dcf3;
 }
 
+.lbcg-wp-editor {
+  margin-top: 15px;
+
+  label {
+    display: block;
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+}
+
 .lbcg-parent {
   position: relative;
   max-width: 900px;
   margin: 0 auto;
-  padding: 1rem;
   background-color: white;
   border-radius: 5px 5px 0 0;
   @import "helpers/reset";
@@ -51,11 +65,35 @@
     }
   }
 
+  ol.lbcg-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    padding: .5rem .75rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style: none;
+    color: var(--theme-color);
+    background: var(--theme-bg, #ffffff);
+    border-radius: 5px 5px 0 0;
+
+    li {
+      display: flex;
+      font-size: .7rem !important;
+
+      a {
+        color: var(--theme-accent);
+        text-decoration: underline;
+      }
+    }
+  }
+
   .lbcg-post-header {
+    padding: 0 1rem;
+
     h1 {
       margin-bottom: .5rem;
       color: #fc155c;
-      font-size: 2rem;
+      font-size: var(--h1-size, 2rem);
       font-weight: 500;
       line-height: 1.35;
       font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
@@ -64,6 +102,7 @@
 
   .lbcg-main {
     display: grid;
+    padding: 0 1rem 1rem;
     grid-template-columns: 180px 1fr;
     grid-template-rows: 1fr;
     grid-column-gap: 20px;
@@ -100,10 +139,15 @@
         }
       }
     }
+
+    &-admin {
+      padding-top: 1rem;
+    }
   }
 
   .lbcg-invitation {
     display: grid;
+    padding: 0 1rem;
     grid-template-columns: 350px 350px;
     grid-template-rows: 1fr;
     grid-column-gap: 20px;
@@ -141,6 +185,7 @@
 
   .lbcg-card-view {
     display: grid;
+    padding: 1rem;
     grid-template-columns: 350px;
     grid-template-rows: 1fr;
     grid-column-gap: 20px;
@@ -161,6 +206,7 @@
 
   .lbcg-print-wrap {
     display: grid;
+    padding: 1rem;
     grid-template-rows: 1fr;
     grid-column-gap: 20px;
     grid-row-gap: 20px;
@@ -202,10 +248,6 @@
       .lbcg-print-wrap-card-holder {
         min-width: 0;
       }
-
-      .lbcg-card-wrap {
-        min-width: 310px;
-      }
     }
 
     @media all and (min-width: 711px) and (max-width: 860px),
@@ -237,7 +279,6 @@
     grid-column-gap: 20px;
 
     &-left {
-
     }
 
     &-right {
@@ -246,6 +287,9 @@
   }
 
   .lbcg-post-content {
+    padding: 0 1rem;
+    background: var(--theme-bg, #f9f8fa);
+
     h1, h2, h3, h4, h5, h6 {
       margin-top: 1.5rem;
       margin-bottom: 0.5rem;

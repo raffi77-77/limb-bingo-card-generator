@@ -25,6 +25,7 @@ class LBCG_Public {
 	 */
 	public function register_dependencies() {
 		add_filter( 'single_template', array( $this, 'get_custom_post_type_template' ) );
+		add_filter( 'taxonomy_template', array( $this, 'get_custom_taxonomy_template' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ), 10 );
 		add_action( 'wp_head', array( $this, 'add_custom_css' ) );
 	}
@@ -44,8 +45,11 @@ class LBCG_Public {
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
 				'ajaxUrl'        => admin_url( 'admin-ajax.php' )
 			] );
-			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
+
 		}
+        if ( is_singular( 'bingo_theme' ) || is_singular( 'bingo_card' ) || is_tax( 'ubud-category' ) ) {
+	        wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
+        }
 	}
 
 	/**
@@ -59,15 +63,15 @@ class LBCG_Public {
 		global $post_type;
 		if ( $post_type === 'bingo_theme' ) {
 			if ( preg_match( '/bingo-card-generator\/([^\/]+)\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'] ) ) {
-				$single_template = $this->attributes['templates_path'] . '/lbcg-public-display-invitation.php';
+				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-invitation.php';
 			} else {
-				$single_template = $this->attributes['templates_path'] . '/lbcg-public-display-generator.php';
+				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-generator.php';
 			}
 		} elseif ( $post_type === 'bingo_card' ) {
-			if ( preg_match( '/lbingo-card\/([^\/]+)\/all\/\?([^\/]+)\/?$/', $_SERVER['REQUEST_URI'] ) ) {
-				$single_template = $this->attributes['templates_path'] . '/lbcg-public-display-cards.php';
+			if ( preg_match( '/ubud-bingo-card\/([^\/]+)\/all\/\?([^\/]+)\/?$/', $_SERVER['REQUEST_URI'] ) ) {
+				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-cards.php';
 			} else {
-				$single_template = $this->attributes['templates_path'] . '/lbcg-public-display-card.php';
+				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-card.php';
 			}
 		}
 
@@ -75,22 +79,43 @@ class LBCG_Public {
 	}
 
 	/**
+	 * Get custom taxonomy template
+	 *
+	 * @param   string  $template
+	 *
+	 * @return string
+	 */
+	public function get_custom_taxonomy_template( $template ) {
+		if ( is_tax( 'ubud-category' ) ) {
+			$template = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive.php';
+		}
+
+		return $template;
+	}
+
+	/**
 	 * Add custom css
 	 */
 	public function add_custom_css() {
-		?>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<?php foreach ( LBCG_Helper::$fonts as $font ): ?>
-            <link href="<?php echo $font['url'] ?>" rel="stylesheet">
-		<?php endforeach; ?>
-		<?php
 		global $post;
 		if ( $post instanceof WP_Post && ( $post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card' ) ) {
-			$custom_css = get_post_meta( $post->ID, 'bingo_card_custom_css', true );
+			// Load google fonts
+			?>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<?php foreach ( LBCG_Helper::$fonts as $font ): ?>
+                <link href="<?php echo $font['url'] ?>" rel="stylesheet">
+			<?php endforeach;
+			$data = get_post_meta( $post->ID );
+			// Load attributes
+			$bc_header = unserialize( $data['bc_header'][0] );
+			$bc_grid   = unserialize( $data['bc_grid'][0] );
+			$bc_card   = unserialize( $data['bc_card'][0] );
+			include_once $this->attributes['public_templates_path'] . '/lbcg-public-properties.php';
+			// Load custom css
 			?>
             <style type="text/css">
-                <?php echo trim(wp_strip_all_tags($custom_css)); ?>
+                <?php echo trim( wp_strip_all_tags( $data['bingo_card_custom_css'][0] ) ); ?>
             </style>
 			<?php
 		}

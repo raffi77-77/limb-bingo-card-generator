@@ -36,20 +36,14 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 	} else {
 		$bingo_card_words = explode( "\r\n", $data['bingo_card_own_content'][0] );
 	}
-	// Header style
-	$bc_header = unserialize( $data['bc_header'][0] );
-	// Grid style
-	$bc_grid = unserialize( $data['bc_grid'][0] );
-	// Card style
-	$bc_card = unserialize( $data['bc_card'][0] );
 	// If include free space
 	$bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
 	?>
+    <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
             <div class="lbcg-card-view">
                 <div class="lbcg-card-wrap">
-					<?php include __DIR__ . '/lbcg-public-properties.php'; ?>
                     <div class="lbcg-card">
                         <div class="lbcg-card-header-holder">
                             <div class="lbcg-card-header">

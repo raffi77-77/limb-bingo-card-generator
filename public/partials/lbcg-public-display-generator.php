@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 $lbcg_current_theme_name = wp_get_theme()->get( 'Name' );
 if ( $lbcg_current_theme_name === 'BNBS' ) {
-	// For BNBS theme
+	// For BNBS theme header
 	$tpl             = 'single-bingo-card';
 	$lyt             = 'single-bingo-card';
 	$ftd_pagetyp     = 'custom-post';
@@ -101,38 +101,54 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
 ?>
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
+			<?php LBCG_Helper::show_bingo_theme_breadcrumb( $lbcg_current_theme_name, $current_id ); ?>
+			<?php if ( ! empty( $data['bt_intro_text'][0] ) ): ?>
+                <div class="lbcg-post-content"><?php echo $data['bt_intro_text'][0]; ?></div>
+			<?php endif; ?>
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>
             <div class="lbcg-main">
                 <aside class="lbcg-sidebar">
-                    <div class="lbcg-sidebar-in collapsed">
-                        <div class="lbcg-sidebar-header">
-                            <a href="#" class="lbcg-sidebar-btn">Bingo Types</a>
-                            <span class="lbcg-sidebar-arrow"></span>
-                        </div>
-                        <div class="lbcg-sidebar-body">
-							<?php
-							$args  = array(
-								'post_type'   => 'bingo_theme',
-								'post_status' => 'publish',
-								'orderby'     => 'title',
-								'order'       => 'ASC'
-							);
-							$query = new WP_Query( $args );
-							if ( $query->have_posts() ) {
-								while ( $query->have_posts() ) {
-									$query->the_post();
+					<?php
+					$bingo_themes = get_posts( [
+						'post_type'   => 'bingo_theme',
+						'post_status' => 'publish',
+						'numberposts' => - 1,
+						'orderby'     => 'post_title',
+						'order'       => 'ASC'
+					] );
+					$menu_items   = [];
+					foreach ( $bingo_themes as $bingo_theme ) {
+						$bt_categories = get_the_terms( $bingo_theme->ID, 'ubud-category' );
+						if ( ! empty( $bt_categories[0] ) ) {
+							$menu_items[ $bt_categories[0]->name ][] = $bingo_theme;
+						} else {
+							$menu_items['uncategorized'][] = $bingo_theme;
+						}
+					}
+					ksort( $menu_items );
+					foreach ( $menu_items as $bt_category_name => $menu_item ) {
+						?>
+                        <div class="lbcg-sidebar-in collapsed">
+                            <div class="lbcg-sidebar-header">
+                                <a href="#" class="lbcg-sidebar-btn"><?php echo $bt_category_name; ?></a>
+                                <span class="lbcg-sidebar-arrow"></span>
+                            </div>
+                            <div class="lbcg-sidebar-body">
+								<?php
+								foreach ( $menu_item as $bingo_theme ) {
 									?>
-                                    <a href="<?php echo esc_url( get_permalink( get_the_ID() ) ); ?>"
-                                       class="lbcg-sidebar-link <?php echo $current_id === get_the_ID() ? 'active' : ''; ?>"><?php the_title(); ?></a>
+                                    <a href="<?php echo esc_url( get_permalink( $bingo_theme->ID ) ); ?>"
+                                       class="lbcg-sidebar-link <?php echo $current_id === $bingo_theme->ID ? 'active' : ''; ?>"><?php echo $bingo_theme->post_title; ?></a>
 									<?php
 								}
-								wp_reset_postdata();
-							}
-							?>
+								?>
+                            </div>
                         </div>
-                    </div>
+						<?php
+					}
+					?>
                 </aside>
 
                 <section class="lbcg-content">
@@ -189,20 +205,18 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                               cols=""
                                               rows="11"><?php echo ! empty( $data['bingo_card_content'][0] ) ? $data['bingo_card_content'][0] : ''; ?></textarea>
                                 </div>
-                                <div class="lbcg-input-wrap" <?php echo ! ( $bingo_card_type !== '1-75' && $bingo_card_type !== '1-90' ) ? 'style="display: none;"' : ''; ?>>
-                                    <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
-                                    <select name="bingo_grid_size" id="lbcg-grid-size" class="lbcg-select">
-                                        <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>
-                                            3x3
-                                        </option>
-                                        <option value="4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>
-                                            4x4
-                                        </option>
-                                        <option value="5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>
-                                            5x5
-                                        </option>
-                                    </select>
-                                </div>
+								<?php if ( $bingo_card_type !== '1-75' && $bingo_card_type !== '1-90' ): ?>
+                                    <div class="lbcg-input-wrap">
+                                        <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
+                                        <select name="bingo_grid_size" id="lbcg-grid-size" class="lbcg-select">
+                                            <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>3x3</option>
+                                            <option value="4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>4x4</option>
+                                            <option value="5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>5x5</option>
+                                        </select>
+                                    </div>
+								<?php else: ?>
+                                    <input type="hidden" id="lbcg-grid-size" name="bingo_grid_size" value="<?php echo $bingo_card_type === '1-75' ? '5x5' : '9x3' ?>">
+								<?php endif; ?>
                                 <div class="lbcg-input-wrap">
                                     <label for="lbcg-font" class="lbcg-label">Select Font Family</label>
                                     <select name="bingo_card_font" id="lbcg-font" class="lbcg-select">
@@ -582,7 +596,6 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                     </div>
                     <div class="lbcg-content-right">
                         <div class="lbcg-card-wrap">
-							<?php include __DIR__ . '/lbcg-public-properties.php'; ?>
                             <div class="lbcg-card">
                                 <div class="lbcg-card-header-holder">
                                     <div class="lbcg-card-header">

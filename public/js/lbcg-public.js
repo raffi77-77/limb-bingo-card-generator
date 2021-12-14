@@ -23,22 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return "";
     }
 
-    /**
-     * Show or hide loading element
-     *
-     * @param show
-     */
-    function toggleLoading(show) {
-        const els = document.getElementsByClassName('lbcg-parent');
-        for (let i = 0; i < els.length; i++) {
-            if (show === true) {
-                els[i].classList.add('lbcg-loading');
-            } else {
-                els[i].classList.remove('lbcg-loading');
-            }
-        }
-    }
-
     toggleLoading(true);
 
     /**
@@ -82,77 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
             gridItems[index].innerHTML = words[index];
         }
     }
-
-    /**
-     * Check and fix wrapped word in grid
-     *
-     * @param spans
-     */
-    function checkWrapWordInGrid(spans) {
-        let madeChange = false,
-            fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
-            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
-            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
-        fontSize = parseFloat(fontSize.split('px')[0]);
-        for (let i = 0; i < spans.length; i++) {
-            while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
-                document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
-                madeChange = true;
-            }
-            // Wait for new changes
-            setTimeout(() => {
-                while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
-                    document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
-                    madeChange = true;
-                }
-            }, 10);
-        }
-        return madeChange;
-    }
-
-    /**
-     * Check small words and make bigger
-     *
-     * @param spans
-     */
-    function checkSmallWordInGrid(spans) {
-        let maxLengthIndex = 0, maxLength = 0, bigWordExists = false;
-        for (let i = 0; i < spans.length; i++) {
-            if (spans[i].innerHTML.length > maxLength) {
-                maxLength = spans[i].innerHTML.length;
-                maxLengthIndex = i;
-            }
-            if (spans[i].offsetHeight > spans[i].parentNode.offsetHeight) {
-                bigWordExists = true;
-            }
-        }
-        let madeChange = false,
-            fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
-            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
-            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
-        fontSize = parseFloat(fontSize.split('px')[0]);
-        while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && fontSize < maxFontSize) {
-            madeChange = true;
-            document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize += 0.5) + 'px');
-        }
-        if (madeChange) {
-            document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize - 0.5) + 'px');
-            return true;
-        }
-        return bigWordExists;
-    }
-
-    function checkGridFontSize() {
-        toggleLoading(true);
-        const spans = document.getElementsByClassName('lbcg-card-text');
-        const result = checkSmallWordInGrid(spans);
-        if (result === true) {
-            checkWrapWordInGrid(spans);
-        }
-        toggleLoading(false);
-    }
-
-    window.onload = checkGridFontSize;
 
     document.addEventListener('click', function (event) {
         if (event.target.matches('div.lbcg-sidebar-header') || event.target.matches('a.lbcg-sidebar-btn')) {
@@ -324,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (event.target.matches('.bc-image')) {
             // On image change
             const type = event.target.getAttribute('data-bct');
-            var aaa = event.target.files;
             document.getElementsByName('bc_' + type + '[remove_image]')[0].value = '0';
             document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'url(' + URL.createObjectURL(event.target.files[0]) + ')');
         } else if (event.target.matches('.bc-pos')) {
@@ -346,3 +258,104 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+/**
+ * Show or hide loading element
+ *
+ * @param show
+ */
+function toggleLoading(show) {
+    const els = document.getElementsByClassName('lbcg-parent');
+    for (let i = 0; i < els.length; i++) {
+        if (show === true) {
+            els[i].classList.add('lbcg-loading');
+        } else {
+            els[i].classList.remove('lbcg-loading');
+        }
+    }
+}
+
+/**
+ * Check small words and make bigger
+ *
+ * @param spans
+ */
+function checkSmallWordInGrid(spans) {
+    let maxLengthIndex = 0, maxLength = 0, bigWordExists = false;
+    for (let i = 0; i < spans.length; i++) {
+        if (spans[i].innerHTML.length > maxLength) {
+            maxLength = spans[i].innerHTML.length;
+            maxLengthIndex = i;
+        }
+        if (spans[i].offsetHeight > spans[i].parentNode.offsetHeight) {
+            bigWordExists = true;
+        }
+    }
+    let madeChange = false,
+        fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
+        lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
+        maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
+    fontSize = parseFloat(fontSize.split('px')[0]);
+    while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && fontSize < maxFontSize) {
+        madeChange = true;
+        document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize += 0.5) + 'px');
+    }
+    if (madeChange) {
+        document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize - 0.5) + 'px');
+        return true;
+    }
+    return bigWordExists;
+}
+
+/**
+ * Check and fix wrapped word in grid
+ *
+ * @param spans
+ */
+function checkWrapWordInGrid(spans, checkSmallResult) {
+    if (checkSmallResult) {
+        let madeChange = false,
+            fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
+            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
+            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
+        fontSize = parseFloat(fontSize.split('px')[0]);
+        for (let i = 0; i < spans.length; i++) {
+            while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
+                document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+                madeChange = true;
+            }
+            // Wait for new changes
+            setTimeout(() => {
+                while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
+                    document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+                    madeChange = true;
+                }
+            }, 10);
+        }
+        return madeChange;
+    } else {
+        let madeChange = false,
+            fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
+            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
+            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
+        fontSize = parseFloat(fontSize.split('px')[0]);
+        while (fontSize > maxFontSize) {
+            document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+            madeChange = true;
+        }
+        return madeChange;
+    }
+}
+
+function checkGridFontSize() {
+    toggleLoading(true);
+    const bingoCardType = document.getElementsByName('bingo_card_type')[0].value;
+    if (bingoCardType !== '1-75' && bingoCardType !== '1-90') {
+        const spans = document.getElementsByClassName('lbcg-card-text');
+        const result = checkSmallWordInGrid(spans);
+        checkWrapWordInGrid(spans, result);
+    }
+    toggleLoading(false);
+}
+
+window.onload = checkGridFontSize;
