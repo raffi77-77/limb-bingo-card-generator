@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
             for (let i = 1, j = 1; i <= gridItems.length; j++) {
                 if (Math.round(gridItems.length / 2) === i && includeFreeSpace) {
                     gridItems[i - 1].innerHTML = LBCG['freeSquareWord'];
+                    i++;
                 } else {
                     if (words_count_message === '' && (typeof words[j - 1] === 'undefined' || words[j - 1] === '')) {
                         continue;
