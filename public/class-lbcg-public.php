@@ -106,8 +106,22 @@ class LBCG_Public {
 			<?php foreach ( LBCG_Helper::$fonts as $font ): ?>
                 <link href="<?php echo $font['url'] ?>" rel="stylesheet">
 			<?php endforeach;
-			$data = get_post_meta( $post->ID );
+			if ( ! empty( $_GET['bc'] ) ) {
+				$bc_posts = get_posts( [
+					'name'           => $_GET['bc'],
+					'post_type'      => 'bingo_card',
+					'posts_per_page' => 1,
+					'post_status'    => 'publish',
+				] );
+				if ( ! empty( $bc_posts[0]->ID ) ) {
+					$data = get_post_meta( $bc_posts[0]->ID );
+				}
+			}
+			if ( empty( $data ) ) {
+				$data = get_post_meta( $post->ID );
+			}
 			// Load attributes
+			$grid_square = unserialize( $data['grid_square'][0] );
 			$bc_header = unserialize( $data['bc_header'][0] );
 			$bc_grid   = unserialize( $data['bc_grid'][0] );
 			$bc_card   = unserialize( $data['bc_card'][0] );

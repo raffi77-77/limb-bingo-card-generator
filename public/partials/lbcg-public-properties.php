@@ -29,6 +29,8 @@
         --lbcg-grid-line-height: <?php echo !empty($data['bingo_card_type'][0]) ? ($data['bingo_card_type'][0] === '1-90' ? '33.3px' : ($data['bingo_grid_size'][0] === '3x3' ? '102px' : ($data['bingo_grid_size'][0] === '4x4' ? '76.25px' : '60.8px'))) : '102px'; ?>;
         --lbcg-grid-text-color: <?php echo !empty($bc_grid['font_color']) ? $bc_grid['font_color'] : '#000'; ?>;
         --lbcg-grid-border-color: <?php echo !empty($bc_grid['border_color']) ? $bc_grid['border_color'] : '#000'; ?>;
+        --lbcg-grid-square-text-color: <?php echo !empty($grid_square['font_color']) ? $grid_square['font_color'] : '#ffffff'; ?>;
+        --lbcg-grid-square-bg-color: <?php echo !empty($grid_square['color']) ? $grid_square['color'] : '#000'; ?>;
         --lbcg-grid-bg-image: <?php echo !empty($bc_grid['image']) ? 'url(' . wp_get_attachment_image_url($bc_grid['image'], 'large') . ')' : 'none'; ?>;
         --lbcg-grid-bg-pos: <?php echo !empty($bc_grid['bg_pos']) ? $bc_grid['bg_pos'] : '0 0'; ?>;
         --lbcg-grid-bg-repeat: <?php echo !empty($bc_grid['repeat']) ? $bc_grid['repeat'] : 'no-repeat'; ?>;

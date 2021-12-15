@@ -144,6 +144,15 @@
     line-height: var(--lbcg-grid-line-height);
     color: inherit;
     overflow-wrap: anywhere;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &-square-checked {
+    color: var(--lbcg-grid-square-text-color);
+    background-color: var(--lbcg-grid-square-bg-color);
   }
 
   img.emoji {

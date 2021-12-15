@@ -370,6 +370,7 @@ class LBCG_Helper {
 			'bingo_card_title'       => '',
 			'bingo_card_spec_title'  => '',
 			'bingo_card_content'     => '',
+			'grid_square'            => '',
 			'bc_header'              => '',
 			'bc_grid'                => '',
 			'bc_card'                => '',
@@ -438,6 +439,10 @@ class LBCG_Helper {
 		if ( ! in_array( $data['bingo_card_type'], $special_cards ) && ! empty( $data['bingo_card_content'] ) ) {
 			$data['bingo_card_content'] = preg_replace( "/(\r?\n){2,}/", "\r\n", $data['bingo_card_content'] );
 			update_post_meta( $post_id, 'bingo_card_content', trim( wp_strip_all_tags( $data['bingo_card_content'] ) ) );
+		}
+		// Square style on click
+		if ( ! empty( $data['grid_square'] ) ) {
+			update_post_meta( $post_id, 'grid_square', $data['grid_square'] );
 		}
 		// Header color, image with attributes
 		if ( ! empty( $data['bc_header'] ) ) {
@@ -788,6 +793,7 @@ class LBCG_Helper {
 		$bt_post_title       = get_the_title( $bingo_theme_id );
 		$links               = [
 			'Home'                        => SITEURL,
+			'Bingo Card Generator'        => SITEURL . '/bingo-card-generator/',
 			$current_bt_category[0]->name => SITEURL . '/bingo-card-generator/' . $current_bt_category[0]->slug . '/',
 			$bt_post_title                => ''
 		];

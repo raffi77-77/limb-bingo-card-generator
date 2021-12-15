@@ -29,6 +29,14 @@ if ( $bingo_card_type === '1-75' ) {
 	}
 	$words_count = count( $bingo_card_words );
 }
+if ( ! empty( $data['grid_square'] ) ) {
+	$grid_square = unserialize( $data['grid_square'][0] );
+} else {
+	$grid_square = [
+		'font_color' => '#ffffff',
+		'color'      => '#000'
+	];
+}
 if ( ! empty( $data['bc_header'][0] ) ) {
 	$bc_header = unserialize( $data['bc_header'][0] );
 } else {
@@ -161,6 +169,26 @@ $special_types = array( '1-75', '1-90' );
                                    hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>
                             <label for="lbcg-free-space-check" class="lbcg-checkbox-holder"></label>
                             <label for="lbcg-free-space-check" class="lbcg-label">Include free space?</label>
+                        </div>
+                        <div class="lbcg-input-wrap">
+                            <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-toggle-square-style-check" hidden/>
+                            <label for="lbcg-toggle-square-style-check" class="lbcg-checkbox-holder"></label>
+                            <label for="lbcg-toggle-square-style-check" class="lbcg-label">Checked Square</label>
+                            <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
+                                <div class="lbcg-input-wrap">
+                                    <label for="grid-square-font-color" class="lbcg-label">Font Color</label>
+                                    <input type="color" id="grid-square-font-color"
+                                           class="bc-font-color lbcg-input" name="grid_square[font_color]"
+                                           value="<?php echo $grid_square['font_color'] ?? '#ffffff'; ?>"
+                                           data-bct="grid-square">
+                                </div>
+                                <div class="lbcg-input-wrap">
+                                    <label for="grid-square-bg-color" class="lbcg-label">Background Color</label>
+                                    <input type="color" id="grid-square-bg-color" class="bc-color lbcg-input"
+                                           name="grid_square[color]" value="<?php echo $grid_square['color'] ?? '#000'; ?>"
+                                           data-bct="grid-square">
+                                </div>
+                            </div>
                         </div>
                         <div class="lbcg-input-wrap">
                             <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-header-bg-check" hidden/>

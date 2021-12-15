@@ -56,6 +56,15 @@ if ( $bingo_card_type === '1-75' ) {
 	}
 	$bingo_card_words = explode( "\r\n", $bingo_card_content );
 }
+// Grid square checked style
+if ( ! empty( $data['grid_square'] ) ) {
+	$grid_square = unserialize( $data['grid_square'][0] );
+} else {
+	$grid_square = [
+		'font_color' => '#ffffff',
+		'color'      => '#000'
+	];
+}
 // Header style
 if ( ! empty( $data['bc_header'][0] ) ) {
 	$bc_header = unserialize( $data['bc_header'][0] );
@@ -102,12 +111,12 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
 			<?php LBCG_Helper::show_bingo_theme_breadcrumb( $lbcg_current_theme_name, $current_id ); ?>
-			<?php if ( ! empty( $data['bt_intro_text'][0] ) ): ?>
-                <div class="lbcg-post-content"><?php echo $data['bt_intro_text'][0]; ?></div>
-			<?php endif; ?>
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>
+			<?php if ( ! empty( $data['bt_intro_text'][0] ) ): ?>
+                <div class="lbcg-post-content lbcg-intro-text"><?php echo $data['bt_intro_text'][0]; ?></div>
+			<?php endif; ?>
             <div class="lbcg-main">
                 <aside class="lbcg-sidebar">
 					<?php
@@ -232,6 +241,26 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                            hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>
                                     <label for="lbcg-free-space-check" class="lbcg-checkbox-holder"></label>
                                     <label for="lbcg-free-space-check" class="lbcg-label">Include free space?</label>
+                                </div>
+                                <div class="lbcg-input-wrap">
+                                    <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-toggle-square-style-check" hidden/>
+                                    <label for="lbcg-toggle-square-style-check" class="lbcg-checkbox-holder"></label>
+                                    <label for="lbcg-toggle-square-style-check" class="lbcg-label">Checked Square</label>
+                                    <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
+                                        <div class="lbcg-input-wrap">
+                                            <label for="grid-square-font-color" class="lbcg-label">Font Color</label>
+                                            <input type="color" id="grid-square-font-color"
+                                                   class="bc-font-color lbcg-input" name="grid_square[font_color]"
+                                                   value="<?php echo $grid_square['font_color'] ?? '#ffffff'; ?>"
+                                                   data-bct="grid-square">
+                                        </div>
+                                        <div class="lbcg-input-wrap">
+                                            <label for="grid-square-bg-color" class="lbcg-label">Background Color</label>
+                                            <input type="color" id="grid-square-bg-color" class="bc-color lbcg-input"
+                                                   name="grid_square[color]" value="<?php echo $grid_square['color'] ?? '#000'; ?>"
+                                                   data-bct="grid-square">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="lbcg-input-wrap">
                                     <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse"
@@ -643,9 +672,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                     </div>
                 </section>
             </div>
-            <div class="lbcg-post-content">
-				<?php the_content(); ?>
-            </div>
+			<?php if ( $the_content = get_the_content() ): ?>
+                <div class="lbcg-post-content"><?php echo $the_content; ?></div>
+			<?php endif; ?>
         </main>
     </div>
 <?php

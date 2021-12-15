@@ -287,12 +287,21 @@
   }
 
   .lbcg-post-content {
-    padding: 0 1rem;
+    padding: 0 1rem 1rem;
     background: var(--theme-bg, #f9f8fa);
 
+    &.lbcg-intro-text {
+      margin-bottom: 1rem;
+      padding-bottom: 0;
+
+      h1, h2, h3, h4, h5, h6 {
+        padding-top: .5rem;
+      }
+    }
+
     h1, h2, h3, h4, h5, h6 {
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
+      padding-top: 1.5rem;
+      padding-bottom: .5rem;
       font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
       font-weight: 500;
       line-height: 1.35;
@@ -331,7 +340,10 @@
 
     p {
       margin-top: 0;
-      margin-bottom: 1rem;
+
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+      }
     }
 
     a {

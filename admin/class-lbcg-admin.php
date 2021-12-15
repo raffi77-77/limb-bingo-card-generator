@@ -129,7 +129,7 @@ class LBCG_Admin {
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
 				'ajaxUrl'        => admin_url( 'admin-ajax.php' )
 			] );
-            wp_enqueue_style( 'lbcg-admin-css', $this->attributes['admin_url'] . 'css/lbcg-admin.css', [], $this->attributes['plugin_version'] );
+			wp_enqueue_style( 'lbcg-admin-css', $this->attributes['admin_url'] . 'css/lbcg-admin.css', [], $this->attributes['plugin_version'] );
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css', [], $this->attributes['plugin_version'] );
 		}
 	}
@@ -159,6 +159,14 @@ class LBCG_Admin {
 			<?php endforeach;
 			$data = get_post_meta( $post->ID );
 			// Load attributes
+			if ( ! empty( $data['grid_square'] ) ) {
+				$grid_square = unserialize( $data['grid_square'][0] );
+			} else {
+				$grid_square = [
+					'font_color' => '#ffffff',
+					'color'      => '#000'
+				];
+			}
 			if ( ! empty( $data['bc_header'][0] ) ) {
 				$bc_header = unserialize( $data['bc_header'][0] );
 			} else {

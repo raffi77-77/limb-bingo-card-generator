@@ -81,12 +81,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 sidebarHeader.classList.add('collapsed')
             }
         } else if (event.target.matches('.remove-bc-image')) {
+            // On remove image button click
             event.preventDefault();
             const type = event.target.getAttribute('data-bct');
             document.getElementById('bc-' + type + '-image').value = '';
             document.getElementsByName('bc_' + type + '[remove_image]')[0].value = 1;
             document.documentElement.style.setProperty('--lbcg-' + type + '-bg-image', 'none');
         } else if (event.target.matches('#lbcg-view-all-cards')) {
+            // On view cards button click
             event.preventDefault();
             const ccEl = document.getElementById('lbcg-cards-custom-count');
             const bcc = parseInt(ccEl.value);
@@ -95,6 +97,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             document.forms['lbcg-view-all-cards-form'].submit();
             ccEl.disabled = false;
+        } else if (event.target.matches('span.lbcg-card-text') || event.target.matches('span.lbcg-card-text img')) {
+            // On grid square click
+            let el = event.target;
+            if (event.target.matches('span.lbcg-card-text img')) {
+                el = el.parentNode;
+            }
+            if (el.classList.contains('lbcg-card-square-checked')) {
+                el.classList.remove('lbcg-card-square-checked');
+            } else {
+                el.classList.add('lbcg-card-square-checked');
+            }
         }
     });
 

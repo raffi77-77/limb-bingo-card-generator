@@ -175,6 +175,9 @@ document.addEventListener('DOMContentLoaded', function () {
             alert("Please provide a minimum words/emojis or numbers quantity.");
         } else {
             event.preventDefault();
+            // Remove checked square classes
+            [...document.getElementsByClassName('lbcg-card-square-checked')].forEach(el => el.classList.remove('lbcg-card-square-checked'));
+            // Get image of card
             html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
                 document.getElementsByName('bingo_card_thumbnail')[0].value = canvas.toDataURL();
                 document.getElementById('post').submit();
