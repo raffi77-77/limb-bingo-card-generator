@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (el.classList.contains('lbcg-card-col-checked')) {
                 el.classList.remove('lbcg-card-col-checked');
-            } else {
+            } else if (el.children[0].hasChildNodes()) {
                 el.classList.add('lbcg-card-col-checked');
             }
         }
