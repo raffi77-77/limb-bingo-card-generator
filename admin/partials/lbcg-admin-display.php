@@ -1,6 +1,5 @@
 <?php
-global $post;
-$data             = get_post_meta( $post->ID );
+$data = LBCG_Admin::get_instance()->get_post_data();
 $bingo_card_type  = ! empty( $data['bingo_card_type'][0] ) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size  = ! empty( $data['bingo_grid_size'][0] ) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : 'Card Title';
@@ -90,7 +89,7 @@ if ( ! empty( $data['bc_card'][0] ) ) {
 // Wrap words
 $bingo_card_wrap_words = ! empty( $data['bingo_card_wrap_words'][0] ) && $data['bingo_card_wrap_words'][0] === 'on' ? true : false;
 // If include free space
-if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' || $bingo_card_type === '1-75' ) {
+if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' ) {
 	$bingo_grid_free_square = true;
 } else {
 	$bingo_grid_free_square = false;
@@ -496,7 +495,7 @@ $special_types = array( '1-75', '1-90' );
         </div>
     </main>
 </div>
-<?php if ( $post->post_type === 'bingo_theme' ):
+<?php if ( get_post_type() === 'bingo_theme' ):
 	ob_start();
 	wp_editor( isset( $data['bt_intro_text'] ) ? $data['bt_intro_text'][0] : '', 'intro-text', [
 		'wpautop'       => true,

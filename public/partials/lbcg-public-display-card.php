@@ -16,8 +16,7 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-global $post;
-$data = get_post_meta( $post->ID );
+$data = LBCG_Public::get_instance()->get_post_data();
 if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 	// Type, size, title
 	$bingo_card_type  = $data['bingo_card_type'][0];

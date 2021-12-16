@@ -10,9 +10,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-postcss");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
 
     var userConfig = {
-        buildDir: "public",
+        buildPubDir: "public",
+        buildAdmDir: "admin",
         srcDir: "www"
     };
 
@@ -23,7 +25,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: ["**"],
-                        dest: "<%= buildDir %>/images/",
+                        dest: "<%= buildPubDir %>/images/",
                         cwd: "<%= srcDir %>/images/",
                         expand: true
                     }
@@ -33,7 +35,7 @@ module.exports = function (grunt) {
         sass: {
             compile: {
                 files: {
-                    "<%= buildDir %>/css/lbcg-public.css": "<%= srcDir %>/sass/main.scss"
+                    "<%= buildPubDir %>/css/lbcg-public.css": "<%= srcDir %>/sass/main.scss"
                 }
             }
         },
@@ -46,18 +48,36 @@ module.exports = function (grunt) {
                 ]
             },
             dist: {
-                src: "<%= buildDir %>/css/lbcg-public.css"
+                src: "<%= buildPubDir %>/css/lbcg-public.css"
             }
         },
         cssmin: {
             target: {
                 files: [{
                     expand: true,
-                    cwd: "<%= buildDir %>/css/",
+                    cwd: "<%= buildPubDir %>/css/",
                     src: ['*.css', '!*.min.css'],
-                    dest: "<%= buildDir %>/css/",
+                    dest: "<%= buildPubDir %>/css/",
                     ext: ".min.css"
                 }]
+            }
+        },
+        uglify: {
+            target: {
+                files: [{
+                    expand: true,
+                    cwd: "<%= buildPubDir %>/js/",
+                    src: ['*.js', '!*.min.js'],
+                    dest: "<%= buildPubDir %>/js/",
+                    ext: ".min.js"
+                },
+                {
+                    expand: true,
+                    cwd: "<%= buildAdmDir %>/js/",
+                    src: ['*.js', '!*.min.js'],
+                    dest: "<%= buildAdmDir %>/js/",
+                    ext: ".min.js"
+                }],
             }
         },
         delta: {
@@ -70,7 +90,7 @@ module.exports = function (grunt) {
              */
             sass: {
                 files: ["<%= srcDir %>/**/*.scss"],
-                tasks: ["sass:compile", "cssmin", "postcss:dist"],
+                tasks: ["sass:compile", "cssmin", "uglify", "postcss:dist"],
                 options: {
                     livereload: true
                 }
@@ -101,6 +121,7 @@ module.exports = function (grunt) {
         "sass:compile",
         "postcss:dist",
         "cssmin",
+        "uglify",
         "copy:assets"
     ]);
 

@@ -21,21 +21,11 @@ if ( is_user_logged_in() ) {
 	global $current_user;
 	$cu_email = $current_user->user_email;
 }
-if ( isset( $_GET['bc'] ) ) {
-	$bc_posts = get_posts( [
-		'name'           => $_GET['bc'],
-		'post_type'      => 'bingo_card',
-		'posts_per_page' => 1,
-		'post_status'    => 'publish'
-	] );
-} else {
-	$bc_posts = [];
-}
-if ( ! empty( $bc_posts[0]->ID ) ) {
-	$bingo_card   = $bc_posts[0];
-	$bc_permalink = get_permalink( $bingo_card->ID );
+$public_instance = LBCG_Public::get_instance();
+if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
+	$bc_permalink = get_permalink( $card_id );
 	// Get bingo card data
-	$data = get_post_meta( $bingo_card->ID );
+	$data = $public_instance->get_post_data();
 	// Type, size, title
 	$bingo_card_type  = $data['bingo_card_type'][0];
 	$bingo_grid_size  = $data['bingo_grid_size'][0];

@@ -28,7 +28,7 @@ class LBCG {
 	 * @return LBCG
 	 */
 	public static function get_instance( $version, $plugin_dir, $plugin_url ) {
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 			// Create new instance
 			self::$instance = new LBCG( $version, $plugin_dir, $plugin_url );
 		}
@@ -81,13 +81,13 @@ class LBCG {
 	private function init() {
 		LBCG_Helper::register_custom_post_types();
 		if ( LBCG_Helper::is_request( 'admin' ) ) {
-			$admin_obj = new LBCG_Admin( $this->attributes );
+			$admin_obj = LBCG_Admin::get_instance( $this->attributes );
 			$admin_obj->register_dependencies();
 		} elseif ( LBCG_Helper::is_request( 'ajax' ) ) {
 			$ajax_obj = new LBCG_Ajax( $this->attributes );
 			$ajax_obj->register_dependencies();
 		} elseif ( LBCG_Helper::is_request( 'public' ) ) {
-			$public_obj = new LBCG_Public( $this->attributes );
+			$public_obj = LBCG_Public::get_instance( $this->attributes );
 			$public_obj->register_dependencies();
 		}
 	}

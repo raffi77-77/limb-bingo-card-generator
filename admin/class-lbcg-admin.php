@@ -5,6 +5,13 @@
  */
 class LBCG_Admin {
 	/**
+	 * An instance of this class
+	 *
+	 * @var LBCG_Admin|null $instance An object of this class
+	 */
+	private static $instance = null;
+
+	/**
 	 * Plugin all needed properties in one place
 	 *
 	 * @var array $attributes The array containing main attributes of the plugin
@@ -12,11 +19,34 @@ class LBCG_Admin {
 	protected $attributes = [];
 
 	/**
+	 * Current object data
+	 *
+	 * @var array $data The array containing all metadata of current post
+	 */
+	private $data = null;
+
+	/**
+	 * Get instance
+	 *
+	 * @param $attributes
+	 *
+	 * @return LBCG_Admin|null
+	 */
+	public static function get_instance( $attributes = [] ) {
+		if ( null === self::$instance && ! empty( $attributes ) ) {
+			// Create new instance
+			self::$instance = new LBCG_Admin( $attributes );
+		}
+
+		return self::$instance;
+	}
+
+	/**
 	 * Construct Bingo Card Admin object
 	 *
 	 * @param   array  $attributes
 	 */
-	public function __construct( $attributes ) {
+	private function __construct( $attributes ) {
 		$this->attributes = $attributes;
 	}
 
@@ -87,9 +117,8 @@ class LBCG_Admin {
 	 * @return array
 	 */
 	public function show_editor_message( $messages ) {
-		global $post;
-		if ( ( $post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card' ) && $post->post_status !== 'auto-draft' ) {
-			$post_meta = get_post_meta( $post->ID );
+		if ( ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) ) && get_post_status() !== 'auto-draft' ) {
+			$post_meta = get_post_meta( get_the_ID() );
 			// Collecting errors
 			$errors = [];
 			if ( empty( $post_meta['bingo_card_type'][0] ) ) {
@@ -115,15 +144,15 @@ class LBCG_Admin {
 	 * Enqueue admin scripts and styles
 	 */
 	public function enqueue_admin_script_and_styles() {
-		global $post_type;
+		$post_type = get_post_type();
 		if ( $post_type === 'bingo_theme' || $post_type === 'bingo_card' ) {
 			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
 			wp_enqueue_script( 'html2canvas-js', $this->attributes['admin_url'] . 'js/html2canvas.min.js', [], $this->attributes['plugin_version'] );
 			if ( ! did_action( 'wp_enqueue_media' ) ) {
 				wp_enqueue_media();
 			}
-			wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.js', [], $this->attributes['plugin_version'] );
-			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.js', [], $this->attributes['plugin_version'] );
+			wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.min.js', [], $this->attributes['plugin_version'] );
+			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js', [], $this->attributes['plugin_version'] );
 			wp_localize_script( 'lbcg-public-js', 'LBCG', [
 				'fonts'          => LBCG_Helper::$fonts,
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
@@ -145,11 +174,20 @@ class LBCG_Admin {
 	}
 
 	/**
+	 * Get current post metadata
+	 *
+	 * @return array|null
+	 */
+	public function get_post_data() {
+		return $this->data;
+	}
+
+	/**
 	 * Add custom css
 	 */
 	public function add_custom_css() {
-		global $post;
-		if ( $post instanceof WP_Post && ( $post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card' ) ) {
+		$post_type = get_post_type();
+		if ( $post_type === 'bingo_theme' || $post_type === 'bingo_card' ) {
 			// Load google fonts
 			?>
             <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -157,18 +195,18 @@ class LBCG_Admin {
 			<?php foreach ( LBCG_Helper::$fonts as $font ): ?>
                 <link href="<?php echo $font['url'] ?>" rel="stylesheet">
 			<?php endforeach;
-			$data = get_post_meta( $post->ID );
+			$this->data = get_post_meta( get_the_ID() );
 			// Load attributes
-			if ( ! empty( $data['grid_square'] ) ) {
-				$grid_square = unserialize( $data['grid_square'][0] );
+			if ( ! empty( $this->data['grid_square'] ) ) {
+				$grid_square = unserialize( $this->data['grid_square'][0] );
 			} else {
 				$grid_square = [
 					'font_color' => '#ffffff',
 					'color'      => '#000'
 				];
 			}
-			if ( ! empty( $data['bc_header'][0] ) ) {
-				$bc_header = unserialize( $data['bc_header'][0] );
+			if ( ! empty( $this->data['bc_header'][0] ) ) {
+				$bc_header = unserialize( $this->data['bc_header'][0] );
 			} else {
 				$bc_header = [
 					'font_color' => '#ffffff',
@@ -180,8 +218,8 @@ class LBCG_Admin {
 					'bg_size'    => 'cover'
 				];
 			}
-			if ( ! empty( $data['bc_grid'][0] ) ) {
-				$bc_grid = unserialize( $data['bc_grid'][0] );
+			if ( ! empty( $this->data['bc_grid'][0] ) ) {
+				$bc_grid = unserialize( $this->data['bc_grid'][0] );
 			} else {
 				$bc_grid = [
 					'font_color'   => '#000',
@@ -194,8 +232,8 @@ class LBCG_Admin {
 					'bg_size'      => 'cover'
 				];
 			}
-			if ( ! empty( $data['bc_card'][0] ) ) {
-				$bc_card = unserialize( $data['bc_card'][0] );
+			if ( ! empty( $this->data['bc_card'][0] ) ) {
+				$bc_card = unserialize( $this->data['bc_card'][0] );
 			} else {
 				$bc_card = [
 					'color'   => '#d6be89',
@@ -206,12 +244,13 @@ class LBCG_Admin {
 					'bg_size' => 'cover'
 				];
 			}
+			$data = $this->data;
 			include_once $this->attributes['public_templates_path'] . '/lbcg-public-properties.php';
 			// Load custom css
-			if ( ! empty( $data['bingo_card_custom_css'][0] ) ) {
+			if ( ! empty( $this->data['bingo_card_custom_css'][0] ) ) {
 				?>
                 <style type="text/css">
-                    <?php echo trim( wp_strip_all_tags( $data['bingo_card_custom_css'][0] ) ); ?>
+                    <?php echo trim( wp_strip_all_tags( $this->data['bingo_card_custom_css'][0] ) ); ?>
                 </style>
 				<?php
 			}

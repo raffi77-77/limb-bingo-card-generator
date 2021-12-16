@@ -16,15 +16,14 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-global $post;
+$data = LBCG_Public::get_instance()->get_post_data();
 // Get bingo card data
-$data              = get_post_meta( $post->ID );
 $title             = $data['bingo_card_title'][0];
 $type              = $data['bingo_card_type'][0];
 $single_page_count = isset( $_GET['bcs'] ) && $type !== '1-90' ? (int) $_GET['bcs'] : 2;
 $cards_count       = (int) $_GET['bcc'];
 // Get generated contents
-$all             = LBCG_Helper::generate_all_content_info( $post->ID, 500, $cards_count, $data );
+$all = LBCG_Helper::generate_all_content_info( $post->ID, 500, $cards_count, $data );
 //$needed_contents = array_slice( $all, 0, $cards_count );
 if ( $type === '1-75' ) {
 	$spec_title = $data['bingo_card_spec_title'][0];
@@ -104,7 +103,7 @@ $card_header_html = ob_get_clean();
 	                                                if ( (int) ceil( $grid_sq_count / 2 ) === $i && $bingo_grid_free_square ) {
 		                                                echo LBCG_Helper::$free_space_word;
 	                                                } else {
-		                                                echo isset($bingo_card_content) ? $bingo_card_content[ $bingo_card_words[ $i - 1 ] ] : $bingo_card_words[ $i - 1 ];
+		                                                echo isset( $bingo_card_content ) ? $bingo_card_content[ $bingo_card_words[ $i - 1 ] ] : $bingo_card_words[ $i - 1 ];
 	                                                }
 	                                                ?></span>
                                                         </div>

@@ -5,6 +5,13 @@
  */
 class LBCG_Public {
 	/**
+	 * An instance of this class
+	 *
+	 * @var LBCG_Public|null $instance An object of this class
+	 */
+	private static $instance = null;
+
+	/**
 	 * Plugin all needed properties in one place
 	 *
 	 * @var array $attributes The array containing main attributes of the plugin
@@ -12,11 +19,41 @@ class LBCG_Public {
 	protected $attributes = [];
 
 	/**
-	 * Construct Bingo Card Public object
+	 * Current object data
+	 *
+	 * @var array $data The array containing all metadata of current post
+	 */
+	private $data = null;
+
+	/**
+	 * If current card in dev mode
+	 *
+	 * @var bool $dev_mode_card_id Card mode
+	 */
+	private $dev_mode_card_id = 0;
+
+	/**
+	 * Get instance
 	 *
 	 * @param $attributes
+	 *
+	 * @return LBCG_Public|null
 	 */
-	public function __construct( $attributes ) {
+	public static function get_instance( $attributes = [] ) {
+		if ( null === self::$instance && ! empty( $attributes ) ) {
+			// Create new instance
+			self::$instance = new LBCG_Public( $attributes );
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Construct Bingo Card Public object
+	 *
+	 * @param   array  $attributes
+	 */
+	private function __construct( $attributes ) {
 		$this->attributes = $attributes;
 	}
 
@@ -34,12 +71,9 @@ class LBCG_Public {
 	 * Enqueue public scripts and styles
 	 */
 	public function enqueue_scripts_and_styles() {
-		if ( is_singular( 'bingo_theme' ) || is_singular( 'bingo_card' ) ) {
+		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) ) {
 			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
-			/*if (!did_action('wp_enqueue_media')) {
-				wp_enqueue_media();
-			}*/
-			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.js', [], $this->attributes['plugin_version'] );
+			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js', [], $this->attributes['plugin_version'] );
 			wp_localize_script( 'lbcg-public-js', 'LBCG', [
 				'fonts'          => LBCG_Helper::$fonts,
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
@@ -47,9 +81,9 @@ class LBCG_Public {
 			] );
 
 		}
-        if ( is_singular( 'bingo_theme' ) || is_singular( 'bingo_card' ) || is_tax( 'ubud-category' ) ) {
-	        wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
-        }
+		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) || is_tax( 'ubud-category' ) ) {
+			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
+		}
 	}
 
 	/**
@@ -60,14 +94,13 @@ class LBCG_Public {
 	 * @return string
 	 */
 	public function get_custom_post_type_template( $single_template ) {
-		global $post_type;
-		if ( $post_type === 'bingo_theme' ) {
+		if ( is_singular( 'bingo_theme' ) ) {
 			if ( preg_match( '/bingo-card-generator\/([^\/]+)\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'] ) ) {
 				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-invitation.php';
 			} else {
 				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-generator.php';
 			}
-		} elseif ( $post_type === 'bingo_card' ) {
+		} elseif ( is_singular( 'bingo_card' ) ) {
 			if ( preg_match( '/ubud-bingo-card\/([^\/]+)\/all\/\?([^\/]+)\/?$/', $_SERVER['REQUEST_URI'] ) ) {
 				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-cards.php';
 			} else {
@@ -94,11 +127,28 @@ class LBCG_Public {
 	}
 
 	/**
+	 * Get current post metadata
+	 *
+	 * @return array|null
+	 */
+	public function get_post_data() {
+		return $this->data;
+	}
+
+	/**
+	 * Get current being built card id
+	 *
+	 * @return int
+	 */
+	public function get_dev_mode_card_id() {
+		return $this->dev_mode_card_id;
+	}
+
+	/**
 	 * Add custom css
 	 */
 	public function add_custom_css() {
-		global $post;
-		if ( $post instanceof WP_Post && ( $post->post_type === 'bingo_theme' || $post->post_type === 'bingo_card' ) ) {
+		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) ) {
 			// Load google fonts
 			?>
             <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,22 +164,24 @@ class LBCG_Public {
 					'post_status'    => 'publish',
 				] );
 				if ( ! empty( $bc_posts[0]->ID ) ) {
-					$data = get_post_meta( $bc_posts[0]->ID );
+					$this->dev_mode_card_id = $bc_posts[0]->ID;
+					$this->data             = get_post_meta( $bc_posts[0]->ID );
 				}
 			}
-			if ( empty( $data ) ) {
-				$data = get_post_meta( $post->ID );
+			if ( empty( $this->data ) ) {
+				$this->data = get_post_meta( get_the_ID() );
 			}
 			// Load attributes
-			$grid_square = unserialize( $data['grid_square'][0] );
-			$bc_header = unserialize( $data['bc_header'][0] );
-			$bc_grid   = unserialize( $data['bc_grid'][0] );
-			$bc_card   = unserialize( $data['bc_card'][0] );
+			$grid_square = unserialize( $this->data['grid_square'][0] );
+			$bc_header   = unserialize( $this->data['bc_header'][0] );
+			$bc_grid     = unserialize( $this->data['bc_grid'][0] );
+			$bc_card     = unserialize( $this->data['bc_card'][0] );
+			$data        = $this->data;
 			include_once $this->attributes['public_templates_path'] . '/lbcg-public-properties.php';
 			// Load custom css
 			?>
             <style type="text/css">
-                <?php echo trim( wp_strip_all_tags( $data['bingo_card_custom_css'][0] ) ); ?>
+                <?php echo trim( wp_strip_all_tags( $this->data['bingo_card_custom_css'][0] ) ); ?>
             </style>
 			<?php
 		}

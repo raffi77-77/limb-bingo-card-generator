@@ -16,22 +16,8 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-global $post;
-$current_id = $post->ID;
-if ( ! empty( $_GET['bc'] ) ) {
-	$bc_posts = get_posts( [
-		'name'           => $_GET['bc'],
-		'post_type'      => 'bingo_card',
-		'posts_per_page' => 1,
-		'post_status'    => 'publish',
-	] );
-	if ( ! empty( $bc_posts[0]->ID ) ) {
-		$data = get_post_meta( $bc_posts[0]->ID );
-	}
-}
-if ( empty( $data ) ) {
-	$data = get_post_meta( $current_id );
-}
+$current_id = get_the_ID();
+$data = LBCG_Public::get_instance()->get_post_data();
 $bingo_card_type  = ! empty( $data['bingo_card_type'][0] ) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size  = ! empty( $data['bingo_grid_size'][0] ) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : '';

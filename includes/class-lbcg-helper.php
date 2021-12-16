@@ -113,7 +113,7 @@ class LBCG_Helper {
 			'supports'           => array( 'title', 'editor', 'author' ),
 			'taxonomies'         => array( 'ubud-category' ),
 		) );
-		add_rewrite_rule( 'bingo-card-generator/([^/]+)/([^/]+)/?(([^/]+)/?)?$', 'index.php?taxonomy=ubud-category&ubud-category=$matches[1]&post_type=bingo_theme&name=$matches[2]', 'top' );
+		add_rewrite_rule( 'bingo-card-generator/([^/]+)/([^/]+)/?(([^/]+)/?)?$', 'index.php?ubud-category=$matches[1]&bingo_theme=$matches[2]', 'top' );
 	}
 
 	/**
@@ -424,7 +424,7 @@ class LBCG_Helper {
 				} else {
 					$thumb_name = 'lbcg-thumb-name-' . wp_generate_password( 12, false );
 				}
-				self::attach_image( $data['bingo_card_thumbnail'], $post_id, $thumb_name . '.png' );
+				self::set_as_featured_image( $data['bingo_card_thumbnail'], $post_id, $thumb_name . '.png' );
 			}
 		}
 		// 1-75 special title
@@ -874,7 +874,7 @@ class LBCG_Helper {
 	 *
 	 * @return bool
 	 */
-	public static function attach_image( $base64, $post_id, $filename ) {
+	public static function set_as_featured_image( $base64, $post_id, $filename ) {
 		if ( empty( $base64 ) ) {
 			return false;
 		}
@@ -897,7 +897,7 @@ class LBCG_Helper {
 		$attach_id   = wp_insert_attachment( $attachment, wp_upload_dir()['path'] . '/' . $filename, $post_id );
 		$attach_data = wp_generate_attachment_metadata( $attach_id, wp_upload_dir()['path'] . '/' . $filename );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
-		update_post_meta( $post_id, '_thumbnail_id', $attach_id, true );
+		set_post_thumbnail( $post_id, $attach_id );
 
 		return true;
 	}
