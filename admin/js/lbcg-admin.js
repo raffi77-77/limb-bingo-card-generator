@@ -15,7 +15,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (request.readyState !== 4 || request.status !== 200) return;
             // On success
             document.getElementsByClassName('lbcg-card')[0].innerHTML = request.responseText;
-            document.documentElement.style.setProperty('--lbcg-grid-line-height', type === '1-90' ? '33.3px' : (size === '3x3' ? '102px' : (size === '4x4' ? '76.25px' : '60.8px')));
+            let lineHeight;
+            if (document.getElementById('lbcg-wrap-words-check').checked) {
+                lineHeight = 1;
+            } else {
+                if (type === '1-90') {
+                    lineHeight = '33.3px';
+                } else if (size === '3x3') {
+                    lineHeight = '102px';
+                } else if (size === '4x4') {
+                    lineHeight = '76.25px';
+                } else {
+                    lineHeight = '60.8px';
+                }
+            }
+            document.documentElement.style.setProperty('--lbcg-grid-line-height', lineHeight);
             if (type !== '1-75' && type !== '1-90') {
                 checkGridFontSize();
             } else {
@@ -38,17 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
     /**
      * Check words count in container
      *
-     * @param event
      * @returns {boolean}
      */
-    function checkWordsCount(event) {
-        let $this;
-        if (typeof event !== 'undefined') {
-            event.preventDefault();
-            $this = event.target;
-        } else {
-            $this = document.getElementById('lbcg-body-content');
-        }
+    function checkWordsCount() {
+        let $this = document.getElementById('lbcg-body-content');
         const words = $this.value.split("\n"),
             bingoGridSize = document.getElementsByName('bingo_grid_size')[0].value,
             bingoCardType = document.getElementById('lbcg-bc-type').value;
@@ -92,33 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /**
-     * Grid size value changed
-     */
-    document.getElementById('lbcg-grid-size').addEventListener('change', function (event) {
-        event.preventDefault();
-        const value = event.target.value,
-            freeSquareEl = document.getElementById('lbcg-free-space-check'),
-            bingoCardType = document.getElementById('lbcg-bc-type').value;
-        if (value !== null) {
-            document.getElementsByName('bingo_grid_size')[0].value = value;
-            const countEl = document.getElementById('content-items-count');
-            if (value === '3x3') {
-                countEl.innerHTML = 9;
-            } else if (value === '4x4') {
-                countEl.innerHTML = 16;
-            } else {
-                countEl.innerHTML = 25;
-            }
-            if (value === '4x4' || bingoCardType === '1-75' || bingoCardType === '1-90') {
-                freeSquareEl.parentNode.style.display = 'none';
-            } else {
-                freeSquareEl.parentNode.style.display = '';
-            }
-            checkWordsCount();
-        }
-    });
-
-    /**
      * On card type change
      */
     document.getElementById('lbcg-bc-type').addEventListener('change', function (event) {
@@ -129,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
             gridSizeInput = document.getElementsByName('bingo_grid_size')[0],
             specTitleElement = document.getElementsByClassName('lbcg-input-wrap--subtitle')[0],
             contentElement = document.getElementById('lbcg-body-content'),
+            wrapWordElement = document.getElementById('lbcg-wrap-words-check'),
             freeSquareElement = document.getElementById('lbcg-free-space-check');
         switch (event.target.value) {
             case '1-75':
@@ -137,8 +118,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 gridSize.parentNode.style.display = 'none';
                 specTitleElement.parentNode.style.display = 'flex';
                 contentElement.parentNode.style.display = 'none';
-                freeSquareElement.parentNode.style.display = 'none';
-                getCardContent('1-75', '5x5', true, title, [...document.querySelectorAll('.lbcg-input-wrap--subtitle .lbcg-input')].map(item => item.value));
+                wrapWordElement.parentNode.style.display = 'none';
+                freeSquareElement.parentNode.style.display = 'flex';
+                getCardContent('1-75', '5x5', freeSquareElement.checked, title, [...document.querySelectorAll('.lbcg-input-wrap--subtitle .lbcg-input')].map(item => item.value));
                 break;
             case '1-90':
                 // Only 9x3
@@ -146,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 gridSize.parentNode.style.display = 'none';
                 specTitleElement.parentNode.style.display = 'none';
                 contentElement.parentNode.style.display = 'none';
+                wrapWordElement.parentNode.style.display = 'none';
                 freeSquareElement.parentNode.style.display = 'none';
                 getCardContent('1-90', '9x3', false, title);
                 break;
@@ -156,7 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 gridSize.parentNode.style.display = 'flex';
                 specTitleElement.parentNode.style.display = 'none';
                 contentElement.parentNode.style.display = 'flex';
+                wrapWordElement.parentNode.style.display = 'flex';
                 freeSquareElement.parentNode.style.display = 'flex';
+                document.getElementById('content-items-count').innerText = 9;
                 getCardContent('generic', '3x3', freeSquareElement.checked, title, [], contentElement.value);
                 break;
         }

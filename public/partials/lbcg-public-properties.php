@@ -26,7 +26,23 @@
 
         --lbcg-grid-font-size: <?php echo !empty($data['bingo_card_type'][0]) ? ($data['bingo_card_type'][0] === '1-90' ? '16px' : ($data['bingo_card_type'][0] === '1-75' ? '31.5px' : '16px')) : '16px'; ?>;
         --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCG_Helper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
-        --lbcg-grid-line-height: <?php echo !empty($data['bingo_card_type'][0]) ? ($data['bingo_card_type'][0] === '1-90' ? '33.3px' : ($data['bingo_grid_size'][0] === '3x3' ? '102px' : ($data['bingo_grid_size'][0] === '4x4' ? '76.25px' : '60.8px'))) : '102px'; ?>;
+        --lbcg-grid-line-height: <?php
+        if (!empty($data['bingo_card_wrap_words'][0]) && $data['bingo_card_wrap_words'][0] === 'on') {
+            echo 1;
+        } else if (!empty($data['bingo_card_type'][0])) {
+            if ($data['bingo_card_type'][0] === '1-90') {
+                echo '33.3px';
+            } elseif ($data['bingo_grid_size'][0] === '3x3') {
+                echo '102px';
+            } elseif ($data['bingo_grid_size'][0] === '4x4') {
+                echo '76.25px';
+                } else {
+                    echo '60.8px';
+                }
+        } else {
+            echo '102px';
+        } ?>;
+        --lbcg-grid-wrap-words: <?php echo !empty($data['bingo_card_wrap_words'][0]) && $data['bingo_card_wrap_words'][0] === 'on' ? 'break-word' : 'anywhere'; ?>;
         --lbcg-grid-text-color: <?php echo !empty($bc_grid['font_color']) ? $bc_grid['font_color'] : '#000'; ?>;
         --lbcg-grid-border-color: <?php echo !empty($bc_grid['border_color']) ? $bc_grid['border_color'] : '#000'; ?>;
         --lbcg-grid-square-text-color: <?php echo !empty($grid_square['font_color']) ? $grid_square['font_color'] : '#ffffff'; ?>;

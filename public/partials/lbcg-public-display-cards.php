@@ -29,7 +29,8 @@ $all             = LBCG_Helper::generate_all_content_info( $post->ID, 500, $card
 if ( $type === '1-75' ) {
 	$spec_title = $data['bingo_card_spec_title'][0];
 }
-if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $data['bingo_grid_size'][0] !== '4x4' || $type === '1-75' ) {
+// Free square
+if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $data['bingo_grid_size'][0] !== '4x4'/* || $type === '1-75'*/ ) {
 	$bingo_grid_free_square = true;
 } else {
 	$bingo_grid_free_square = false;

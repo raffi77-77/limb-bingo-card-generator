@@ -729,7 +729,10 @@
         -ms-flex-pack: start;
             justify-content: flex-start;
         line-height: inherit;
-        z-index: 2; }
+        z-index: 2;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none; }
         .lbcg-parent .lbcg-card-subtitle-text > span {
           display: block;
           width: 20%;
@@ -780,7 +783,10 @@
         display: block;
         text-align: center;
         line-height: inherit;
-        z-index: 2; }
+        z-index: 2;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none; }
     .lbcg-parent .lbcg-card-col {
       position: relative;
       border-top: 1px solid var(--lbcg-grid-border-color);
@@ -788,11 +794,16 @@
       overflow: hidden;
       color: var(--lbcg-grid-text-color);
       z-index: 2; }
+      .lbcg-parent .lbcg-card-col-checked {
+        color: var(--lbcg-grid-square-text-color);
+        background-color: var(--lbcg-grid-square-bg-color); }
+      .lbcg-parent .lbcg-card-col:hover {
+        cursor: pointer; }
     .lbcg-parent .lbcg-card-text {
       display: block;
       position: absolute;
       left: 0;
-      top: 0;
+      top: 50%;
       width: 100%;
       padding: 0 3px;
       text-align: center;
@@ -801,12 +812,11 @@
       font-size: var(--lbcg-grid-font-size);
       line-height: var(--lbcg-grid-line-height);
       color: inherit;
-      overflow-wrap: anywhere; }
-      .lbcg-parent .lbcg-card-text:hover {
-        cursor: pointer; }
-    .lbcg-parent .lbcg-card-square-checked {
-      color: var(--lbcg-grid-square-text-color);
-      background-color: var(--lbcg-grid-square-bg-color); }
+      overflow-wrap: var(--lbcg-grid-wrap-words);
+      transform: translate3d(0, -50%, 0);
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none; }
     .lbcg-parent .lbcg-card img.emoji {
       max-width: 90%; }
     .lbcg-parent .lbcg-card-body {

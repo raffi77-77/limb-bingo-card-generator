@@ -4,12 +4,15 @@ $data             = get_post_meta( $post->ID );
 $bingo_card_type  = ! empty( $data['bingo_card_type'][0] ) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size  = ! empty( $data['bingo_grid_size'][0] ) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : 'Card Title';
+// Special title
 if ( ! empty( $data['bingo_card_spec_title'][0] ) ) {
 	$bingo_card_spec_title = explode( '|', $data['bingo_card_spec_title'][0] );
 } else {
 	$bingo_card_spec_title = [ 'B', 'I', 'N', 'G', 'O' ];
 }
 // Bingo card words
+$words_count        = 25;
+$bingo_card_content = "1\n16\n31\n46\n61\n2\n17\n32\n47\n62\n3\n18\n33\n48\n63\n4\n19\n34\n49\n64\n5\n20\n35\n50\n65";
 if ( $bingo_card_type === '1-75' ) {
 	$bingo_card_words = LBCG_Helper::get_1_75_bingo_card_numbers();
 } elseif ( $bingo_card_type === '1-90' ) {
@@ -28,6 +31,14 @@ if ( $bingo_card_type === '1-75' ) {
 		$bingo_card_words = explode( "\n", $bingo_card_content );
 	}
 	$words_count = count( $bingo_card_words );
+}
+// Need words count
+if ( $bingo_grid_size === '3x3' ) {
+	$min_words_count = 9;
+} elseif ( $bingo_grid_size === '4x4' ) {
+	$min_words_count = 16;
+} else {
+	$min_words_count = 25;
 }
 if ( ! empty( $data['grid_square'] ) ) {
 	$grid_square = unserialize( $data['grid_square'][0] );
@@ -76,6 +87,8 @@ if ( ! empty( $data['bc_card'][0] ) ) {
 		'bg_size' => 'cover'
 	];
 }
+// Wrap words
+$bingo_card_wrap_words = ! empty( $data['bingo_card_wrap_words'][0] ) && $data['bingo_card_wrap_words'][0] === 'on' ? true : false;
 // If include free space
 if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' || $bingo_card_type === '1-75' ) {
 	$bingo_grid_free_square = true;
@@ -109,7 +122,8 @@ $special_types = array( '1-75', '1-90' );
                 </div>
                 <div class="lbcg-input-wrap">
                     <label for="bc-custom-css" class="lbcg-label">Custom CSS</label>
-                    <textarea class="lbcg-input" id="bc-custom-css" name="bingo_card_custom_css" cols="" rows="11"><?php echo ! empty( $data['bingo_card_custom_css'][0] ) ? $data['bingo_card_custom_css'][0] : ''; ?></textarea>
+                    <textarea class="lbcg-input" id="bc-custom-css" name="bingo_card_custom_css" cols="" rows="11"><?php echo ! empty( $data['bingo_card_custom_css'][0] ) ? $data['bingo_card_custom_css'][0]
+							: ''; ?></textarea>
                 </div>
             </aside>
             <section class="lbcg-content">
@@ -151,7 +165,7 @@ $special_types = array( '1-75', '1-90' );
                         </div>
                         <div class="lbcg-input-wrap" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;' : ''; ?>>
                             <label for="lbcg-body-content" class="lbcg-label">Enter words/emojis or numbers</label>
-                            <p>Note: Please fill minimum <span id="content-items-count"><?php echo $words_count; ?></span> words/emojis or numbers, each in new line.</p>
+                            <p>Note: Please fill minimum <span id="content-items-count"><?php echo $min_words_count; ?></span> words/emojis or numbers, each in new line.</p>
                             <textarea class="lbcg-input" id="lbcg-body-content" name="bingo_card_content" cols="" rows="11"><?php echo $bingo_card_content; ?></textarea>
                         </div>
                         <div class="lbcg-input-wrap">
@@ -163,7 +177,15 @@ $special_types = array( '1-75', '1-90' );
 								<?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="lbcg-input-wrap" <?php echo ( $bingo_card_type === '1-75' || $bingo_card_type === '1-90' || $bingo_grid_size === '4x4' ) ? 'style="display: none;"' : ''; ?>>
+                        <div class="lbcg-input-wrap" <?php echo ( $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ) ? 'style="display: none;"' : ''; ?>>
+                            <input type="checkbox" class="lbcg-checkbox" id="lbcg-wrap-words-check"
+                                   name="bingo_card_wrap_words"
+                                   hidden <?php echo $bingo_card_wrap_words ? 'checked' : ''; ?>/>
+                            <label for="lbcg-wrap-words-check" class="lbcg-checkbox-holder"></label>
+                            <label for="lbcg-wrap-words-check" class="lbcg-label">Wrap Words?</label>
+                        </div>
+                        <div class="lbcg-input-wrap" <?php echo ( /*$bingo_card_type === '1-75' ||*/
+							$bingo_card_type === '1-90' || $bingo_grid_size === '4x4' ) ? 'style="display: none;"' : ''; ?>>
                             <input type="checkbox" class="lbcg-checkbox" id="lbcg-free-space-check"
                                    name="bingo_card_free_square"
                                    hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>

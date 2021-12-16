@@ -101,8 +101,10 @@ if ( ! empty( $data['bc_card'][0] ) ) {
 		'repeat'  => 'no-repeat'
 	];
 }
+// Wrap words
+$bingo_card_wrap_words = ! empty( $data['bingo_card_wrap_words'][0] ) && $data['bingo_card_wrap_words'][0] === 'on' ? true : false;
 // If include free space
-if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' || $bingo_card_type === '1-75' ) {
+if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' /*|| $bingo_card_type === '1-75'*/ ) {
 	$bingo_grid_free_square = true;
 } else {
 	$bingo_grid_free_square = false;
@@ -235,7 +237,14 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
 										<?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="lbcg-input-wrap" <?php echo ( $bingo_card_type === '1-75' || $bingo_card_type === '1-90' || $bingo_grid_size === '4x4' ) ? 'style="display: none;"' : ''; ?>>
+                                <div class="lbcg-input-wrap" <?php echo ( $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ) ? 'style="display: none;"' : ''; ?>>
+                                    <input type="checkbox" class="lbcg-checkbox" id="lbcg-wrap-words-check"
+                                           name="bingo_card_wrap_words"
+                                           hidden <?php echo $bingo_card_wrap_words ? 'checked' : ''; ?>/>
+                                    <label for="lbcg-wrap-words-check" class="lbcg-checkbox-holder"></label>
+                                    <label for="lbcg-wrap-words-check" class="lbcg-label">Wrap Words?</label>
+                                </div>
+                                <div class="lbcg-input-wrap" <?php echo ( /*$bingo_card_type === '1-75' ||*/ $bingo_card_type === '1-90' || $bingo_grid_size === '4x4' ) ? 'style="display: none;"' : ''; ?>>
                                     <input type="checkbox" class="lbcg-checkbox" id="lbcg-free-space-check"
                                            name="bingo_card_free_square"
                                            hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>

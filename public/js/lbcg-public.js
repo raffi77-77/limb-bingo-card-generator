@@ -55,6 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /**
      * Remove or add star in middle of grid
+     *
+     * @param add
      */
     function changeFreeSpaceItem(add) {
         const gridItems = document.querySelectorAll('div.lbcg-card-body-grid span.lbcg-card-text'),
@@ -63,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             gridItems[index].innerHTML = LBCG['freeSquareWord'];
         } else {
             const words = document.getElementById('lbcg-body-content').value.split("\n");
-            gridItems[index].innerHTML = words[index];
+            gridItems[index].innerHTML = document.getElementsByName('bingo_card_type')[0].value === '1-75' ? 33 : words[index];
         }
     }
 
@@ -97,16 +99,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             document.forms['lbcg-view-all-cards-form'].submit();
             ccEl.disabled = false;
-        } else if (event.target.matches('span.lbcg-card-text') || event.target.matches('span.lbcg-card-text img')) {
+        } else if (event.target.matches('div.lbcg-card-col') || event.target.matches('span.lbcg-card-text') || event.target.matches('span.lbcg-card-text img')) {
             // On grid square click
             let el = event.target;
-            if (event.target.matches('span.lbcg-card-text img')) {
+            if (event.target.matches('span.lbcg-card-text')) {
                 el = el.parentNode;
+            } else if (event.target.matches('span.lbcg-card-text img')) {
+                el = el.parentNode.parentNode;
             }
-            if (el.classList.contains('lbcg-card-square-checked')) {
-                el.classList.remove('lbcg-card-square-checked');
+            if (el.classList.contains('lbcg-card-col-checked')) {
+                el.classList.remove('lbcg-card-col-checked');
             } else {
-                el.classList.add('lbcg-card-square-checked');
+                el.classList.add('lbcg-card-col-checked');
             }
         }
     });
@@ -141,9 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('change', function (event) {
         if (event.target.matches('#lbcg-grid-size')) {
             // On grid size change
-            const gridSize = event.target.value,
-                freeSpaceEl = document.getElementById('lbcg-free-space-check');
-            if (gridSize === '4x4') {
+            const freeSpaceEl = document.getElementById('lbcg-free-space-check');
+            if (event.target.value === '4x4') {
                 window.LBCIncludeFreeSpace = freeSpaceEl.checked;
                 freeSpaceEl.checked = false;
                 freeSpaceEl.parentNode.style.display = 'none';
@@ -151,7 +154,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 freeSpaceEl.checked = window.LBCIncludeFreeSpace;
                 freeSpaceEl.parentNode.style.display = '';
             }
-            document.documentElement.style.setProperty('--lbcg-grid-line-height', gridSize === '3x3' ? '102px' : (gridSize === '4x4' ? '76.25px' : '60.8px'));
+            let lineHeight;
+            if (document.getElementById('lbcg-wrap-words-check').checked) {
+                lineHeight = 1;
+            } else {
+                if (document.getElementsByName('bingo_card_type')[0].value === '1-90') {
+                    lineHeight = '33.3px';
+                } else if (event.target.value === '3x3') {
+                    lineHeight = '102px';
+                } else if (event.target.value === '4x4') {
+                    lineHeight = '76.25px';
+                } else {
+                    lineHeight = '60.8px';
+                }
+            }
+            const minWordsEl = document.getElementById('content-items-count');
+            if (minWordsEl) {
+                minWordsEl.innerText = event.target.value === '3x3' ? 9 : event.target.value === '4x4' ? 16 : 25;
+            }
+            const gridSizeEl = document.getElementsByName('bingo_grid_size')[0];
+            if (gridSizeEl) {
+                gridSizeEl.value = event.target.value;
+            }
+            document.documentElement.style.setProperty('--lbcg-grid-line-height', lineHeight);
             drawNewGrid();
             checkGridFontSize();
         } else if (event.target.matches('#lbcg-font')) {
@@ -163,8 +188,29 @@ document.addEventListener('DOMContentLoaded', function () {
             // On free space checkbox change
             changeFreeSpaceItem(event.target.checked);
         } else if (event.target.matches('#lbcg-cards-custom-count')) {
+            // On view cards custom count change
             const bcc = parseInt(event.target.value);
             document.getElementById('lbcg-cards-count').disabled = bcc > 0;
+        } else if (event.target.matches('#lbcg-wrap-words-check')) {
+            // On wrap word checkbox change
+            let lineHeight;
+            if (event.target.checked) {
+                lineHeight = 1;
+            } else {
+                const bingoGridSize = document.getElementById('lbcg-grid-size').value;
+                if (document.getElementsByName('bingo_card_type')[0].value === '1-90') {
+                    lineHeight = '33.3px';
+                } else if (bingoGridSize === '3x3') {
+                    lineHeight = '102px';
+                } else if (bingoGridSize === '4x4') {
+                    lineHeight = '76.25px';
+                } else {
+                    lineHeight = '60.8px';
+                }
+            }
+            document.documentElement.style.setProperty('--lbcg-grid-line-height', lineHeight);
+            document.documentElement.style.setProperty('--lbcg-grid-wrap-words', event.target.checked ? 'break-word' : 'anywhere');
+            checkGridFontSize();
         }
     });
 
@@ -293,6 +339,7 @@ function toggleLoading(show) {
  * Check small words and make bigger
  *
  * @param spans
+ * @returns {boolean}
  */
 function checkSmallWordInGrid(spans) {
     let maxLengthIndex = 0, maxLength = 0, bigWordExists = false;
@@ -307,8 +354,8 @@ function checkSmallWordInGrid(spans) {
     }
     let madeChange = false,
         fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
-        lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
-        maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
+        lineHeight = spans[0].parentNode.offsetHeight,
+        maxFontSize = lineHeight * 0.71;
     fontSize = parseFloat(fontSize.split('px')[0]);
     while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && fontSize < maxFontSize) {
         madeChange = true;
@@ -322,25 +369,54 @@ function checkSmallWordInGrid(spans) {
 }
 
 /**
+ * Check is word of span is single and wrapped
+ *
+ * @param span
+ * @param fontSize
+ * @returns {boolean}
+ */
+function isSingleWordWrapped(span, fontSize) {
+    const isSingleWord = span.innerText.trim().indexOf(' ') === -1;
+    return isSingleWord && span.offsetHeight > fontSize * 1.5;
+}
+
+/**
  * Check and fix wrapped word in grid
  *
  * @param spans
+ * @param checkSmallResult
+ * @returns {boolean}
  */
 function checkWrapWordInGrid(spans, checkSmallResult) {
     if (checkSmallResult) {
+        const wrapWordsEl = document.getElementById('lbcg-wrap-words-check');
+        let wrapWords;
+        if (wrapWordsEl) {
+            wrapWords = wrapWordsEl.checked;
+        } else {
+            wrapWords = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-wrap-words').trim() === 'break-word';
+        }
         let madeChange = false,
             fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
-            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
-            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
+            lineHeight = spans[0].parentNode.offsetHeight,
+            maxFontSize = lineHeight * 0.71;
         fontSize = parseFloat(fontSize.split('px')[0]);
         for (let i = 0; i < spans.length; i++) {
-            while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
+            while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight + 0.1) || fontSize > maxFontSize) {
+                document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+                madeChange = true;
+            }
+            while (wrapWords && isSingleWordWrapped(spans[i], fontSize)) {
                 document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
                 madeChange = true;
             }
             // Wait for new changes
             setTimeout(() => {
-                while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight * 1.5) || fontSize > maxFontSize) {
+                while (spans[i].offsetHeight > (spans[i].parentNode.offsetHeight + 0.1) || fontSize > maxFontSize) {
+                    document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+                    madeChange = true;
+                }
+                while (wrapWords && isSingleWordWrapped(spans[i], fontSize)) {
                     document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
                     madeChange = true;
                 }
@@ -350,8 +426,8 @@ function checkWrapWordInGrid(spans, checkSmallResult) {
     } else {
         let madeChange = false,
             fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
-            lineHeight = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-line-height'),
-            maxFontSize = parseFloat(lineHeight.split('px')[0]) * 0.71;
+            lineHeight = spans[0].parentNode.offsetHeight,
+            maxFontSize = lineHeight * 0.71;
         fontSize = parseFloat(fontSize.split('px')[0]);
         while (fontSize > maxFontSize) {
             document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
@@ -361,6 +437,9 @@ function checkWrapWordInGrid(spans, checkSmallResult) {
     }
 }
 
+/**
+ * Check grid font size
+ */
 function checkGridFontSize() {
     toggleLoading(true);
     const bingoCardType = document.getElementsByName('bingo_card_type')[0].value;

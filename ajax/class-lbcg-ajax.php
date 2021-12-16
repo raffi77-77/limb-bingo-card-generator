@@ -202,11 +202,9 @@ class LBCG_Ajax {
 		} else {
 			if ( $type === '1-75' ) {
 				$size                   = '5x5';
-				$bingo_grid_free_square = true;
 				$bingo_card_words       = LBCG_Helper::get_1_75_bingo_card_numbers();
 			} else {
 				$size                   = $_POST['card_grid_size'];
-				$bingo_grid_free_square = $_POST['free_square'] === 'true' ? true : false;
 				if ( ! empty( $_POST['card_content'] ) ) {
 					$bingo_card_content = $_POST['card_content'];
 				} else {
@@ -219,6 +217,7 @@ class LBCG_Ajax {
 					$bingo_card_words = explode( "\n", $bingo_card_content );
 				}
 			}
+			$bingo_grid_free_square = $_POST['free_square'] === 'true' ? true : false;
 			?>
             <div class="lbcg-card-body-grid lbcg-grid-<?php echo $size[0]; ?>">
 				<?php

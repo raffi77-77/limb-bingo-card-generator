@@ -113,7 +113,7 @@ class LBCG_Helper {
 			'supports'           => array( 'title', 'editor', 'author' ),
 			'taxonomies'         => array( 'ubud-category' ),
 		) );
-		add_rewrite_rule( 'bingo-card-generator/([^/]+)/([^/]+)/?(([^/]+)/?)?$', 'index.php?post_type=bingo_theme&name=$matches[2]', 'top' );
+		add_rewrite_rule( 'bingo-card-generator/([^/]+)/([^/]+)/?(([^/]+)/?)?$', 'index.php?taxonomy=ubud-category&ubud-category=$matches[1]&post_type=bingo_theme&name=$matches[2]', 'top' );
 	}
 
 	/**
@@ -375,6 +375,7 @@ class LBCG_Helper {
 			'bc_grid'                => '',
 			'bc_card'                => '',
 			'bingo_card_font'        => '',
+			'bingo_card_wrap_words'  => '',
 			'bingo_card_free_square' => '',
 			'bingo_card_custom_css'  => ''
 		];
@@ -505,6 +506,8 @@ class LBCG_Helper {
 		if ( ! empty( $data['bingo_card_font'] ) ) {
 			update_post_meta( $post_id, 'bingo_card_font', $data['bingo_card_font'] );
 		}
+		// Word wrap
+		update_post_meta( $post_id, 'bingo_card_wrap_words', empty( $data['bingo_card_wrap_words'] ) ? 'off' : 'on' );
 		// Free square
 		update_post_meta( $post_id, 'bingo_card_free_square', empty( $data['bingo_card_free_square'] ) ? 'off' : 'on' );
 		// Custom CSS
