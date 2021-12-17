@@ -16,49 +16,147 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-$taxonomy = get_queried_object();
-// Get bingo themes
-$bingo_themes = get_posts( array(
-	'posts_per_page' => - 1,
-	'post_type'      => 'bingo_theme',
-	'post_status'    => 'publish',
-	'tax_query'      => array(
-		array(
-			'taxonomy' => 'ubud-category',
-			'field'    => 'term_id',
-			'terms'    => $taxonomy->term_id
-		)
-	)
-) );
+$the_taxonomy = get_queried_object();
 ?>
     <input type="hidden" name="bingo_card_type" value="general">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent">
+			<?php LBCG_Helper::show_breadcrumb( $lbcg_current_theme_name, $the_taxonomy, 'ubud_category' ); ?>
             <div class="lbcg-post-header">
-                <h1><?php echo $taxonomy->name; ?></h1>
+                <h1><?php echo $the_taxonomy->name; ?></h1>
+            </div>
+            <div class="lbcg-main">
+                <aside class="lbcg-sidebar">
+					<?php
+					$all_bingo_themes = get_posts( [
+						'post_type'   => 'bingo_theme',
+						'post_status' => 'publish',
+						'numberposts' => - 1,
+						'orderby'     => 'post_title',
+						'order'       => 'ASC'
+					] );
+					$menu_items       = [];
+					$taxonomies       = [];
+					foreach ( $all_bingo_themes as $bingo_theme ) {
+						$bt_categories = get_the_terms( $bingo_theme->ID, 'ubud-category' );
+						if ( ! empty( $bt_categories[0] ) ) {
+							if ( ! isset( $taxonomies[ $bt_categories[0]->term_id ] ) ) {
+								$taxonomies[ $bt_categories[0]->term_id ] = $bt_categories[0];
+							}
+							$menu_items[ $bt_categories[0]->term_id ][] = $bingo_theme;
+						}
+					}
+					ksort( $menu_items );
+					foreach ( $menu_items as $cur_term_id => $menu_item ) {
+						?>
+                        <div class="lbcg-sidebar-in <?php echo $the_taxonomy->term_id === $cur_term_id ? 'collapsed' : ''; ?>">
+                            <div class="lbcg-sidebar-header">
+                                <a href="<?php echo get_term_link( $cur_term_id ); ?>"
+                                   class="lbcg-sidebar-btn <?php echo $the_taxonomy->term_id === $cur_term_id ? 'active' : ''; ?>"><?php echo $taxonomies[ $cur_term_id ]->name; ?></a>
+                                <span class="lbcg-sidebar-arrow"></span>
+                            </div>
+                            <div class="lbcg-sidebar-body">
+								<?php
+								foreach ( $menu_item as $bingo_theme ) {
+									?>
+                                    <a href="<?php echo esc_url( get_permalink( $bingo_theme->ID ) ); ?>" class="lbcg-sidebar-link"><?php echo $bingo_theme->post_title; ?></a>
+									<?php
+								}
+								?>
+                            </div>
+                        </div>
+						<?php
+					}
+					?>
+                </aside>
+                <section class="lbcg-generators">
+					<?php
+					$bingo_themes = new WP_Query( array(
+						'post_type'      => 'bingo_theme',
+						'post_status'    => 'publish',
+						'orderby'        => 'post_title',
+						'order'          => 'ASC',
+						'posts_per_page' => 9,
+						'paged'          => isset( $_GET['tab'] ) ? $_GET['tab'] : 1,
+						'tax_query'      => array(
+							array(
+								'taxonomy' => 'ubud-category',
+								'field'    => 'term_id',
+								'terms'    => $the_taxonomy->term_id
+							)
+						)
+					) );
+					$k            = 0;
+					while ( $k < count( $bingo_themes->posts ) ) {
+						$j = 0;
+						?>
+                        <div class="lbcg-generators-row<?php echo count( $bingo_themes->posts ) > 1 ? '-2' : ''; ?>">
+							<?php
+							do {
+								$bingo_theme = $bingo_themes->posts[ $k ];
+								?>
+                                <div class="lbcg-generators-single">
+                                    <div class="lbcg-generators-image">
+                                        <img src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>" alt="<?php echo $bingo_theme->post_title; ?>">
+                                    </div>
+                                    <div class="lbcg-generators-title">
+                                        <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>"><?php echo $bingo_theme->post_title; ?></a>
+                                    </div>
+									<?php if ( $text = get_post_meta( $bingo_theme->ID, 'bt_intro_text', true ) ): ?>
+                                        <div class="lbcg-generators-content">
+											<?php echo $text; ?>
+                                        </div>
+									<?php endif; ?>
+                                </div>
+								<?php
+								if ( ++ $k >= count( $bingo_themes->posts ) ) {
+									break;
+								}
+							} while ( ++ $j < 2 );
+							?>
+                        </div>
+						<?php
+					}
+					$max_num_pages = $bingo_themes->max_num_pages;
+					$paged         = $bingo_themes->query_vars['paged'];
+					if ( $max_num_pages > 1 ) {
+						if ( $paged > 1 ) {
+							$page_items = [ $paged - 1, $paged ];
+						} else {
+							$page_items = [ $paged, $paged + 1 ];
+						}
+						if ( $max_num_pages > 2 ) {
+							$page_items[] = $page_items[ count( $page_items ) - 1 ] + 1;
+						}
+						?>
+                        <div class="lbcg-pagination">
+                            <ul>
+                                <li class="page-item <?php echo $paged < 2 ? 'disabled' : ''; ?>">
+                                    <a href="?tab=<?php echo $paged > 1 ? $paged - 1 : 1; ?>" class="page-link"><</a>
+                                </li>
+								<?php
+								foreach ( $page_items as $item ) { ?>
+                                    <li class="page-item <?php echo $item === $paged ? 'active' : ''; ?>">
+                                        <a href="?tab=<?php echo $item; ?>" class="page-link"><?php echo $item; ?></a>
+                                    </li>
+									<?php
+								}
+								?>
+                                <li class="page-item <?php echo $paged >= $max_num_pages ? 'disabled' : ''; ?>">
+                                    <a href="?tab=<?php echo $paged < $max_num_pages ? $paged + 1 : $max_num_pages; ?>" class="page-link">></a>
+                                </li>
+                            </ul>
+                        </div>
+						<?php
+					}
+					?>
+                </section>
             </div>
 			<?php
-			$k = 0;
-			while ( $k < count( $bingo_themes ) ) {
-				?>
-                <div class="lbcg-print-wrap lbcg-print-wrap-2"><?php
-				$j = 0;
-				do {
-					$thumbnail_url = get_the_post_thumbnail_url( $bingo_themes[ $k ]->ID, 'full' );
-					?>
-                    <div class="lbcg-print-wrap-in">
-                        <div class="lbcg-print-wrap-card-holder">
-                            <a href="<?php echo get_permalink( $bingo_themes[ $k ]->ID ); ?>">
-                                <img src="<?php echo $thumbnail_url; ?>" alt="<?php echo $bingo_themes[ $k ]->post_title; ?>" style="width: 100%;">
-                            </a>
-                        </div>
-                    </div><?php
-					if ( ++ $k >= count( $bingo_themes ) ) {
-						break;
-					}
-				} while ( ++ $j < 2 );
-				?></div><?php
-			} ?>
+			$intro_text = get_term_meta( $the_taxonomy->term_id, 'lbcg_intro_text', true );
+			if ( ! empty( $intro_text ) ): ?>
+                <div class="lbcg-post-content"><?php echo $intro_text; ?></div>
+			<?php endif; ?>
         </main>
     </div>
 <?php

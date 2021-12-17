@@ -16,8 +16,8 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-$current_id = get_the_ID();
-$data = LBCG_Public::get_instance()->get_post_data();
+$current_id       = get_the_ID();
+$data             = LBCG_Public::get_instance()->get_post_data();
 $bingo_card_type  = ! empty( $data['bingo_card_type'][0] ) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size  = ! empty( $data['bingo_grid_size'][0] ) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : '';
@@ -98,7 +98,7 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
 ?>
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
-			<?php LBCG_Helper::show_bingo_theme_breadcrumb( $lbcg_current_theme_name, $current_id ); ?>
+			<?php LBCG_Helper::show_breadcrumb( $lbcg_current_theme_name, $current_id, 'bingo_theme' ); ?>
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>
@@ -108,28 +108,34 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
             <div class="lbcg-main">
                 <aside class="lbcg-sidebar">
 					<?php
-					$bingo_themes = get_posts( [
+					$bingo_themes    = get_posts( [
 						'post_type'   => 'bingo_theme',
 						'post_status' => 'publish',
 						'numberposts' => - 1,
 						'orderby'     => 'post_title',
 						'order'       => 'ASC'
 					] );
-					$menu_items   = [];
+					$menu_items      = [];
+					$taxonomies      = [];
+					$current_term_id = 0;
 					foreach ( $bingo_themes as $bingo_theme ) {
 						$bt_categories = get_the_terms( $bingo_theme->ID, 'ubud-category' );
 						if ( ! empty( $bt_categories[0] ) ) {
-							$menu_items[ $bt_categories[0]->name ][] = $bingo_theme;
-						} else {
-							$menu_items['uncategorized'][] = $bingo_theme;
+							if ( ! isset( $taxonomies[ $bt_categories[0]->term_id ] ) ) {
+								$taxonomies[ $bt_categories[0]->term_id ] = $bt_categories[0];
+							}
+							$menu_items[ $bt_categories[0]->term_id ][] = $bingo_theme;
+							if ( $current_id === $bingo_theme->ID ) {
+								$current_term_id = $bt_categories[0]->term_id;
+							}
 						}
 					}
 					ksort( $menu_items );
-					foreach ( $menu_items as $bt_category_name => $menu_item ) {
+					foreach ( $menu_items as $cur_term_id => $menu_item ) {
 						?>
-                        <div class="lbcg-sidebar-in collapsed">
+                        <div class="lbcg-sidebar-in <?php echo $current_term_id === $cur_term_id ? 'collapsed' : ''; ?>">
                             <div class="lbcg-sidebar-header">
-                                <a href="#" class="lbcg-sidebar-btn"><?php echo $bt_category_name; ?></a>
+                                <a href="<?php echo get_term_link( $cur_term_id ); ?>" class="lbcg-sidebar-btn"><?php echo $taxonomies[ $cur_term_id ]->name; ?></a>
                                 <span class="lbcg-sidebar-arrow"></span>
                             </div>
                             <div class="lbcg-sidebar-body">
@@ -230,7 +236,8 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                     <label for="lbcg-wrap-words-check" class="lbcg-checkbox-holder"></label>
                                     <label for="lbcg-wrap-words-check" class="lbcg-label">Wrap Words?</label>
                                 </div>
-                                <div class="lbcg-input-wrap" <?php echo ( /*$bingo_card_type === '1-75' ||*/ $bingo_card_type === '1-90' || $bingo_grid_size === '4x4' ) ? 'style="display: none;"' : ''; ?>>
+                                <div class="lbcg-input-wrap" <?php echo ( /*$bingo_card_type === '1-75' ||*/
+									$bingo_card_type === '1-90' || $bingo_grid_size === '4x4' ) ? 'style="display: none;"' : ''; ?>>
                                     <input type="checkbox" class="lbcg-checkbox" id="lbcg-free-space-check"
                                            name="bingo_card_free_square"
                                            hidden <?php echo $bingo_grid_free_square ? 'checked' : ''; ?>/>

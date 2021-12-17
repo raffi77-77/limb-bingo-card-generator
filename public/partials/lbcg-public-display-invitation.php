@@ -61,7 +61,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
     <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
-			<?php LBCG_Helper::show_bingo_theme_breadcrumb( $lbcg_current_theme_name, get_the_ID() ); ?>
+			<?php LBCG_Helper::show_breadcrumb( $lbcg_current_theme_name, get_the_ID(), 'bingo_theme' ); ?>
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>

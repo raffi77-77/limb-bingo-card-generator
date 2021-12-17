@@ -13,16 +13,6 @@
         max-height: 300px;
       }
 
-      .lbcg-sidebar-btn {
-        &:hover, &:focus {
-          text-decoration: none !important;
-        }
-
-        &:hover {
-          color: #fd477f;
-        }
-      }
-
       /*.lbcg-sidebar-arrow {
         &:before {
           transform: rotate(-90deg);
@@ -54,14 +44,10 @@
     white-space: nowrap;
     background-color: #382063 !important;
     color: #FFF;
-    text-decoration: none;
     transition: background-color .3s;
+    margin-right: 38px;
 
-    &:hover, &:focus {
-      text-decoration: none !important;
-    }
-
-    &:hover {
+    &:hover, &.active {
       color: #fd477f;
     }
   }
@@ -75,11 +61,12 @@
     right: 0;
     width: 38px;
     height: 38px;
-    pointer-events: none;
     z-index: 1;
     color: #fc155c;
+    background-color: #382063 !important;
     font-weight: 500;
     transition: all .3s;
+    cursor: pointer;
 
     &:before {
       content: "›";

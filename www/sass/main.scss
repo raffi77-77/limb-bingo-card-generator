@@ -164,6 +164,7 @@
 
       .lbcg-content {
         grid-template-columns: 1fr;
+
         &-right {
           display: flex;
           justify-content: center;
@@ -260,6 +261,7 @@
     @media all and (max-width: 710px) {
       &:not(:first-child) {
         margin-top: 20px;
+
         .lbcg-print-wrap-card-holder:first-child {
           margin-top: 0;
         }
@@ -289,6 +291,7 @@
   .lbcg-post-content {
     padding: 0 1rem 1rem;
     background: var(--theme-bg, #f9f8fa);
+    font-size: 1rem;
 
     &.lbcg-intro-text {
       margin-bottom: 1rem;
@@ -352,6 +355,182 @@
 
       &:hover {
         color: #59359a;
+      }
+    }
+  }
+
+  .lbcg-generators {
+    &-row-2 {
+      width: calc(700px - 2rem);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      grid-column-gap: 20px;
+
+      &:not(:last-child) {
+        padding-bottom: 1rem;
+      }
+    }
+
+    &-single {
+    }
+
+    &-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 1rem !important;
+
+      img {
+        max-width: 100%;
+        display: block;
+        max-height: 300px;
+      }
+    }
+
+    &-title {
+      text-align: center;
+
+      a {
+        font-size: 1.2rem;
+        font-weight: 500;
+        line-height: 1.35;
+        color: #6f42c1;
+      }
+    }
+
+    &-content {
+      font-size: .8rem;
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
+        font-weight: 500;
+        line-height: 1.15;
+        color: var(--theme-heads, #fc155c);
+      }
+
+      h1 {
+        font-size: 1.3rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      h3 {
+        font-size: 1.1rem;
+      }
+
+      h4 {
+        font-size: 1.1rem;
+      }
+
+      h5 {
+        font-size: .8rem;
+      }
+
+      h6 {
+        font-size: .8rem;
+      }
+
+      ol, ul {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        padding-left: 40px;
+      }
+
+      p {
+        margin-top: 0;
+
+        &:not(:last-child) {
+          margin-bottom: 1rem;
+        }
+      }
+
+      a {
+        color: #5c0c9b;
+        text-decoration: underline;
+
+        &:hover {
+          color: #59359a;
+        }
+      }
+    }
+  }
+
+  .lbcg-pagination {
+    font-size: 1rem;
+
+    ul {
+      display: flex;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .page-item {
+      border: 0;
+      font-size: 100%;
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+
+      &.active {
+        .page-link {
+          z-index: 3;
+          color: #fff;
+          background-color: #ffc107;
+          border-color: #ffc107;
+        }
+      }
+
+      &.disabled {
+        .page-link {
+          color: #6c757d;
+          pointer-events: none;
+          cursor: auto;
+          background-color: #fff;
+          border-color: #dee2e6;
+        }
+      }
+
+      .page-link {
+        position: relative;
+        display: block;
+        padding: 0.5rem 0.75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #6f42c1;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        text-decoration: none;
+
+        &:hover {
+          z-index: 2;
+          color: #4e2d89;
+          text-decoration: none;
+          background-color: #e9ecef;
+          border-color: #dee2e6;
+        }
+
+        &:focus {
+          z-index: 3;
+          outline: 0;
+          box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 25%);
+        }
+      }
+
+      &:first-child {
+        .page-link {
+          border-top-left-radius: 0.25rem;
+          border-bottom-left-radius: 0.25rem;
+        }
+      }
+
+      &:last-child {
+        .page-link {
+          border-top-right-radius: 0.25rem;
+          border-bottom-right-radius: 0.25rem;
+        }
       }
     }
   }

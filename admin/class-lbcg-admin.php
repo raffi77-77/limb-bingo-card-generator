@@ -57,8 +57,11 @@ class LBCG_Admin {
 		add_action( 'add_meta_boxes', array( $this, 'add_custom_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_custom_fields' ), 10, 3 );
 		add_action( 'post_updated_messages', array( $this, 'show_editor_message' ) );
-		add_action( 'admin_print_scripts-post-new.php', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
-		add_action( 'admin_print_scripts-post.php', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
+		add_action( 'ubud-category_add_form_fields', array( $this, 'add_taxonomy_custom_content' ) );
+		add_action( 'ubud-category_edit_form_fields', array( $this, 'edit_taxonomy_custom_content' ), 10, 2 );
+		add_action( 'created_ubud-category', array( $this, 'save_taxonomy_image' ) );
+		add_action( 'edited_ubud-category', array( $this, 'save_taxonomy_image' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
 		add_action( 'admin_head', array( $this, 'add_custom_css' ) );
 		$this->disable_emojy_print();
 	}
@@ -141,6 +144,100 @@ class LBCG_Admin {
 	}
 
 	/**
+	 * Add taxonomy custom content
+	 *
+	 * @param   string  $term
+	 *
+	 * @return void
+	 */
+	public function add_taxonomy_custom_content( $term ) {
+		?>
+        <div class="form-field form-required term-group">
+            <label for="lbcg-uc-image-set">Set featured image</label>
+            <input type="hidden" id="lbcg-uc-image" name="lbcg_uc_image" value="">
+            <input type="button" id="lbcg-uc-image-set" class="button" value="Choose featured image">
+            <input type="button" id="lbcg-uc-image-remove" class="button" value="Remove image">
+            <img id="lbcg-uc-img" src="" alt="" width="50px" height="50px" style="display: none;">
+        </div>
+		<?php
+		ob_start();
+		wp_editor( '', 'lbcg-uc-intro-text', [
+			'wpautop'       => true,
+			'media_buttons' => false,
+			'textarea_name' => 'lbcg_uc_intro_text',
+			'textarea_cols' => 40,
+			'textarea_rows' => 10
+		] );
+		$editor = ob_get_clean();
+		?>
+        <div class="form-field">
+            <label for="lbcg-uc-intro-text">Intro text</label>
+			<?php echo $editor; ?>
+            <p>The intro html text.</p>
+        </div>
+		<?php
+	}
+
+	/**
+	 * Edit taxonomy custom content
+	 *
+	 * @param   WP_Term  $term
+	 * @param   string   $taxonomy
+	 *
+	 * @return void
+	 */
+	public function edit_taxonomy_custom_content( $term, $taxonomy ) {
+		$thumnail_id = get_term_meta( $term->term_id, '_lbcg_thumbnail_id', true );
+        $thumnail_url = wp_get_attachment_image_url($thumnail_id);
+        ?>
+        <tr class="form-field">
+            <th scope="row"><label for="lbcg-uc-image-set">Set featured image</label></th>
+            <td>
+                <input type="hidden" id="lbcg-uc-image" name="lbcg_uc_image" value="<?php echo $thumnail_id ?>">
+                <input type="button" id="lbcg-uc-image-set" class="button" value="Choose featured image">
+                <input type="button" id="lbcg-uc-image-remove" class="button" value="Remove image">
+                <img id="lbcg-uc-img" src="<?php echo $thumnail_url; ?>" alt="" width="50px" height="50px" <?php echo !$thumnail_url ? 'style="display: none;"' : ''; ?>>
+                <p class="description">Set featured image for the taxonomy.</p>
+            </td>
+        </tr>
+		<?php
+		ob_start();
+		wp_editor( '', 'lbcg-uc-intro-text', [
+			'wpautop'       => true,
+			'media_buttons' => false,
+			'textarea_name' => 'lbcg_uc_intro_text',
+			'textarea_cols' => 40,
+			'textarea_rows' => 10
+		] );
+		$editor = ob_get_clean();
+		?>
+        <tr class="form-field">
+            <th scope="row"><label for="lbcg-uc-intro-text">Intro text</label></th>
+            <td>
+				<?php echo $editor; ?>
+                <p class="description">The intro html text.</p>
+            </td>
+        </tr>
+		<?php
+	}
+
+	/**
+	 * Save taxonomy image id
+	 *
+	 * @param   int  $term_id
+	 *
+	 * @return void
+	 */
+	public function save_taxonomy_image( $term_id ) {
+		if ( ! empty( $_POST['lbcg_uc_image'] ) && (int) $_POST['lbcg_uc_image'] > 0 ) {
+			update_term_meta( $term_id, '_lbcg_thumbnail_id', (int) $_POST['lbcg_uc_image'] );
+		}
+		if ( isset( $_POST['lbcg_uc_intro_text'] ) && !empty( trim( $_POST['lbcg_uc_intro_text'] ) ) ) {
+			update_term_meta( $term_id, 'lbcg_intro_text', trim( $_POST['lbcg_uc_intro_text'] ) );
+		}
+	}
+
+	/**
 	 * Enqueue admin scripts and styles
 	 */
 	public function enqueue_admin_script_and_styles() {
@@ -160,6 +257,14 @@ class LBCG_Admin {
 			] );
 			wp_enqueue_style( 'lbcg-admin-css', $this->attributes['admin_url'] . 'css/lbcg-admin.css', [], $this->attributes['plugin_version'] );
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css', [], $this->attributes['plugin_version'] );
+		} else {
+			global $taxnow;
+			if ( $taxnow === 'ubud-category' ) {
+				if ( ! did_action( 'wp_enqueue_media' ) ) {
+					wp_enqueue_media();
+				}
+				wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.min.js', [], $this->attributes['plugin_version'] );
+			}
 		}
 	}
 

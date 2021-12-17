@@ -71,7 +71,7 @@ class LBCG_Public {
 	 * Enqueue public scripts and styles
 	 */
 	public function enqueue_scripts_and_styles() {
-		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) ) {
+		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) || is_tax( 'ubud-category' ) ) {
 			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
 			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js', [], $this->attributes['plugin_version'] );
 			wp_localize_script( 'lbcg-public-js', 'LBCG', [
@@ -79,9 +79,6 @@ class LBCG_Public {
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
 				'ajaxUrl'        => admin_url( 'admin-ajax.php' )
 			] );
-
-		}
-		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) || is_tax( 'ubud-category' ) ) {
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
 		}
 	}

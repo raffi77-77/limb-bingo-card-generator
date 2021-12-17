@@ -70,19 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.addEventListener('click', function (event) {
-        if (event.target.matches('div.lbcg-sidebar-header') || event.target.matches('a.lbcg-sidebar-btn')) {
-            // On sidebar header click
-            event.preventDefault();
-            let sidebarHeader = event.target.parentNode;
-            if (event.target.matches('a.lbcg-sidebar-btn')) {
-                sidebarHeader = sidebarHeader.parentNode;
-            }
-            if (sidebarHeader.classList.contains('collapsed')) {
-                sidebarHeader.classList.remove('collapsed')
-            } else {
-                sidebarHeader.classList.add('collapsed')
-            }
-        } else if (event.target.matches('.remove-bc-image')) {
+        if (event.target.matches('.remove-bc-image')) {
             // On remove image button click
             event.preventDefault();
             const type = event.target.getAttribute('data-bct');
@@ -111,6 +99,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 el.classList.remove('lbcg-card-col-checked');
             } else if (el.children[0].hasChildNodes()) {
                 el.classList.add('lbcg-card-col-checked');
+            }
+        } else if (event.target.matches('span.lbcg-sidebar-arrow')) {
+            // On sidebar arrow clock
+            const sidebarHeader = event.target.parentNode.parentNode;
+            if (sidebarHeader.classList.contains('collapsed')) {
+                sidebarHeader.classList.remove('collapsed');
+            } else {
+                sidebarHeader.classList.add('collapsed');
             }
         }
     });
@@ -445,8 +441,10 @@ function checkGridFontSize() {
     const bingoCardType = document.getElementsByName('bingo_card_type')[0].value;
     if (bingoCardType !== '1-75' && bingoCardType !== '1-90') {
         const spans = document.getElementsByClassName('lbcg-card-text');
-        const result = checkSmallWordInGrid(spans);
-        checkWrapWordInGrid(spans, result);
+        if (spans.length > 0) {
+            const result = checkSmallWordInGrid(spans);
+            checkWrapWordInGrid(spans, result);
+        }
     }
     toggleLoading(false);
 }

@@ -783,23 +783,37 @@ class LBCG_Helper {
 	/**
 	 * Show bingo theme breadcrumb
 	 *
-	 * @param   string  $wp_theme_name
-	 * @param   int     $bingo_theme_id
+	 * @param   string       $wp_theme_name
+	 * @param   int|WP_Term  $bingo_theme_id
+	 * @param   string       $type
 	 *
 	 * @return void
 	 */
-	public static function show_bingo_theme_breadcrumb( $wp_theme_name, $bingo_theme_id ) {
+	public static function show_breadcrumb( $wp_theme_name, $data, $type ) {
 		if ( ! function_exists( 'link_trk' ) || $wp_theme_name !== 'BNBS' ) {
 			return;
 		}
-		$current_bt_category = get_the_terms( $bingo_theme_id, 'ubud-category' );
-		$bt_post_title       = get_the_title( $bingo_theme_id );
-		$links               = [
-			'Home'                        => SITEURL,
-			'Bingo Card Generator'        => SITEURL . '/bingo-card-generator/',
-			$current_bt_category[0]->name => SITEURL . '/bingo-card-generator/' . $current_bt_category[0]->slug . '/',
-			$bt_post_title                => ''
-		];
+		if ( $type === 'bingo_theme' ) {
+			$current_bt_category = get_the_terms( $data, 'ubud-category' );
+			$bt_post_title       = get_the_title( $data );
+			$links               = [
+				'Home'                        => SITEURL,
+				'Bingo Card Generator'        => SITEURL . '/bingo-card-generator/',
+				$current_bt_category[0]->name => SITEURL . '/bingo-card-generator/' . $current_bt_category[0]->slug . '/',
+				$bt_post_title                => ''
+			];
+		} elseif ( $type === 'ubud_category' ) {
+			$links = [
+				'Home'                 => SITEURL,
+				'Bingo Card Generator' => SITEURL . '/bingo-card-generator/',
+				$data->name            => ''
+			];
+		} else {
+			$links = [
+				'Home'                 => SITEURL,
+				'Bingo Card Generator' => SITEURL . '/bingo-card-generator/'
+			];
+        }
 		?>
         <nav aria-label="lbcg-breadcrumb">
             <ol class="lbcg-breadcrumb">
