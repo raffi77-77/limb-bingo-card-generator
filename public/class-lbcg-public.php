@@ -61,10 +61,30 @@ class LBCG_Public {
 	 * Add actions, filters ...
 	 */
 	public function register_dependencies() {
+		add_shortcode( 'lbcg-ubud-categories', array( $this, 'show_ubud_categeories_template' ) );
 		add_filter( 'single_template', array( $this, 'get_custom_post_type_template' ) );
 		add_filter( 'taxonomy_template', array( $this, 'get_custom_taxonomy_template' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ), 10 );
 		add_action( 'wp_head', array( $this, 'add_custom_css' ) );
+	}
+
+	/**
+     * Show UBUD Categories
+     *
+	 * @param   array   $atts
+	 * @param   string  $content
+	 * @param   string  $tag
+	 *
+	 * @return string
+	 */
+	public function show_ubud_categeories_template( $atts = array(), $content = '', $tag = '' ) {
+		$attributes = shortcode_atts( array(
+			'slugs' => 'all'
+		), $atts );
+		ob_start();
+		require( $this->attributes['public_templates_path'] . '/lbcg-public-display-generators.php' );
+
+		return ob_get_clean();
 	}
 
 	/**
@@ -79,6 +99,9 @@ class LBCG_Public {
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
 				'ajaxUrl'        => admin_url( 'admin-ajax.php' )
 			] );
+			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
+		}
+		if ( is_page( 'bingo-card-generator' ) ) {
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
 		}
 	}

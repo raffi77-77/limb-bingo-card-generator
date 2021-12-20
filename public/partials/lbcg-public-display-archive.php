@@ -76,7 +76,7 @@ $the_taxonomy = get_queried_object();
 						'post_status'    => 'publish',
 						'orderby'        => 'post_title',
 						'order'          => 'ASC',
-						'posts_per_page' => 9,
+						'posts_per_page' => 6,
 						'paged'          => isset( $_GET['tab'] ) ? $_GET['tab'] : 1,
 						'tax_query'      => array(
 							array(
@@ -122,11 +122,15 @@ $the_taxonomy = get_queried_object();
 					if ( $max_num_pages > 1 ) {
 						if ( $paged > 1 ) {
 							$page_items = [ $paged - 1, $paged ];
+							$last_item = $paged;
 						} else {
 							$page_items = [ $paged, $paged + 1 ];
+							$last_item = $paged + 1;
 						}
-						if ( $max_num_pages > 2 ) {
-							$page_items[] = $page_items[ count( $page_items ) - 1 ] + 1;
+						if ( $max_num_pages > $last_item ) {
+							$page_items[] = $last_item + 1;
+						} else if ( $paged > 1 ) {
+							array_unshift($page_items, $page_items[0] - 1 );
 						}
 						?>
                         <div class="lbcg-pagination">
