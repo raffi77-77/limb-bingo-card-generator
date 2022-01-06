@@ -187,22 +187,22 @@ class LBCG_Admin {
 	 * @return void
 	 */
 	public function edit_taxonomy_custom_content( $term, $taxonomy ) {
-		$thumnail_id = get_term_meta( $term->term_id, '_lbcg_thumbnail_id', true );
-        $thumnail_url = wp_get_attachment_image_url($thumnail_id);
-        ?>
+		$thumnail_id  = get_term_meta( $term->term_id, '_lbcg_thumbnail_id', true );
+		$thumnail_url = wp_get_attachment_image_url( $thumnail_id );
+		?>
         <tr class="form-field">
             <th scope="row"><label for="lbcg-uc-image-set">Set featured image</label></th>
             <td>
                 <input type="hidden" id="lbcg-uc-image" name="lbcg_uc_image" value="<?php echo $thumnail_id ?>">
                 <input type="button" id="lbcg-uc-image-set" class="button" value="Choose featured image">
                 <input type="button" id="lbcg-uc-image-remove" class="button" value="Remove image">
-                <img id="lbcg-uc-img" src="<?php echo $thumnail_url; ?>" alt="" width="50px" height="50px" <?php echo !$thumnail_url ? 'style="display: none;"' : ''; ?>>
+                <img id="lbcg-uc-img" src="<?php echo $thumnail_url; ?>" alt="" width="50px" height="50px" <?php echo ! $thumnail_url ? 'style="display: none;"' : ''; ?>>
                 <p class="description">Set featured image for the taxonomy.</p>
             </td>
         </tr>
 		<?php
 		ob_start();
-		wp_editor( '', 'lbcg-uc-intro-text', [
+		wp_editor( get_term_meta( $term->term_id, 'lbcg_intro_text', true ), 'lbcg-uc-intro-text', [
 			'wpautop'       => true,
 			'media_buttons' => false,
 			'textarea_name' => 'lbcg_uc_intro_text',
@@ -229,10 +229,10 @@ class LBCG_Admin {
 	 * @return void
 	 */
 	public function save_taxonomy_image( $term_id ) {
-		if ( ! empty( $_POST['lbcg_uc_image'] ) && (int) $_POST['lbcg_uc_image'] > 0 ) {
-			update_term_meta( $term_id, '_lbcg_thumbnail_id', (int) $_POST['lbcg_uc_image'] );
+		if ( isset( $_POST['lbcg_uc_image'] ) ) {
+			update_term_meta( $term_id, '_lbcg_thumbnail_id', is_numeric( $_POST['lbcg_uc_image'] ) ? (int) $_POST['lbcg_uc_image'] : 0 );
 		}
-		if ( isset( $_POST['lbcg_uc_intro_text'] ) && !empty( trim( $_POST['lbcg_uc_intro_text'] ) ) ) {
+		if ( isset( $_POST['lbcg_uc_intro_text'] ) ) {
 			update_term_meta( $term_id, 'lbcg_intro_text', trim( $_POST['lbcg_uc_intro_text'] ) );
 		}
 	}

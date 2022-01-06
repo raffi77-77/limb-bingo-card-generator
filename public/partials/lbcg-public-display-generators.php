@@ -26,7 +26,6 @@ if ( ! empty( $attributes ) ) {
 		'order'      => 'ASC',
 		'number'     => $number,
 		'offset'     => $offset,
-		'hide_empty' => false
 	];
 	if ( ! empty( $term_slugs ) ) {
 		$term_args['slug'] = $term_slugs;
@@ -46,7 +45,7 @@ if ( ! empty( $attributes ) ) {
                         <a href="<?php echo get_term_link( $cat->term_id ); ?>"><?php echo $cat->name; ?></a>
                     </h2>
 					<?php if ( $intro_text = get_term_meta( $cat->term_id, 'lbcg_intro_text', true ) ) {
-						echo $intro_text;
+						echo '<div class="lbcg-tcs-content-body">' . $intro_text . '</div>';
 					} ?>
                 </div>
             </div>

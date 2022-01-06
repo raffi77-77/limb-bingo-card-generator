@@ -157,7 +157,7 @@ $the_taxonomy = get_queried_object();
                 </section>
             </div>
 			<?php
-			$intro_text = get_term_meta( $the_taxonomy->term_id, 'lbcg_intro_text', true );
+//			$intro_text = get_term_meta( $the_taxonomy->term_id, 'lbcg_intro_text', true );
 			if ( ! empty( $intro_text ) ): ?>
                 <div class="lbcg-post-content"><?php echo $intro_text; ?></div>
 			<?php endif; ?>
