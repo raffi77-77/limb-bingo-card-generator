@@ -59,7 +59,6 @@ class LBCG_Admin {
 		add_action( 'post_updated_messages', array( $this, 'show_editor_message' ) );
 		add_action( 'ubud-category_add_form_fields', array( $this, 'add_taxonomy_custom_content' ) );
 		add_action( 'ubud-category_edit_form_fields', array( $this, 'edit_taxonomy_custom_content' ), 10, 2 );
-		add_action( 'created_ubud-category', array( $this, 'save_taxonomy_image' ) );
 		add_action( 'edited_ubud-category', array( $this, 'save_taxonomy_image' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
 		add_action( 'admin_head', array( $this, 'add_custom_css' ) );

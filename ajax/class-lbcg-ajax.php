@@ -30,6 +30,8 @@ class LBCG_Ajax {
 		add_action( 'wp_ajax_lbcg_bc_invitation', array( $this, 'invitation' ) );
 		add_action( 'wp_ajax_nopriv_lbcg_get_card_content', array( $this, 'get_card_content' ) );
 		add_action( 'wp_ajax_lbcg_get_card_content', array( $this, 'get_card_content' ) );
+		$admin_instance = LBCG_Admin::get_instance( $this->attributes );
+		add_action( 'created_ubud-category', array( $admin_instance, 'save_taxonomy_image' ) );
 	}
 
 	/**
