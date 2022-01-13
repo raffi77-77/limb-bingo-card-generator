@@ -79,7 +79,6 @@ class LBCG {
 	 * Register dependencies
 	 */
 	private function init() {
-		LBCG_Helper::register_custom_post_types();
 		if ( LBCG_Helper::is_request( 'admin' ) ) {
 			$admin_obj = LBCG_Admin::get_instance( $this->attributes );
 			$admin_obj->register_dependencies();

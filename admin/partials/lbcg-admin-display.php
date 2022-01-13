@@ -442,6 +442,9 @@ $special_types = array( '1-75', '1-90' );
                                 </div>
                             </div>
                         </div>
+                        <div class="lbcg-input-wrap">
+                            <button id="lbcg-post-done" class="lbcg-btn lbcg-btn--lg lbcg-btn--main">Save styles</button>
+                        </div>
                     </div>
                 </div>
                 <div class="lbcg-content-right">

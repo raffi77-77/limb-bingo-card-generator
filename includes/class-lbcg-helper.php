@@ -109,7 +109,7 @@ class LBCG_Helper {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'hierarchical'       => true,
-			'rewrite'            => array( 'slug' => '/bingo-card-generator/%ubud-category%' ),
+			'rewrite'            => array( 'slug' => 'bingo-card-generator/%ubud-category%' ),
 			'supports'           => array( 'title', 'editor', 'author' ),
 			'taxonomies'         => array( 'ubud-category' ),
 		) );
