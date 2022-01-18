@@ -454,7 +454,8 @@
       line-height: 1.35;
       color: #6f42c1; }
   .lbcg-parent .lbcg-generators-content {
-    font-size: .8rem; }
+    font-size: .8rem;
+    margin-bottom: 10px; }
     .lbcg-parent .lbcg-generators-content h1, .lbcg-parent .lbcg-generators-content h2, .lbcg-parent .lbcg-generators-content h3, .lbcg-parent .lbcg-generators-content h4, .lbcg-parent .lbcg-generators-content h5, .lbcg-parent .lbcg-generators-content h6 {
       font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
       font-weight: 500;
@@ -665,6 +666,9 @@
       min-width: 30px; }
     .lbcg-parent .lbcg-input-wrap--subtitle .lbcg-input {
       text-align: center; }
+    .lbcg-parent .lbcg-input-wrap-head {
+      font-weight: 500;
+      color: #000; }
   .lbcg-parent .lbcg-label {
     display: block;
     width: 100%;

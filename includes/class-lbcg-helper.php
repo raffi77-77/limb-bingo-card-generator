@@ -50,7 +50,7 @@ class LBCG_Helper {
 	public static function register_custom_post_types() {
 		self::register_bingo_theme_post_type();
 		self::register_bingo_card_post_type();
-		add_filter( 'post_type_link', array( 'LBCG_Helper', 'check_post_link' ), 10, 2 );
+//		add_filter( 'post_type_link', array( 'LBCG_Helper', 'check_post_link' ), 10, 2 );
 	}
 
 	/**
@@ -79,9 +79,9 @@ class LBCG_Helper {
 			'show_in_rest'      => true,
 			'show_admin_column' => true,
 			'query_var'         => true,
-			'rewrite'           => array( 'slug' => 'bingo-card-generator' ),
+			'rewrite'           => array( 'slug' => 'bingo-card-generator/category' ),
 		) );
-		add_rewrite_rule( 'bingo-card-generator/([^/]+)/?$', 'index.php?taxonomy=ubud-category&post_type=bingo_theme&ubud-category=$matches[0]', 'top' );
+		add_rewrite_rule( 'bingo-card-generator/category/([^/]+)/?$', 'index.php?taxonomy=ubud-category&post_type=bingo_theme&ubud-category=$matches[0]', 'top' );
 		// Custom post type settings
 		$labels = array(
 			'name'           => __( 'UBUD Bingo themes', 'textdomain' ),
@@ -107,13 +107,13 @@ class LBCG_Helper {
 			'show_ui'            => true,
 			'show_in_menu'       => true,
 			'capability_type'    => 'post',
-			'has_archive'        => true,
+			'has_archive'        => false,
 			'hierarchical'       => true,
-			'rewrite'            => array( 'slug' => 'bingo-card-generator/%ubud-category%' ),
+			'rewrite'            => array( 'slug' => 'bingo-card-generator' ),
 			'supports'           => array( 'title', 'editor', 'author' ),
 			'taxonomies'         => array( 'ubud-category' ),
 		) );
-		add_rewrite_rule( 'bingo-card-generator/([^/]+)/([^/]+)/?(([^/]+)/?)?$', 'index.php?ubud-category=$matches[1]&bingo_theme=$matches[2]', 'top' );
+		add_rewrite_rule( 'bingo-card-generator/([^/]+)/?(([^/]+)/?)?$', 'index.php?post_type=bingo_theme&name=$matches[1]', 'top' );
 	}
 
 	/**
@@ -428,12 +428,9 @@ class LBCG_Helper {
 			}
 		}
 		// 1-75 special title
-		if ( $data['bingo_card_type'] === '1-75' && ! empty( $data['bingo_card_spec_title'] ) ) {
-			if ( is_string( $data['bingo_card_spec_title'] ) ) {
-				$data['bingo_card_spec_title'] = explode( '|', $data['bingo_card_spec_title'] );
-			}
-			if ( count( $data['bingo_card_spec_title'] ) === 5 ) {
-				update_post_meta( $post_id, 'bingo_card_spec_title', implode( '|', $data['bingo_card_spec_title'] ) );
+		if ( $data['bingo_card_type'] === '1-75' && isset( $data['bingo_card_spec_title'] ) ) {
+			if ( is_string( $data['bingo_card_spec_title'] ) && strlen( $data['bingo_card_spec_title'] ) <= 5 ) {
+				update_post_meta( $post_id, 'bingo_card_spec_title', $data['bingo_card_spec_title'] );
 			}
 		}
 		// Words/emojis or numbers
@@ -511,9 +508,7 @@ class LBCG_Helper {
 		// Free square
 		update_post_meta( $post_id, 'bingo_card_free_square', empty( $data['bingo_card_free_square'] ) ? 'off' : 'on' );
 		// Custom CSS
-		if ( ! empty( $data['bingo_card_custom_css'] ) ) {
-			update_post_meta( $post_id, 'bingo_card_custom_css', trim( wp_strip_all_tags( $data['bingo_card_custom_css'] ) ) );
-		}
+		update_post_meta( $post_id, 'bingo_card_custom_css', isset( $data['bingo_card_custom_css'] ) ? trim( wp_strip_all_tags( $data['bingo_card_custom_css'] ) ) : '' );
 	}
 
 	/**
@@ -798,22 +793,22 @@ class LBCG_Helper {
 			$bt_post_title       = get_the_title( $data );
 			$links               = [
 				'Home'                        => SITEURL,
-				'Bingo Card Generator'        => SITEURL . '/bingo-card-generator/',
-				$current_bt_category[0]->name => SITEURL . '/bingo-card-generator/' . $current_bt_category[0]->slug . '/',
+				'Bingo Card Generators'       => SITEURL . '/bingo-card-generator/',
+				$current_bt_category[0]->name => SITEURL . '/bingo-card-generator/category/' . $current_bt_category[0]->slug . '/',
 				$bt_post_title                => ''
 			];
 		} elseif ( $type === 'ubud_category' ) {
 			$links = [
-				'Home'                 => SITEURL,
-				'Bingo Card Generator' => SITEURL . '/bingo-card-generator/',
-				$data->name            => ''
+				'Home'                  => SITEURL,
+				'Bingo Card Generators' => SITEURL . '/bingo-card-generator/',
+				$data->name             => ''
 			];
 		} else {
 			$links = [
-				'Home'                 => SITEURL,
-				'Bingo Card Generator' => SITEURL . '/bingo-card-generator/'
+				'Home'                  => SITEURL,
+				'Bingo Card Generators' => SITEURL . '/bingo-card-generator/'
 			];
-        }
+		}
 		?>
         <nav aria-label="lbcg-breadcrumb">
             <ol class="lbcg-breadcrumb">

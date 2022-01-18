@@ -96,17 +96,17 @@ $the_taxonomy = get_queried_object();
 								$bingo_theme = $bingo_themes->posts[ $k ];
 								?>
                                 <div class="lbcg-generators-single">
+	                                <?php if ( $text = get_post_meta( $bingo_theme->ID, 'bt_intro_text', true ) ): ?>
+                                        <div class="lbcg-generators-content">
+			                                <?php echo $text; ?>
+                                        </div>
+	                                <?php endif; ?>
                                     <div class="lbcg-generators-image">
                                         <img src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>" alt="<?php echo $bingo_theme->post_title; ?>">
                                     </div>
                                     <div class="lbcg-generators-title">
                                         <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>"><?php echo $bingo_theme->post_title; ?></a>
                                     </div>
-									<?php if ( $text = get_post_meta( $bingo_theme->ID, 'bt_intro_text', true ) ): ?>
-                                        <div class="lbcg-generators-content">
-											<?php echo $text; ?>
-                                        </div>
-									<?php endif; ?>
                                 </div>
 								<?php
 								if ( ++ $k >= count( $bingo_themes->posts ) ) {

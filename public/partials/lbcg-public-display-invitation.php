@@ -32,7 +32,18 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
 	$bingo_card_title = $data['bingo_card_title'][0];
 	// Special title
 	if ( $bingo_card_type === '1-75' ) {
-		$bingo_card_spec_title = explode( '|', $data['bingo_card_spec_title'][0] );
+		$bingo_card_spec_title = ! empty( $data['bingo_card_spec_title'][0] ) ? str_split( $data['bingo_card_spec_title'][0] ) : [];
+		$additional_spec_part  = '';
+		switch ( count( $bingo_card_spec_title ) ) {
+			case 4:
+			case 3:
+				$additional_spec_part = '<span></span>';
+				break;
+			case 2:
+			case 1:
+				$additional_spec_part = '<span></span><span></span>';
+				break;
+		}
 	}
 	// Bingo card words
 	if ( $bingo_card_type === '1-75' ) {
@@ -76,7 +87,10 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                                     </div>
 									<?php if ( $bingo_card_type === '1-75' ): ?>
                                         <div class="lbcg-card-subtitle">
-                                            <span class="lbcg-card-subtitle-text"><span><?php echo implode( '</span><span>', $bingo_card_spec_title ); ?></span></span>
+                                            <span class="lbcg-card-subtitle-text"><?php
+                                                echo $additional_spec_part;
+                                                echo !empty( $bingo_card_spec_title ) ? '<span>' . implode( '</span><span>', $bingo_card_spec_title ) . '</span>' : '';
+                                                echo $additional_spec_part; ?></span>
                                         </div>
 									<?php endif; ?>
                                 </div>
@@ -121,7 +135,10 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                         <form id="lbcg-view-all-cards-form" action="<?php echo $bc_permalink . 'all/'; ?>" method="get"
                               target="_blank">
                             <div class="lbcg-input-wrap">
-                                <label for="lbcg-cards-count" class="lbcg-label">Cards count</label>
+                                <h2 class="lbcg-input-wrap-head">Print Cards</h2>
+                            </div>
+                            <div class="lbcg-input-wrap">
+                                <label for="lbcg-cards-count" class="lbcg-label">How many cards would you like to print?</label>
                                 <select name="bcc" id="lbcg-cards-count" class="lbcg-select">
                                     <option value="30" selected>30 cards</option>
                                     <option value="100">100 cards</option>
@@ -130,12 +147,12 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                                 </select>
                             </div>
                             <div class="lbcg-input-wrap">
-                                <label for="lbcg-cards-custom-count" class="lbcg-label">Cards custom count</label>
+                                <label for="lbcg-cards-custom-count" class="lbcg-label">Custom number to print</label>
                                 <input type="number" id="lbcg-cards-custom-count" class="lbcg-input" name="bcc" value=""
                                        min="0">
                             </div>
                             <div class="lbcg-input-wrap">
-                                <label for="lbcg-cards-per-page" class="lbcg-label">Cards per page count</label>
+                                <label for="lbcg-cards-per-page" class="lbcg-label">How many cards per page?</label>
                                 <select name="bcs" id="lbcg-cards-per-page"
                                         class="lbcg-select" <?php echo $bingo_card_type === '1-90' ? 'disabled' : ''; ?>>
                                     <option value="1">1 large card</option>
@@ -145,7 +162,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                             </div>
                             <div class="lbcg-input-wrap lbcg-buttons-wrap">
                                 <button id="lbcg-view-all-cards" class="lbcg-btn lbcg-btn--lg lbcg-btn--main"
-                                        type="submit">View
+                                        type="submit">Generate Printable Cards
                                 </button>
                             </div>
                         </form>
@@ -157,6 +174,9 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                             <input type="hidden" name="bingo_card_uid" value="<?php echo $_GET['bc']; ?>">
                             <div class="lbcg-content-form">
                                 <div class="lbcg-input-wrap">
+                                    <h2 class="lbcg-input-wrap-head">Invite through email</h2>
+                                </div>
+                                <div class="lbcg-input-wrap">
                                     <label for="cu-email" class="lbcg-label">Your email:</label>
                                     <input class="lbcg-input" type="email" id="cu-email" name="author_email"
                                            value="<?php echo $cu_email; ?>"
@@ -166,7 +186,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                                     <label for="invite-emails" class="lbcg-label">Invite emails:</label>
                                     <textarea class="lbcg-input" id="invite-emails" name="invite_emails"
                                               cols="" rows="6"
-                                              placeholder="Enter invite emails, each in new line"></textarea>
+                                              placeholder="Enter invite emails, one per line e.g.&#13;&#10;info@test.com&#13;&#10;john@smith.com"></textarea>
                                 </div>
                             </div>
                             <div class="lbcg-input-wrap lbcg-buttons-wrap">

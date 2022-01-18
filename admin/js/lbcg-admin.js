@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * @param specTitle
      * @param content
      */
-    function getCardContent(type, size = '', freeSquare = false, title = '', specTitle = [], content = '') {
+    function getCardContent(type, size = '', freeSquare = false, title = '', specTitle = '', content = '') {
         const request = new XMLHttpRequest();
         request.onreadystatechange = function () {
             if (request.readyState !== 4 || request.status !== 200) return;
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         reqData.append('card_grid_size', size);
         reqData.append('free_square', freeSquare ? 'true' : 'false');
         reqData.append('card_title', title);
-        reqData.append('spec_title', specTitle.join(';'));
+        reqData.append('spec_title', specTitle);
         reqData.append('card_content', content);
         request.send(reqData);
     }
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const title = document.getElementById('lbcg-title').value,
                 gridSize = document.getElementById('lbcg-grid-size'),
                 gridSizeInput = document.getElementsByName('bingo_grid_size')[0],
-                specTitleElement = document.getElementsByClassName('lbcg-input-wrap--subtitle')[0],
+                specTitleElement = document.getElementById('lbcg-subtitle'),
                 contentElement = document.getElementById('lbcg-body-content'),
                 wrapWordElement = document.getElementById('lbcg-wrap-words-check'),
                 freeSquareElement = document.getElementById('lbcg-free-space-check');
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     contentElement.parentNode.style.display = 'none';
                     wrapWordElement.parentNode.style.display = 'none';
                     freeSquareElement.parentNode.style.display = 'flex';
-                    getCardContent('1-75', '5x5', freeSquareElement.checked, title, [...document.querySelectorAll('.lbcg-input-wrap--subtitle .lbcg-input')].map(item => item.value));
+                    getCardContent('1-75', '5x5', freeSquareElement.checked, title, specTitleElement.value);
                     break;
                 case '1-90':
                     // Only 9x3
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     wrapWordElement.parentNode.style.display = 'flex';
                     freeSquareElement.parentNode.style.display = 'flex';
                     document.getElementById('content-items-count').innerText = 9;
-                    getCardContent('generic', '3x3', freeSquareElement.checked, title, [], contentElement.value);
+                    getCardContent('generic', '3x3', freeSquareElement.checked, title, '', contentElement.value);
                     break;
             }
         }

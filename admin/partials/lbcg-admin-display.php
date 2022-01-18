@@ -1,13 +1,24 @@
 <?php
-$data = LBCG_Admin::get_instance()->get_post_data();
+$data             = LBCG_Admin::get_instance()->get_post_data();
 $bingo_card_type  = ! empty( $data['bingo_card_type'][0] ) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size  = ! empty( $data['bingo_grid_size'][0] ) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : 'Card Title';
 // Special title
 if ( ! empty( $data['bingo_card_spec_title'][0] ) ) {
-	$bingo_card_spec_title = explode( '|', $data['bingo_card_spec_title'][0] );
+	$bingo_card_spec_title = str_split( $data['bingo_card_spec_title'][0] );
 } else {
-	$bingo_card_spec_title = [ 'B', 'I', 'N', 'G', 'O' ];
+	$bingo_card_spec_title = [];
+}
+$additional_spec_part = '';
+switch ( count( $bingo_card_spec_title ) ) {
+	case 4:
+	case 3:
+		$additional_spec_part = '<span></span>';
+		break;
+	case 2:
+	case 1:
+		$additional_spec_part = '<span></span><span></span>';
+		break;
 }
 // Bingo card words
 $words_count        = 25;
@@ -133,34 +144,8 @@ $special_types = array( '1-75', '1-90' );
                             <input class="lbcg-input" id="lbcg-title" type="text" name="bingo_card_title" value="<?php echo $bingo_card_title; ?>"/>
                         </div>
                         <div class="lbcg-input-wrap" <?php echo ! ( ! empty( $data['bingo_card_type'][0] ) && $data['bingo_card_type'][0] === '1-75' ) ? 'style="display: none;"' : ''; ?>>
-                            <label for="lbcg-title" class="lbcg-label">Enter a Subtitle</label>
-                            <div class="lbcg-input-wrap-in lbcg-input-wrap--subtitle">
-                                <label class="lbcg-label lbcg-label--single">
-                                    <input class="lbcg-input" id="lbcg-subtitle-1" size="1" maxlength="1"
-                                           name="bingo_card_spec_title[0]"
-                                           type="text" value="<?php echo $bingo_card_spec_title[0]; ?>"/>
-                                </label>
-                                <label class="lbcg-label lbcg-label--single">
-                                    <input class="lbcg-input" id="lbcg-subtitle-2" size="1" maxlength="1"
-                                           name="bingo_card_spec_title[1]"
-                                           type="text" value="<?php echo $bingo_card_spec_title[1]; ?>"/>
-                                </label>
-                                <label class="lbcg-label lbcg-label--single">
-                                    <input class="lbcg-input" id="lbcg-subtitle-3" size="1" maxlength="1"
-                                           name="bingo_card_spec_title[2]"
-                                           type="text" value="<?php echo $bingo_card_spec_title[2]; ?>"/>
-                                </label>
-                                <label class="lbcg-label lbcg-label--single">
-                                    <input class="lbcg-input" id="lbcg-subtitle-4" size="1" maxlength="1"
-                                           name="bingo_card_spec_title[3]"
-                                           type="text" value="<?php echo $bingo_card_spec_title[3]; ?>"/>
-                                </label>
-                                <label class="lbcg-label lbcg-label--single">
-                                    <input class="lbcg-input" id="lbcg-subtitle-5" size="1" maxlength="1"
-                                           name="bingo_card_spec_title[4]"
-                                           type="text" value="<?php echo $bingo_card_spec_title[4]; ?>"/>
-                                </label>
-                            </div>
+                            <label for="lbcg-subtitle" class="lbcg-label">Enter a Subtitle</label>
+                            <input class="lbcg-input" id="lbcg-subtitle" type="text" name="bingo_card_spec_title" maxlength="5" value="<?php echo implode( '', $bingo_card_spec_title ); ?>"/>
                         </div>
                         <div class="lbcg-input-wrap" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;' : ''; ?>>
                             <label for="lbcg-body-content" class="lbcg-label">Enter words/emojis or numbers</label>
@@ -456,7 +441,10 @@ $special_types = array( '1-75', '1-90' );
                                 </div>
 								<?php if ( $bingo_card_type === '1-75' ): ?>
                                     <div class="lbcg-card-subtitle">
-                                        <span class="lbcg-card-subtitle-text"><span><?php echo ! empty( $bingo_card_spec_title ) ? implode( '</span><span>', $bingo_card_spec_title ) : ''; ?></span></span>
+                                        <span class="lbcg-card-subtitle-text"><?php
+	                                        echo $additional_spec_part;
+	                                        echo ! empty( $bingo_card_spec_title ) ? '<span>' . implode( '</span><span>', $bingo_card_spec_title ) . '</span>' : '';
+	                                        echo $additional_spec_part; ?></span>
                                     </div>
 								<?php endif; ?>
                             </div>

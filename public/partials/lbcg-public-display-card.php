@@ -24,7 +24,18 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 	$bingo_card_title = $data['bingo_card_title'][0];
 	// Special title
 	if ( $bingo_card_type === '1-75' ) {
-		$bingo_card_spec_title = explode( '|', $data['bingo_card_spec_title'][0] );
+		$bingo_card_spec_title = ! empty( $data['bingo_card_spec_title'][0] ) ? str_split( $data['bingo_card_spec_title'][0] ) : [];
+		$additional_spec_part  = '';
+		switch ( count( $bingo_card_spec_title ) ) {
+			case 4:
+			case 3:
+				$additional_spec_part = '<span></span>';
+				break;
+			case 2:
+			case 1:
+				$additional_spec_part = '<span></span><span></span>';
+				break;
+		}
 	}
 	// Bingo card words
 	if ( $bingo_card_type === '1-90' ) {
@@ -50,7 +61,10 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
                             </div>
 							<?php if ( $bingo_card_type === '1-75' ): ?>
                                 <div class="lbcg-card-subtitle">
-                                    <span class="lbcg-card-subtitle-text"><span><?php echo implode( '</span><span>', $bingo_card_spec_title ); ?></span></span>
+                                    <span class="lbcg-card-subtitle-text"><?php
+	                                    echo $additional_spec_part;
+	                                    echo ! empty( $bingo_card_spec_title ) ? '<span>' . implode( '</span><span>', $bingo_card_spec_title ) . '</span>' : '';
+	                                    echo $additional_spec_part; ?></span>
                                 </div>
 							<?php endif; ?>
                         </div>

@@ -166,81 +166,95 @@ class LBCG_Ajax {
 	}
 
 	/**
-     * Get card content html
-     *
+	 * Get card content html
+	 *
 	 * @return void
 	 */
 	public function get_card_content() {
-		$type = $_POST['card_type'];
-        $title = $_POST['card_title'];
-        $spec_title = explode(';', $_POST['spec_title']);
+		$type                 = $_POST['card_type'];
+		$title                = $_POST['card_title'];
+		$spec_title           = ! empty( $_POST['spec_title'] ) ? str_split( $_POST['spec_title'] ) : [];
+		$additional_spec_part = '';
+		switch ( count( $spec_title ) ) {
+			case 4:
+			case 3:
+				$additional_spec_part = '<span></span>';
+				break;
+			case 2:
+			case 1:
+				$additional_spec_part = '<span></span><span></span>';
+				break;
+		}
 		ob_start();
-        ?>
+		?>
         <div class="lbcg-card-header-holder">
             <div class="lbcg-card-header">
                 <span class="lbcg-card-header-text"><?php echo $title; ?></span>
             </div>
-            <?php if ( $type === '1-75' ): ?>
+			<?php if ( $type === '1-75' ): ?>
                 <div class="lbcg-card-subtitle">
-                    <span class="lbcg-card-subtitle-text"><span><?php echo ! empty( $spec_title ) ? implode( '</span><span>', $spec_title ) : ''; ?></span></span>
+                    <span class="lbcg-card-subtitle-text"><?php
+	                    echo $additional_spec_part;
+	                    echo ! empty( $spec_title ) ? '<span>' . implode( '</span><span>', $spec_title ) . '</span>' : '';
+	                    echo $additional_spec_part; ?></span>
                 </div>
-            <?php endif; ?>
+			<?php endif; ?>
         </div>
         <div class="lbcg-card-body">
-        <?php
-		if ( $type === '1-90' ) {
-			$bingo_card_words = LBCG_Helper::get_1_90_bingo_card_numbers();
-			foreach ( $bingo_card_words as $single_card_words ) { ?>
-                <div class="lbcg-card-body-grid lbcg-grid-9">
+			<?php
+			if ( $type === '1-90' ) {
+				$bingo_card_words = LBCG_Helper::get_1_90_bingo_card_numbers();
+				foreach ( $bingo_card_words as $single_card_words ) { ?>
+                    <div class="lbcg-card-body-grid lbcg-grid-9">
+						<?php
+						foreach ( $single_card_words as $number ) { ?>
+                            <div class="lbcg-card-col">
+                                <span class="lbcg-card-text"><?php echo $number; ?></span>
+                            </div>
+						<?php } ?>
+                    </div>
 					<?php
-					foreach ( $single_card_words as $number ) { ?>
+				}
+			} else {
+				if ( $type === '1-75' ) {
+					$size             = '5x5';
+					$bingo_card_words = LBCG_Helper::get_1_75_bingo_card_numbers();
+				} else {
+					$size = $_POST['card_grid_size'];
+					if ( ! empty( $_POST['card_content'] ) ) {
+						$bingo_card_content = $_POST['card_content'];
+					} else {
+						$result             = LBCG_Helper::get_bg_default_content( $size );
+						$bingo_card_content = $result['words'];
+					}
+					if ( strpos( $bingo_card_content, "\r\n" ) !== false ) {
+						$bingo_card_words = explode( "\r\n", $bingo_card_content );
+					} else {
+						$bingo_card_words = explode( "\n", $bingo_card_content );
+					}
+				}
+				$bingo_grid_free_square = $_POST['free_square'] === 'true' ? true : false;
+				?>
+                <div class="lbcg-card-body-grid lbcg-grid-<?php echo $size[0]; ?>">
+					<?php
+					$grid_sq_count = $size ** 2;
+					for ( $i = 1; $i <= $grid_sq_count; $i ++ ): ?>
                         <div class="lbcg-card-col">
-                            <span class="lbcg-card-text"><?php echo $number; ?></span>
+                        <span class="lbcg-card-text"><?php
+	                        if ( (int) ceil( $grid_sq_count / 2 ) === $i && $bingo_grid_free_square ) {
+		                        echo LBCG_Helper::$free_space_word;
+	                        } else {
+		                        echo $bingo_card_words[ $i - 1 ];
+	                        }
+	                        ?></span>
                         </div>
-					<?php } ?>
+					<?php endfor; ?>
                 </div>
 				<?php
 			}
-		} else {
-			if ( $type === '1-75' ) {
-				$size                   = '5x5';
-				$bingo_card_words       = LBCG_Helper::get_1_75_bingo_card_numbers();
-			} else {
-				$size                   = $_POST['card_grid_size'];
-				if ( ! empty( $_POST['card_content'] ) ) {
-					$bingo_card_content = $_POST['card_content'];
-				} else {
-					$result             = LBCG_Helper::get_bg_default_content( $size );
-					$bingo_card_content = $result['words'];
-				}
-				if ( strpos( $bingo_card_content, "\r\n" ) !== false ) {
-					$bingo_card_words = explode( "\r\n", $bingo_card_content );
-				} else {
-					$bingo_card_words = explode( "\n", $bingo_card_content );
-				}
-			}
-			$bingo_grid_free_square = $_POST['free_square'] === 'true' ? true : false;
 			?>
-            <div class="lbcg-card-body-grid lbcg-grid-<?php echo $size[0]; ?>">
-				<?php
-				$grid_sq_count = $size ** 2;
-				for ( $i = 1; $i <= $grid_sq_count; $i ++ ): ?>
-                    <div class="lbcg-card-col">
-                        <span class="lbcg-card-text"><?php
-                            if ( (int) ceil( $grid_sq_count / 2 ) === $i && $bingo_grid_free_square ) {
-                                echo LBCG_Helper::$free_space_word;
-                            } else {
-                                echo $bingo_card_words[ $i - 1 ];
-                            }
-                            ?></span>
-                    </div>
-				<?php endfor; ?>
-            </div>
-			<?php
-		}
-        ?>
         </div>
-        <?php
+		<?php
 		echo ob_get_clean();
 		die();
 	}

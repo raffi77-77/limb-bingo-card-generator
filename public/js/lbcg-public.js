@@ -135,6 +135,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             checkGridFontSize();
+        } else if ( event.target.matches('#lbcg-subtitle') ) {
+            // On subtitle change
+            const specTitle = event.target.value !== '' ? event.target.value.split('') : [];
+            let additionalPart = '';
+            switch (specTitle.length) {
+                case 4:
+                case 3:
+                    additionalPart = '<span></span>';
+                    break;
+                case 2:
+                case 1:
+                    additionalPart = '<span></span><span></span>';
+                    break;
+            }
+            document.getElementsByClassName('lbcg-card-subtitle-text')[0].innerHTML = additionalPart + (specTitle.length ? '<span>' + specTitle.join('</span><span>') + '</span>' : '') + additionalPart;
         }
     });
 
@@ -208,19 +223,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.documentElement.style.setProperty('--lbcg-grid-wrap-words', event.target.checked ? 'break-word' : 'anywhere');
             checkGridFontSize();
         }
-    });
-
-    /**
-     * On subtitle letters change
-     */
-    document.querySelectorAll('label.lbcg-label--single input.lbcg-input').forEach(function (el) {
-        el.addEventListener('input', function (event) {
-            const $this = event.target,
-                letterElements = document.querySelectorAll('div.lbcg-card-subtitle span.lbcg-card-subtitle-text span'),
-                id = $this.getAttribute('id'),
-                index = id.replace('lbcg-subtitle-', '') - 1;
-            letterElements[index].innerHTML = $this.value;
-        });
     });
 
     document.addEventListener('submit', function (event) {

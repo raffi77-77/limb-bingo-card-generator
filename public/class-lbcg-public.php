@@ -63,14 +63,15 @@ class LBCG_Public {
 	public function register_dependencies() {
 		add_shortcode( 'lbcg-ubud-categories', array( $this, 'show_ubud_categeories_template' ) );
 		add_filter( 'single_template', array( $this, 'get_custom_post_type_template' ) );
+//		add_filter( 'template_include', array( $this, 'get_custom_template' ) );
 		add_filter( 'taxonomy_template', array( $this, 'get_custom_taxonomy_template' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ), 10 );
 		add_action( 'wp_head', array( $this, 'add_custom_css' ) );
 	}
 
 	/**
-     * Show UBUD Categories
-     *
+	 * Show UBUD Categories
+	 *
 	 * @param   array   $atts
 	 * @param   string  $content
 	 * @param   string  $tag
@@ -101,7 +102,7 @@ class LBCG_Public {
 			] );
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
 		}
-		if ( is_page( 'bingo-card-generator' ) ) {
+		if ( is_page( 'bingo-card-generator' ) || is_post_type_archive( 'bingo_theme' ) ) {
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
 		}
 	}
@@ -115,7 +116,7 @@ class LBCG_Public {
 	 */
 	public function get_custom_post_type_template( $single_template ) {
 		if ( is_singular( 'bingo_theme' ) ) {
-			if ( preg_match( '/bingo-card-generator\/([^\/]+)\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'] ) ) {
+			if ( preg_match( '/bingo-card-generator\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'] ) ) {
 				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-invitation.php';
 			} else {
 				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-generator.php';
@@ -129,6 +130,21 @@ class LBCG_Public {
 		}
 
 		return $single_template;
+	}
+
+	/**
+	 * Get custom template
+	 *
+	 * @param   string  $template
+	 *
+	 * @return string
+	 */
+	public function get_custom_template( $template ) {
+		if ( is_post_type_archive( 'bingo_theme' ) ) {
+			$template = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive-bingo_theme.php';
+		}
+
+		return $template;
 	}
 
 	/**

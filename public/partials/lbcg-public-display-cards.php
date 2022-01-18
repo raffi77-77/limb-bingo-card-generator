@@ -26,7 +26,18 @@ $cards_count       = (int) $_GET['bcc'];
 $all = LBCG_Helper::generate_all_content_info( $post->ID, 500, $cards_count, $data );
 //$needed_contents = array_slice( $all, 0, $cards_count );
 if ( $type === '1-75' ) {
-	$spec_title = $data['bingo_card_spec_title'][0];
+	$spec_title           = ! empty( $data['bingo_card_spec_title'][0] ) ? str_split( $data['bingo_card_spec_title'][0] ) : [];
+	$additional_spec_part = '';
+	switch ( count( $spec_title ) ) {
+		case 4:
+		case 3:
+			$additional_spec_part = '<span></span>';
+			break;
+		case 2:
+		case 1:
+			$additional_spec_part = '<span></span><span></span>';
+			break;
+	}
 }
 // Free square
 if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $data['bingo_grid_size'][0] !== '4x4'/* || $type === '1-75'*/ ) {
@@ -46,7 +57,10 @@ ob_start();
         </div>
 		<?php if ( $type === '1-75' ): ?>
             <div class="lbcg-card-subtitle">
-                <span class="lbcg-card-subtitle-text"><span><?php echo ! empty( $spec_title ) ? implode( '</span><span>', explode( '|', $spec_title ) ) : ''; ?></span></span>
+                <span class="lbcg-card-subtitle-text"><?php
+                    echo $additional_spec_part;
+                    echo ! empty( $spec_title ) ? '<span>' . implode( '</span><span>', $spec_title ) . '</span>' : '';
+                    echo $additional_spec_part; ?></span>
             </div>
 		<?php endif; ?>
     </div>
