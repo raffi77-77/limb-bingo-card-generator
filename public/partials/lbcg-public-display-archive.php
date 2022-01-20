@@ -71,7 +71,7 @@ $the_taxonomy = get_queried_object();
                 </aside>
                 <section class="lbcg-generators">
 					<?php
-					$bingo_themes = new WP_Query( array(
+					$bingo_themes         = new WP_Query( array(
 						'post_type'      => 'bingo_theme',
 						'post_status'    => 'publish',
 						'orderby'        => 'post_title',
@@ -86,34 +86,50 @@ $the_taxonomy = get_queried_object();
 							)
 						)
 					) );
-					$k            = 0;
+					$k                    = 0;
+					$generators_row_class = 'lbcg-generators-row' . ( count( $bingo_themes->posts ) > 1 ? '-2' : '' );
 					while ( $k < count( $bingo_themes->posts ) ) {
-						$j = 0;
-						?>
-                        <div class="lbcg-generators-row<?php echo count( $bingo_themes->posts ) > 1 ? '-2' : ''; ?>">
-							<?php
-							do {
-								$bingo_theme = $bingo_themes->posts[ $k ];
-								?>
-                                <div class="lbcg-generators-single">
-	                                <?php if ( $text = get_post_meta( $bingo_theme->ID, 'bt_intro_text', true ) ): ?>
-                                        <div class="lbcg-generators-content">
-			                                <?php echo $text; ?>
-                                        </div>
-	                                <?php endif; ?>
-                                    <div class="lbcg-generators-image">
-                                        <img src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>" alt="<?php echo $bingo_theme->post_title; ?>">
-                                    </div>
-                                    <div class="lbcg-generators-title">
-                                        <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>"><?php echo $bingo_theme->post_title; ?></a>
-                                    </div>
-                                </div>
-								<?php
-								if ( ++ $k >= count( $bingo_themes->posts ) ) {
-									break;
-								}
-							} while ( ++ $j < 2 );
+						$j             = 0;
+						$descs_exists  = false;
+						$descs_content = '';
+						$cards_content = '';
+						do {
+							$bingo_theme = $bingo_themes->posts[ $k ];
+							ob_start();
 							?>
+                            <div class="lbcg-generators-single">
+								<?php if ( $text = get_post_meta( $bingo_theme->ID, 'bt_intro_text', true ) ):
+									$descs_exists = true; ?>
+                                    <div class="lbcg-generators-content">
+										<?php echo $text; ?>
+                                    </div>
+								<?php endif; ?>
+                            </div>
+							<?php
+							$descs_content .= ob_get_clean();
+							ob_start();
+							?>
+                            <div class="lbcg-generators-single">
+                                <div class="lbcg-generators-image">
+                                    <img src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>" alt="<?php echo $bingo_theme->post_title; ?>">
+                                </div>
+                                <div class="lbcg-generators-title">
+                                    <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>"><?php echo $bingo_theme->post_title; ?></a>
+                                </div>
+                            </div>
+							<?php
+							$cards_content .= ob_get_clean();
+							if ( ++ $k >= count( $bingo_themes->posts ) ) {
+								break;
+							}
+						} while ( ++ $j < 2 );
+						if ( $descs_exists === true ): ?>
+                            <div class="<?php echo $generators_row_class; ?>">
+								<?php echo $descs_content; ?>
+                            </div>
+						<?php endif; ?>
+                        <div class="<?php echo $generators_row_class; ?>">
+							<?php echo $cards_content; ?>
                         </div>
 						<?php
 					}
@@ -122,15 +138,15 @@ $the_taxonomy = get_queried_object();
 					if ( $max_num_pages > 1 ) {
 						if ( $paged > 1 ) {
 							$page_items = [ $paged - 1, $paged ];
-							$last_item = $paged;
+							$last_item  = $paged;
 						} else {
 							$page_items = [ $paged, $paged + 1 ];
-							$last_item = $paged + 1;
+							$last_item  = $paged + 1;
 						}
 						if ( $max_num_pages > $last_item ) {
 							$page_items[] = $last_item + 1;
-						} else if ( $paged > 1 ) {
-							array_unshift($page_items, $page_items[0] - 1 );
+						} elseif ( $paged > 1 ) {
+							array_unshift( $page_items, $page_items[0] - 1 );
 						}
 						?>
                         <div class="lbcg-pagination">
@@ -157,7 +173,7 @@ $the_taxonomy = get_queried_object();
                 </section>
             </div>
 			<?php
-//			$intro_text = get_term_meta( $the_taxonomy->term_id, 'lbcg_intro_text', true );
+			//			$intro_text = get_term_meta( $the_taxonomy->term_id, 'lbcg_intro_text', true );
 			if ( ! empty( $intro_text ) ): ?>
                 <div class="lbcg-post-content"><?php echo $intro_text; ?></div>
 			<?php endif; ?>

@@ -585,7 +585,7 @@
 
     &-content {
       font-size: .8rem;
-      margin-bottom: 10px;
+      word-break: break-all;
 
       h1, h2, h3, h4, h5, h6 {
         font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;

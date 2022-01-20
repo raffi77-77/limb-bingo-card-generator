@@ -455,7 +455,7 @@
       color: #6f42c1; }
   .lbcg-parent .lbcg-generators-content {
     font-size: .8rem;
-    margin-bottom: 10px; }
+    word-break: break-all; }
     .lbcg-parent .lbcg-generators-content h1, .lbcg-parent .lbcg-generators-content h2, .lbcg-parent .lbcg-generators-content h3, .lbcg-parent .lbcg-generators-content h4, .lbcg-parent .lbcg-generators-content h5, .lbcg-parent .lbcg-generators-content h6 {
       font-family: arvo, SFMono-Regular, Menlo, Monaco, Consolas, liberation mono, courier new, monospace;
       font-weight: 500;
