@@ -40,7 +40,7 @@ if ( $type === '1-75' ) {
 	}
 }
 // Free square
-if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $data['bingo_grid_size'][0] !== '4x4'/* || $type === '1-75'*/ ) {
+if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $data['bingo_grid_size'][0] !== '4x4' && $type !== '1-90' ) {
 	$bingo_grid_free_square = true;
 } else {
 	$bingo_grid_free_square = false;

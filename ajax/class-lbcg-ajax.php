@@ -112,7 +112,7 @@ class LBCG_Ajax {
 			$bingo_card = $bc_posts[0];
 			// Get emails
 			$author_email  = trim( $_POST['author_email'] );
-			$invite_emails = explode( "\r\n", $_POST['invite_emails'] );
+			$invite_emails = preg_split( '/\r\n|\r|\n/', $_POST['invite_emails'] );
 			$invite_emails = array_map( 'trim', $invite_emails );
 			$invite_emails = array_unique( $invite_emails );
 			// Remove author email from invite emails list

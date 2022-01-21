@@ -100,7 +100,7 @@ if ( ! empty( $data['bc_card'][0] ) ) {
 // Wrap words
 $bingo_card_wrap_words = ! empty( $data['bingo_card_wrap_words'][0] ) && $data['bingo_card_wrap_words'][0] === 'on' ? true : false;
 // If include free space
-if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' ) {
+if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' && $bingo_card_type !== '1-90' ) {
 	$bingo_grid_free_square = true;
 } else {
 	$bingo_grid_free_square = false;
@@ -109,6 +109,7 @@ $special_types = array( '1-75', '1-90' );
 ?>
 <input type="hidden" name="lbcg_action" value="save_bc_post">
 <input type="hidden" name="bingo_grid_size" value="<?php echo $bingo_grid_size; ?>">
+<input type="hidden" name="lbcg_font_size" value="<?php echo LBCG_Helper::$font_size; ?>">
 <input type="hidden" name="bingo_card_thumbnail" value="">
 <div class="lbcg-custom-container">
     <main class="lbcg-parent lbcg-loading">

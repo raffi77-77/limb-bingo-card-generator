@@ -47,7 +47,7 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 		$bingo_card_words = explode( "\r\n", $data['bingo_card_own_content'][0] );
 	}
 	// If include free space
-	$bingo_grid_free_square = $data['bingo_card_free_square'][0] === 'on';
+	$bingo_grid_free_square = $bingo_grid_size !== '4x4' && $bingo_card_type !== '1-90' && $data['bingo_card_free_square'][0] === 'on';
 	?>
     <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
     <div class="lbcg-custom-container">
@@ -102,9 +102,12 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
                     </div>
                 </div>
             </div>
-            <div class="lbcg-post-content">
-				<?php the_content(); ?>
-            </div>
+			<?php $the_content = get_the_content();
+			if ( ! empty( $the_content ) ): ?>
+                <div class="lbcg-post-content">
+					<?php echo $the_content; ?>
+                </div>
+			<?php endif; ?>
         </main>
     </div>
 	<?php

@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (type !== '1-75' && type !== '1-90') {
                 checkGridFontSize();
             } else {
-                document.documentElement.style.setProperty('--lbcg-grid-font-size', type === '1-90' ? '16px' : (type === '1-75' ? '31.5px' : '16px'));
+                const fontSize = type === '1-90' ? 16 : (type === '1-75' ? 31.5 : 16);
+                document.documentElement.style.setProperty('--lbcg-grid-font-size', fontSize + 'px');
+                document.getElementsByName('lbcg_font_size')[0].value = fontSize;
             }
             toggleLoading(false);
         }

@@ -157,7 +157,7 @@
     font-size: var(--lbcg-grid-font-size);
     line-height: var(--lbcg-grid-line-height);
     color: inherit;
-    overflow-wrap: var(--lbcg-grid-wrap-words);
+    /*overflow-wrap: var(--lbcg-grid-wrap-words);*/
     transform: translate3d(0, -50%, 0);
   }
 

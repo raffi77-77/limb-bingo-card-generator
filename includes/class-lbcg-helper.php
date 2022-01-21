@@ -45,6 +45,13 @@ class LBCG_Helper {
 	public static $free_space_word = '&#9733;';
 
 	/**
+     * Cards global font size
+     *
+	 * @var int
+	 */
+	public static $font_size = 16;
+
+	/**
 	 * Register custom post types and hooks
 	 */
 	public static function register_custom_post_types() {
@@ -368,6 +375,7 @@ class LBCG_Helper {
 			'bingo_card_type'        => '',
 			'bingo_grid_size'        => '',
 			'bingo_card_title'       => '',
+			'lbcg_font_size'         => '',
 			'bingo_card_spec_title'  => '',
 			'bingo_card_content'     => '',
 			'grid_square'            => '',
@@ -408,9 +416,10 @@ class LBCG_Helper {
 		if ( $post_type === 'bingo_theme' ) {
 			update_post_meta( $post_id, 'bt_intro_text', $data['bt_intro_text'] );
 		}
-		// Type and size
+		// Type, grid and font size
 		update_post_meta( $post_id, 'bingo_card_type', $data['bingo_card_type'] );
 		update_post_meta( $post_id, 'bingo_grid_size', $data['bingo_grid_size'] );
+		update_post_meta( $post_id, 'lbcg_font_size', $data['lbcg_font_size'] );
 		// Title
 		if ( ! empty( $data['bingo_card_title'] ) ) {
 			$title = trim( wp_strip_all_tags( $data['bingo_card_title'] ) );
@@ -506,7 +515,7 @@ class LBCG_Helper {
 		// Word wrap
 		update_post_meta( $post_id, 'bingo_card_wrap_words', empty( $data['bingo_card_wrap_words'] ) ? 'off' : 'on' );
 		// Free square
-		update_post_meta( $post_id, 'bingo_card_free_square', empty( $data['bingo_card_free_square'] ) ? 'off' : 'on' );
+		update_post_meta( $post_id, 'bingo_card_free_square', ! empty( $data['bingo_card_free_square'] ) && $data['bingo_grid_size'] !== '4x4' && $data['bingo_card_type'] !== '1-90' ? 'on' : 'off' );
 		// Custom CSS
 		update_post_meta( $post_id, 'bingo_card_custom_css', isset( $data['bingo_card_custom_css'] ) ? trim( wp_strip_all_tags( $data['bingo_card_custom_css'] ) ) : '' );
 	}

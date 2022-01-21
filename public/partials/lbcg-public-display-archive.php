@@ -16,15 +16,19 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-$the_taxonomy = get_queried_object();
+$the_term = get_queried_object();
 ?>
     <input type="hidden" name="bingo_card_type" value="general">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent">
-			<?php LBCG_Helper::show_breadcrumb( $lbcg_current_theme_name, $the_taxonomy, 'ubud_category' ); ?>
+			<?php LBCG_Helper::show_breadcrumb( $lbcg_current_theme_name, $the_term, 'ubud_category' ); ?>
             <div class="lbcg-post-header">
-                <h1><?php echo $the_taxonomy->name; ?></h1>
+                <h1><?php echo $the_term->name; ?></h1>
             </div>
+			<?php $intro_text = get_term_meta( $the_term->term_id, 'lbcg_intro_text', true );
+			if ( ! empty( $intro_text ) ): ?>
+                <div class="lbcg-post-content lbcg-intro-text"><?php echo $intro_text; ?></div>
+			<?php endif; ?>
             <div class="lbcg-main">
                 <aside class="lbcg-sidebar">
 					<?php
@@ -49,10 +53,10 @@ $the_taxonomy = get_queried_object();
 					ksort( $menu_items );
 					foreach ( $menu_items as $cur_term_id => $menu_item ) {
 						?>
-                        <div class="lbcg-sidebar-in <?php echo $the_taxonomy->term_id === $cur_term_id ? 'collapsed' : ''; ?>">
+                        <div class="lbcg-sidebar-in <?php echo $the_term->term_id === $cur_term_id ? 'collapsed' : ''; ?>">
                             <div class="lbcg-sidebar-header">
                                 <a href="<?php echo get_term_link( $cur_term_id ); ?>"
-                                   class="lbcg-sidebar-btn <?php echo $the_taxonomy->term_id === $cur_term_id ? 'active' : ''; ?>"><?php echo $taxonomies[ $cur_term_id ]->name; ?></a>
+                                   class="lbcg-sidebar-btn <?php echo $the_term->term_id === $cur_term_id ? 'active' : ''; ?>"><?php echo $taxonomies[ $cur_term_id ]->name; ?></a>
                                 <span class="lbcg-sidebar-arrow"></span>
                             </div>
                             <div class="lbcg-sidebar-body">
@@ -82,7 +86,7 @@ $the_taxonomy = get_queried_object();
 							array(
 								'taxonomy' => 'ubud-category',
 								'field'    => 'term_id',
-								'terms'    => $the_taxonomy->term_id
+								'terms'    => $the_term->term_id
 							)
 						)
 					) );
@@ -98,12 +102,12 @@ $the_taxonomy = get_queried_object();
 							ob_start();
 							?>
                             <div class="lbcg-generators-single">
-								<?php if ( $text = get_post_meta( $bingo_theme->ID, 'bt_intro_text', true ) ):
-									$descs_exists = true; ?>
-                                    <div class="lbcg-generators-content">
-										<?php echo $text; ?>
-                                    </div>
-								<?php endif; ?>
+								<?php //if ( $text = get_post_meta( $bingo_theme->ID, 'bt_intro_text', true ) ):
+								//$descs_exists = true; ?>
+                                <div class="lbcg-generators-content">
+									<?php //echo $text; ?>
+                                </div>
+								<?php //endif; ?>
                             </div>
 							<?php
 							$descs_content .= ob_get_clean();
@@ -172,11 +176,6 @@ $the_taxonomy = get_queried_object();
 					?>
                 </section>
             </div>
-			<?php
-			//			$intro_text = get_term_meta( $the_taxonomy->term_id, 'lbcg_intro_text', true );
-			if ( ! empty( $intro_text ) ): ?>
-                <div class="lbcg-post-content"><?php echo $intro_text; ?></div>
-			<?php endif; ?>
         </main>
     </div>
 <?php

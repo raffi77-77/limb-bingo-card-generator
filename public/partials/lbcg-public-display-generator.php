@@ -101,7 +101,7 @@ if ( ! empty( $data['bc_card'][0] ) ) {
 // Wrap words
 $bingo_card_wrap_words = ! empty( $data['bingo_card_wrap_words'][0] ) && $data['bingo_card_wrap_words'][0] === 'on' ? true : false;
 // If include free space
-if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' /*|| $bingo_card_type === '1-75'*/ ) {
+if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' && $bingo_card_type !== '1-90' ) {
 	$bingo_grid_free_square = true;
 } else {
 	$bingo_grid_free_square = false;
@@ -172,6 +172,7 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                             <input type="hidden" name="action" value="lbcg_bc_generation">
                             <input type="hidden" name="bingo_theme_id" value="<?php echo $current_id; ?>">
                             <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
+                            <input type="hidden" name="lbcg_font_size" value="<?php echo LBCG_Helper::$font_size; ?>">
 							<?php if ( ! empty( $bc_posts[0]->ID ) ): ?>
                                 <input type="hidden" name="bc" value="<?php echo $_GET['bc']; ?>">
 							<?php endif; ?>
@@ -620,9 +621,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
 									<?php if ( $bingo_card_type === '1-75' ): ?>
                                         <div class="lbcg-card-subtitle">
                                             <span class="lbcg-card-subtitle-text"><?php
-                                                echo $additional_spec_part;
-                                                echo ! empty( $bingo_card_spec_title ) ? '<span>' . implode( '</span><span>', $bingo_card_spec_title ) . '</span>': '';
-		                                        echo $additional_spec_part; ?></span>
+	                                            echo $additional_spec_part;
+	                                            echo ! empty( $bingo_card_spec_title ) ? '<span>' . implode( '</span><span>', $bingo_card_spec_title ) . '</span>' : '';
+	                                            echo $additional_spec_part; ?></span>
                                         </div>
 									<?php endif; ?>
                                 </div>
