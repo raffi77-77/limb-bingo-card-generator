@@ -62,8 +62,12 @@
   }
 
   &-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
     &-header {
-      margin-top: 1rem !important;
+      margin-top: 0 !important;
     }
 
     &-body {
@@ -550,9 +554,15 @@
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr;
       grid-column-gap: 20px;
+      grid-row-gap: 20px;
 
       &:not(:last-child) {
         padding-bottom: 1rem;
+      }
+
+      @media all and (max-width: 700px) {
+        width: 100%;
+        grid-template-columns: 1fr;
       }
     }
 
