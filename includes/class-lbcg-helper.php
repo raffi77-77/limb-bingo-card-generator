@@ -478,7 +478,7 @@ class LBCG_Helper {
 			} elseif ( ! empty( $theme_meta_data['bc_grid'][0] ) ) {
 				$bc_grid                  = unserialize( $theme_meta_data['bc_grid'][0] );
 				$data['bc_grid']['image'] = $bc_grid['image'];
-			} elseif ( empty( $data['bc_header']['image'] ) ) {
+			} elseif ( empty( $data['bc_grid']['image'] ) ) {
 				$data['bc_grid']['image'] = '0';
 			}
 			if ( empty( $data['bc_grid']['repeat'] ) ) {
@@ -497,7 +497,7 @@ class LBCG_Helper {
 			} elseif ( ! empty( $theme_meta_data['bc_card'][0] ) ) {
 				$bc_card                  = unserialize( $theme_meta_data['bc_card'][0] );
 				$data['bc_card']['image'] = $bc_card['image'];
-			} elseif ( empty( $data['bc_header']['image'] ) ) {
+			} elseif ( empty( $data['bc_card']['image'] ) ) {
 				$data['bc_card']['image'] = 0;
 			}
 			if ( empty( $data['bc_card']['repeat'] ) ) {
