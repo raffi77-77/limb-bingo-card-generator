@@ -49,6 +49,7 @@
     grid-template-rows: 1fr;
     grid-column-gap: 20px;
     margin: 0;
+    align-items: center;
 
     &:not(:last-child) {
       margin-bottom: 1rem;
@@ -62,10 +63,6 @@
   }
 
   &-content {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-
     &-header {
       margin-top: 0 !important;
     }
