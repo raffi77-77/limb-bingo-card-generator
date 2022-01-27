@@ -102,7 +102,7 @@ class LBCG_Public {
 			] );
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
 		}
-		if ( is_page( 'bingo-card-generator' ) || is_post_type_archive( 'bingo_theme' ) ) {
+		if ( is_page( 'bingo-cards' ) || is_post_type_archive( 'bingo_theme' ) ) {
 			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css?', [], $this->attributes['plugin_version'] );
 		}
 	}
@@ -116,7 +116,7 @@ class LBCG_Public {
 	 */
 	public function get_custom_post_type_template( $single_template ) {
 		if ( is_singular( 'bingo_theme' ) ) {
-			if ( preg_match( '/bingo-card-generator\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'] ) ) {
+			if ( preg_match( '/bingo-cards\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'] ) ) {
 				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-invitation.php';
 			} else {
 				$single_template = $this->attributes['public_templates_path'] . '/lbcg-public-display-generator.php';

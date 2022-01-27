@@ -86,9 +86,9 @@ class LBCG_Helper {
 			'show_in_rest'      => true,
 			'show_admin_column' => true,
 			'query_var'         => true,
-			'rewrite'           => array( 'slug' => 'bingo-card-generator/category' ),
+			'rewrite'           => array( 'slug' => 'bingo-cards/category' ),
 		) );
-		add_rewrite_rule( 'bingo-card-generator/category/([^/]+)/?$', 'index.php?taxonomy=ubud-category&post_type=bingo_theme&ubud-category=$matches[0]', 'top' );
+		add_rewrite_rule( 'bingo-cards/category/([^/]+)/?$', 'index.php?taxonomy=ubud-category&post_type=bingo_theme&ubud-category=$matches[0]', 'top' );
 		// Custom post type settings
 		$labels = array(
 			'name'           => __( 'UBUD Bingo themes', 'textdomain' ),
@@ -116,11 +116,11 @@ class LBCG_Helper {
 			'capability_type'    => 'post',
 			'has_archive'        => false,
 			'hierarchical'       => true,
-			'rewrite'            => array( 'slug' => 'bingo-card-generator' ),
+			'rewrite'            => array( 'slug' => 'bingo-cards' ),
 			'supports'           => array( 'title', 'editor', 'author' ),
 			'taxonomies'         => array( 'ubud-category' ),
 		) );
-		add_rewrite_rule( 'bingo-card-generator/([^/]+)/?(([^/]+)/?)?$', 'index.php?post_type=bingo_theme&name=$matches[1]', 'top' );
+		add_rewrite_rule( 'bingo-cards/([^/]+)/?(([^/]+)/?)?$', 'index.php?post_type=bingo_theme&name=$matches[1]', 'top' );
 	}
 
 	/**
@@ -802,20 +802,20 @@ class LBCG_Helper {
 			$bt_post_title       = get_the_title( $data );
 			$links               = [
 				'Home'                        => SITEURL,
-				'Bingo Card Generators'       => SITEURL . '/bingo-card-generator/',
-				$current_bt_category[0]->name => SITEURL . '/bingo-card-generator/category/' . $current_bt_category[0]->slug . '/',
+				'Bingo Card Generators'       => SITEURL . '/bingo-cards/',
+				$current_bt_category[0]->name => SITEURL . '/bingo-cards/category/' . $current_bt_category[0]->slug . '/',
 				$bt_post_title                => ''
 			];
 		} elseif ( $type === 'ubud_category' ) {
 			$links = [
 				'Home'                  => SITEURL,
-				'Bingo Card Generators' => SITEURL . '/bingo-card-generator/',
+				'Bingo Card Generators' => SITEURL . '/bingo-cards/',
 				$data->name             => ''
 			];
 		} else {
 			$links = [
 				'Home'                  => SITEURL,
-				'Bingo Card Generators' => SITEURL . '/bingo-card-generator/'
+				'Bingo Card Generators' => SITEURL . '/bingo-cards/'
 			];
 		}
 		?>

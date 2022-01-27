@@ -13,7 +13,7 @@
 
         --lbcg-header-font-size: 16px;
         --lbcg-header-height: 48px;
-        --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCG_Helper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
+        --lbcg-header-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCG_Helper::$fonts[$data['bingo_card_font'][0]]['name'] : LBCG_Helper::$fonts['mochiy-pop-p-one']['name']; ?>', sans-serif;
         --lbcg-header-text-color: <?php echo !empty($bc_header['font_color']) ? $bc_header['font_color'] : '#ffffff'; ?>;
         --lbcg-header-bg-image: <?php echo !empty($bc_header['image']) ? 'url(' . wp_get_attachment_image_url($bc_header['image'], 'large') . ')' : 'none' ?>;
         --lbcg-header-bg-pos: <?php echo !empty($bc_header['bg_pos']) ? $bc_header['bg_pos'] : '0 0'; ?>;
@@ -28,7 +28,7 @@
         16 : ($data['bingo_card_type'][0]
         === '1-75' ? 31.5 : 16)) :
         16); echo LBCG_Helper::$font_size . 'px'; ?>;
-        --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCG_Helper::$fonts[$data['bingo_card_font'][0]]['name'] : 'Roboto'; ?>', sans-serif;
+        --lbcg-grid-font-family: '<?php echo !empty($data['bingo_card_font'][0]) ? LBCG_Helper::$fonts[$data['bingo_card_font'][0]]['name'] : LBCG_Helper::$fonts['mochiy-pop-p-one']['name']; ?>', sans-serif;
         --lbcg-grid-line-height: <?php
         if (!empty($data['bingo_card_wrap_words'][0]) && $data['bingo_card_wrap_words'][0] === 'on') {
             echo 1;
