@@ -490,7 +490,7 @@ $special_types = array( '1-75', '1-90' );
 <?php if ( get_post_type() === 'bingo_theme' ):
 	ob_start();
 	wp_editor( isset( $data['bt_intro_text'] ) ? $data['bt_intro_text'][0] : '', 'intro-text', [
-		'wpautop'       => true,
+		'wpautop'       => false,
 		'media_buttons' => false,
 		'textarea_name' => 'bt_intro_text',
 		'textarea_rows' => 10

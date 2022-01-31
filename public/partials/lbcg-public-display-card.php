@@ -105,7 +105,7 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 			<?php $the_content = get_the_content();
 			if ( ! empty( $the_content ) ): ?>
                 <div class="lbcg-post-content">
-					<?php echo $the_content; ?>
+					<?php the_content(); ?>
                 </div>
 			<?php endif; ?>
         </main>

@@ -161,7 +161,7 @@ class LBCG_Admin {
 		<?php
 		ob_start();
 		wp_editor( '', 'lbcg-uc-intro-text', [
-			'wpautop'       => true,
+			'wpautop'       => false,
 			'media_buttons' => false,
 			'textarea_name' => 'lbcg_uc_intro_text',
 			'textarea_cols' => 40,
@@ -202,7 +202,7 @@ class LBCG_Admin {
 		<?php
 		ob_start();
 		wp_editor( get_term_meta( $term->term_id, 'lbcg_intro_text', true ), 'lbcg-uc-intro-text', [
-			'wpautop'       => true,
+			'wpautop'       => false,
 			'media_buttons' => false,
 			'textarea_name' => 'lbcg_uc_intro_text',
 			'textarea_cols' => 40,

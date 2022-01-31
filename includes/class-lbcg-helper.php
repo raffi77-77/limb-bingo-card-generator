@@ -788,7 +788,7 @@ class LBCG_Helper {
 	 * Show bingo theme breadcrumb
 	 *
 	 * @param   string       $wp_theme_name
-	 * @param   int|WP_Term  $bingo_theme_id
+	 * @param   int|WP_Term  $data
 	 * @param   string       $type
 	 *
 	 * @return void
@@ -802,10 +802,12 @@ class LBCG_Helper {
 			$bt_post_title       = get_the_title( $data );
 			$links               = [
 				'Home'                        => SITEURL,
-				'Bingo Card Generators'       => SITEURL . '/bingo-cards/',
-				$current_bt_category[0]->name => SITEURL . '/bingo-cards/category/' . $current_bt_category[0]->slug . '/',
-				$bt_post_title                => ''
+				'Bingo Card Generators'       => SITEURL . '/bingo-cards/'
 			];
+            if ( isset( $current_bt_category[0] ) ) {
+	            $links[$current_bt_category[0]->name] = SITEURL . '/bingo-cards/category/' . $current_bt_category[0]->slug . '/';
+            }
+			$links[$bt_post_title] = '';
 		} elseif ( $type === 'ubud_category' ) {
 			$links = [
 				'Home'                  => SITEURL,

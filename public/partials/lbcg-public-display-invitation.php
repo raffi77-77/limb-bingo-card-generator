@@ -201,7 +201,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
 	        <?php $the_content = get_the_content();
 	        if ( ! empty( $the_content ) ): ?>
                 <div class="lbcg-post-content">
-			        <?php echo $the_content; ?>
+			        <?php the_content(); ?>
                 </div>
 	        <?php endif; ?>
         </main>

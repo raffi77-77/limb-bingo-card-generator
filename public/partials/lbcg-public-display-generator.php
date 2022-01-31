@@ -664,7 +664,7 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                 </section>
             </div>
 			<?php if ( $the_content = get_the_content() ): ?>
-                <div class="lbcg-post-content"><?php echo $the_content; ?></div>
+                <div class="lbcg-post-content"><?php the_content(); ?></div>
 			<?php endif; ?>
         </main>
     </div>
