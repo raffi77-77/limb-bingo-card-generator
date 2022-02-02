@@ -135,7 +135,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                         <form id="lbcg-view-all-cards-form" action="<?php echo $bc_permalink . 'all/'; ?>" method="get"
                               target="_blank">
                             <div class="lbcg-input-wrap">
-                                <h2 class="lbcg-input-wrap-head">Print Cards</h2>
+                                <h3 class="lbcg-input-wrap-head">Print Cards</h3>
                             </div>
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-cards-count" class="lbcg-label">How many cards would you like to print?</label>
@@ -174,7 +174,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                             <input type="hidden" name="bingo_card_uid" value="<?php echo $_GET['bc']; ?>">
                             <div class="lbcg-content-form">
                                 <div class="lbcg-input-wrap">
-                                    <h2 class="lbcg-input-wrap-head">Invite through email</h2>
+                                    <h3 class="lbcg-input-wrap-head">Invite through email</h3>
                                 </div>
                                 <div class="lbcg-input-wrap">
                                     <label for="cu-email" class="lbcg-label">Your email:</label>

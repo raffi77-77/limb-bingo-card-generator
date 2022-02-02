@@ -178,6 +178,12 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
 							<?php endif; ?>
                             <div class="lbcg-content-form">
                                 <div class="lbcg-input-wrap">
+                                    <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo Cards</button>
+                                </div>
+                                <div class="lbcg-input-wrap">
+                                    <h3>Customise Your Card</h3>
+                                </div>
+                                <div class="lbcg-input-wrap">
                                     <label for="lbcg-title" class="lbcg-label">Enter a Title</label>
                                     <input class="lbcg-input" id="lbcg-title" type="text" name="bingo_card_title"
                                            value="<?php echo ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : ''; ?>"/>
@@ -604,10 +610,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="lbcg-input-wrap">
-                                <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo Card
-                                </button>
+                                <div class="lbcg-input-wrap">
+                                    <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo Cards</button>
+                                </div>
                             </div>
                         </form>
                     </div>
