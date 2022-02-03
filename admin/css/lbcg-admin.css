@@ -3,6 +3,11 @@
     padding-right: .5rem !important;
 }
 
+#bingo-theme-custom-fields .lbcg-generator-container {
+    margin: 0 -12px;
+    border-bottom: 1px solid #c3c4c7;
+}
+
 #bingo-theme-custom-fields .lbcg-input-field {
     width: 100%;
 }

@@ -111,7 +111,7 @@ $special_types = array( '1-75', '1-90' );
 <input type="hidden" name="bingo_grid_size" value="<?php echo $bingo_grid_size; ?>">
 <input type="hidden" name="lbcg_font_size" value="<?php echo LBCG_Helper::$font_size; ?>">
 <input type="hidden" name="bingo_card_thumbnail" value="">
-<div class="lbcg-custom-container">
+<div class="lbcg-generator-container">
     <main class="lbcg-parent lbcg-loading">
         <div class="lbcg-main lbcg-main-admin">
             <aside>
@@ -427,9 +427,6 @@ $special_types = array( '1-75', '1-90' );
                                     </label>
                                 </div>
                             </div>
-                        </div>
-                        <div class="lbcg-input-wrap">
-                            <button id="lbcg-post-done" class="lbcg-btn lbcg-btn--lg lbcg-btn--main">Save styles</button>
                         </div>
                     </div>
                 </div>

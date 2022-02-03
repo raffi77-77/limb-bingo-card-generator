@@ -163,7 +163,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert("Please provide a minimum words/emojis or numbers quantity.");
             } else if (thumbEl.value === '') {
                 event.preventDefault();
-                alert("Please click on 'Save styles' button before save the post.");
+                event.target.classList.add('disabled');
+                document.querySelector('#publishing-action span.spinner').classList.add('is-active');
+                document.getElementsByClassName('lbcg-parent')[0].classList.remove('lbcg-loading');
+                // Remove checked square classes
+                [...document.getElementsByClassName('lbcg-card-col-checked')].forEach(el => el.classList.remove('lbcg-card-col-checked'));
+                // Get image of card
+                html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
+                    thumbEl.value = canvas.toDataURL();
+                    event.target.classList.remove('disabled');
+                    event.target.click();
+                });
             }
         } else if (event.target.matches('.bc-image-admin')) {
             // Set image
@@ -211,20 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Remove taxonomy image
             document.getElementById('lbcg-uc-image').value = '';
             document.getElementById('lbcg-uc-img').style.display = 'none';
-        } else if (event.target.matches('#lbcg-post-done')) {
-            event.preventDefault();
-            const saveButton = document.getElementById('publish'),
-                thumbEl = document.getElementsByName('bingo_card_thumbnail')[0];
-            saveButton.disabled = true;
-            thumbEl.value = '';
-            // Remove checked square classes
-            [...document.getElementsByClassName('lbcg-card-col-checked')].forEach(el => el.classList.remove('lbcg-card-col-checked'));
-            // Get image of card
-            html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
-                document.getElementsByName('bingo_card_thumbnail')[0].value = canvas.toDataURL();
-                saveButton.disabled = false;
-                alert('Styles saved successfully.');
-            });
         }
     }, false);
 }, false);

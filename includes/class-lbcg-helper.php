@@ -949,7 +949,10 @@ class LBCG_Helper {
 		$attach_id   = wp_insert_attachment( $attachment, wp_upload_dir()['path'] . '/' . $filename, $post_id );
 		$attach_data = wp_generate_attachment_metadata( $attach_id, wp_upload_dir()['path'] . '/' . $filename );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
-		set_post_thumbnail( $post_id, $attach_id );
+        $old_thumb_id = get_post_thumbnail_id();
+        if ( set_post_thumbnail( $post_id, $attach_id ) === true ) {
+	        wp_delete_attachment( $old_thumb_id, true );
+		}
 
 		return true;
 	}
