@@ -135,8 +135,18 @@ class LBCG_Ajax {
 				] ) );
 				die();
 			}
+			// Save user email for 90 days
+			if ( isset( $_COOKIE['LBCG_IUE'] ) && $_COOKIE['LBCG_IUE'] !== $author_email || ! isset( $_COOKIE['LBCG_IUE'] ) ) {
+				setcookie( 'LBCG_IUE', $author_email, strtotime( '+90 days' ), '/bingo-cards/', $_SERVER['HTTP_HOST'] );
+			}
+			// Get privacy message
+			if ( isset( $_POST['author_message'] ) ) {
+				$author_message = trim( strip_tags( $_POST['author_message'], [ 'p', 'a', 'b', 'string', 'i', 'em', 'mark', 'small', 'del', 'ins', 'sub', 'sup' ] ) );
+			} else {
+				$author_message = '';
+			}
 			// Create bingo cards and invite
-			$result = LBCG_Helper::invite_emails( $bingo_card->ID, $author_email, $invite_emails );
+			$result = LBCG_Helper::invite_emails( $bingo_card->ID, $author_email, $invite_emails, $author_message );
 			if ( $result['success'] === false ) {
 				print_r( json_encode( [
 					'success'       => false,

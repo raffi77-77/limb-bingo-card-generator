@@ -16,11 +16,6 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-$cu_email = '';
-if ( is_user_logged_in() ) {
-	global $current_user;
-	$cu_email = $current_user->user_email;
-}
 $public_instance = LBCG_Public::get_instance();
 if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
 	$bc_permalink = get_permalink( $card_id );
@@ -179,7 +174,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                                 <div class="lbcg-input-wrap">
                                     <label for="cu-email" class="lbcg-label">Your email:</label>
                                     <input class="lbcg-input" type="email" id="cu-email" name="author_email"
-                                           value="<?php echo $cu_email; ?>"
+                                           value="<?php echo LBCG_Helper::get_invite_user_email(); ?>"
                                            placeholder="Enter email">
                                 </div>
                                 <div class="lbcg-input-wrap">
@@ -188,12 +183,24 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                                               cols="" rows="6"
                                               placeholder="Enter invite emails, one per line e.g.&#13;&#10;info@test.com&#13;&#10;john@smith.com"></textarea>
                                 </div>
+                                <div class="lbcg-input-wrap">
+                                    <label for="lbcg-author-message" class="lbcg-label">Your message:</label>
+                                    <textarea class="lbcg-input" id="lbcg-author-message" name="author_message"
+                                              cols="" rows="6"
+                                              placeholder="Your message (optional)"></textarea>
+                                </div>
                             </div>
                             <div class="lbcg-input-wrap lbcg-buttons-wrap">
-                                <a class="lbcg-btn lbcg-btn--lg lbcg-btn--back" role="button" role="button"
+                                <a class="lbcg-btn lbcg-btn--lg lbcg-btn--back" role="button"
                                    href="<?php echo get_permalink( get_the_ID() ) . '?bc=' . $_GET['bc']; ?>">Back</a>
                                 <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Invite</button>
                             </div>
+	                        <?php $privacy_message = get_option( 'lbcg_privacy_message' );
+                            if ( ! empty( $privacy_message ) ): ?>
+                                <div class="lbcg-input-wrap">
+                                    <p><?php echo $privacy_message; ?></p>
+                                </div>
+	                        <?php endif; ?>
                         </form>
                     </div>
                 </aside>

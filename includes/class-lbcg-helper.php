@@ -52,6 +52,33 @@ class LBCG_Helper {
 	public static $font_size = 16;
 
 	/**
+	 * Invite user email
+	 *
+	 * @var null|string
+	 */
+	public static $invite_user_email = null;
+
+	/**
+	 * Get invite user email
+	 *
+	 * @return string
+	 */
+	public static function get_invite_user_email() {
+		if ( is_null( self::$invite_user_email ) ) {
+			if ( ! empty( $_COOKIE['LBCG_IUE'] ) && is_email( $_COOKIE['LBCG_IUE'] ) ) {
+				self::$invite_user_email = $_COOKIE['LBCG_IUE'];
+			} elseif ( is_user_logged_in() ) {
+				global $current_user;
+				self::$invite_user_email = $current_user->user_email;
+			} else {
+				self::$invite_user_email = '';
+			}
+		}
+
+		return self::$invite_user_email;
+	}
+
+	/**
 	 * Register custom post types and hooks
 	 */
 	public static function register_custom_post_types() {
@@ -415,6 +442,9 @@ class LBCG_Helper {
 		// Custom intro text for generation page
 		if ( $post_type === 'bingo_theme' ) {
 			update_post_meta( $post_id, 'bt_intro_text', $data['bt_intro_text'] );
+            if ( isset( $data['bt_privacy_message'] ) ) {
+	            update_option( 'lbcg_privacy_message', trim( wp_strip_all_tags( $data['bt_privacy_message'] ) ), false );
+            }
 		}
 		// Type, grid and font size
 		update_post_meta( $post_id, 'bingo_card_type', $data['bingo_card_type'] );
@@ -546,10 +576,11 @@ class LBCG_Helper {
 	 * @param   int     $bingo_card_id
 	 * @param   string  $author_email
 	 * @param   array   $invite_emails
+	 * @param   string  $author_message
 	 *
 	 * @return array
 	 */
-	public static function invite_emails( $bingo_card_id, $author_email, $invite_emails ) {
+	public static function invite_emails( $bingo_card_id, $author_email, $invite_emails, $author_message ) {
 		$data = get_post_meta( $bingo_card_id );
 		// Save card content
 		if ( $data['bingo_card_type'][0] === '1-75' ) {
@@ -570,7 +601,7 @@ class LBCG_Helper {
 		$headers = "MIME-Version: 1.0" . "\r\n";
 		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 		// Get email content
-		$email_content = self::get_new_bingo_email_content( $subject, $author_email, $bingo_card_id );
+		$email_content = self::get_new_bingo_email_content( $subject, $author_email, $bingo_card_id, $author_message );
 		$sent          = mail( $author_email, $subject, $email_content, $headers );
 		if ( ! $sent ) {
 			return [
@@ -590,7 +621,7 @@ class LBCG_Helper {
 				continue;
 			}
 			// Get email content
-			$email_content = self::get_new_bingo_email_content( $invite_subject, $user_email, $new_bc_id );
+			$email_content = self::get_new_bingo_email_content( $invite_subject, $author_email, $new_bc_id, $author_message );
 			$sent          = mail( $user_email, $invite_subject, $email_content, $headers );
 			if ( ! $sent ) {
 				// Delete not used bingo card
@@ -610,12 +641,13 @@ class LBCG_Helper {
 	 * Get new bingo card email content
 	 *
 	 * @param   string  $title
-	 * @param   string  $user_email
+	 * @param   string  $author_email
 	 * @param   int     $bc_id
+	 * @param   string  $author_message
 	 *
 	 * @return false|string
 	 */
-	public static function get_new_bingo_email_content( $title, $user_email, $bc_id ) {
+	public static function get_new_bingo_email_content( $title, $author_email, $bc_id, $author_message ) {
 		// Get bingo card link
 		$bc_link = get_permalink( $bc_id );
 		/**
