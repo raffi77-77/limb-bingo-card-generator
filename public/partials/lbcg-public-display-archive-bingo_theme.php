@@ -61,7 +61,7 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 	get_header();
 }
 ?>
-    <div class="order-containers d-flex flex-column">
+    <main class="order-containers d-flex flex-column">
         <div class="layout--container-fluid order-1">
             <div class="layout--container mt-4">
 				<?php require( get_template_directory() . '/layouts/comp/breadcrumbs.php' ); ?>
@@ -81,7 +81,7 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 <?php
 if ( $lbcg_current_theme_name === 'BNBS' ) {
 	$data = array( 'footer' => array() );

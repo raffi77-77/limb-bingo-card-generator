@@ -63,7 +63,7 @@ class LBCG_Public {
 	public function register_dependencies() {
 		add_shortcode( 'lbcg-ubud-categories', array( $this, 'show_ubud_categeories_template' ) );
 		add_filter( 'single_template', array( $this, 'get_custom_post_type_template' ) );
-//		add_filter( 'template_include', array( $this, 'get_custom_template' ) );
+		add_filter( 'template_include', array( $this, 'get_custom_template' ) );
 		add_filter( 'taxonomy_template', array( $this, 'get_custom_taxonomy_template' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ), 10 );
 		add_action( 'wp_head', array( $this, 'add_custom_css' ) );

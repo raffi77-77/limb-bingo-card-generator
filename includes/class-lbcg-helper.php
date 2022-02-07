@@ -118,7 +118,7 @@ class LBCG_Helper {
 		add_rewrite_rule( 'bingo-cards/category/([^/]+)/?$', 'index.php?taxonomy=ubud-category&post_type=bingo_theme&ubud-category=$matches[0]', 'top' );
 		// Custom post type settings
 		$labels = array(
-			'name'           => __( 'UBUD Bingo themes', 'textdomain' ),
+			'name'           => __( 'Bingo Card Generators', 'textdomain' ),
 			'singular_name'  => __( 'UBUD Bingo theme', 'textdomain' ),
 			'menu_name'      => __( 'UBUD Bingo themes', 'textdomain' ),
 			'name_admin_bar' => __( 'UBUD Bingo theme', 'textdomain' ),
@@ -141,7 +141,7 @@ class LBCG_Helper {
 			'show_ui'            => true,
 			'show_in_menu'       => true,
 			'capability_type'    => 'post',
-			'has_archive'        => false,
+			'has_archive'        => true,
 			'hierarchical'       => true,
 			'rewrite'            => array( 'slug' => 'bingo-cards' ),
 			'supports'           => array( 'title', 'editor', 'author' ),
