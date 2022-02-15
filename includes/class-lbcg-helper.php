@@ -45,8 +45,8 @@ class LBCG_Helper {
 	public static $free_space_word = '&#9733;';
 
 	/**
-     * Cards global font size
-     *
+	 * Cards global font size
+	 *
 	 * @var int
 	 */
 	public static $font_size = 16;
@@ -442,9 +442,9 @@ class LBCG_Helper {
 		// Custom intro text for generation page
 		if ( $post_type === 'bingo_theme' ) {
 			update_post_meta( $post_id, 'bt_intro_text', $data['bt_intro_text'] );
-            if ( isset( $data['bt_privacy_message'] ) ) {
-	            update_option( 'lbcg_privacy_message', trim( wp_strip_all_tags( $data['bt_privacy_message'] ) ), false );
-            }
+			if ( isset( $data['bt_privacy_message'] ) ) {
+				update_option( 'lbcg_privacy_message', trim( wp_strip_all_tags( $data['bt_privacy_message'] ) ), false );
+			}
 		}
 		// Type, grid and font size
 		update_post_meta( $post_id, 'bingo_card_type', $data['bingo_card_type'] );
@@ -621,11 +621,11 @@ class LBCG_Helper {
 				$failed_to_invite[] = $user_email;
 				continue;
 			}
-            // Set thumbnail
-            if ( ! empty( $thumb_base64 ) ) {
-	            $thumb_name = sanitize_file_name( $new_bc['title'] ) . '-' . wp_generate_password( 12, false );
-	            LBCG_Helper::set_as_featured_image( $thumb_base64, $new_bc['id'], $thumb_name . '.png' );
-            }
+			// Set thumbnail
+			if ( ! empty( $thumb_base64 ) ) {
+				$thumb_name = sanitize_file_name( $new_bc['title'] ) . '-' . wp_generate_password( 12, false );
+				LBCG_Helper::set_as_featured_image( $thumb_base64, $new_bc['id'], $thumb_name . '.png' );
+			}
 			// Get email content
 			$email_content = self::get_new_bingo_email_content( $invite_subject, $author_email, $new_bc['id'], $author_message );
 			$sent          = mail( $user_email, $invite_subject, $email_content, $headers );
@@ -753,7 +753,8 @@ class LBCG_Helper {
 			if ( isset( $bc_posts[0] ) && ! empty( $bc_posts[0]->ID ) ) {
 				return [
 					'id'      => $bc_posts[0]->ID,
-					'uniq_id' => $_POST['bc']
+					'uniq_id' => $_POST['bc'],
+					'title'   => $bc_posts[0]->post_title
 				];
 			}
 		}
@@ -850,7 +851,7 @@ class LBCG_Helper {
 			}
 			if ( $page === 'invitation' && ! empty( $bc ) ) {
 				$links[ $bt_post_title ] = get_permalink( $data ) . '?bc=' . $bc;
-				$links['Invitation']     = '';
+				$links['Print & Invite'] = '';
 			} else {
 				$links[ $bt_post_title ] = '';
 			}
@@ -944,11 +945,18 @@ class LBCG_Helper {
 		if ( empty( $base64 ) ) {
 			return false;
 		}
-		$upload_dir   = wp_upload_dir();
-		$upload_path  = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
-		$img          = str_replace( 'data:image/png;base64,', '', $base64 );
-		$img          = str_replace( ' ', '+', $img );
-		$decoded      = base64_decode( $img );
+		$upload_dir  = wp_upload_dir();
+		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
+		$img         = str_replace( 'data:image/png;base64,', '', $base64 );
+		$img         = str_replace( ' ', '+', $img );
+		$decoded     = base64_decode( $img );
+		$path_info   = pathinfo( $filename );
+		// Check if file exists
+		$i = 0;
+		while ( file_exists( $upload_path . $filename ) ) {
+			$filename = $path_info['filename'] . '-' . ( ++ $i ) . '.' . $path_info['extension'];
+		}
+        // Save file content
 		$image_upload = file_put_contents( $upload_path . $filename, $decoded );
 		if ( ! function_exists( 'wp_handle_sideload' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -963,9 +971,9 @@ class LBCG_Helper {
 		$attach_id   = wp_insert_attachment( $attachment, wp_upload_dir()['path'] . '/' . $filename, $post_id );
 		$attach_data = wp_generate_attachment_metadata( $attach_id, wp_upload_dir()['path'] . '/' . $filename );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
-        $old_thumb_id = get_post_thumbnail_id();
-        if ( set_post_thumbnail( $post_id, $attach_id ) === true ) {
-	        wp_delete_attachment( $old_thumb_id, true );
+		$old_thumb_id = get_post_thumbnail_id();
+		if ( set_post_thumbnail( $post_id, $attach_id ) === true ) {
+			wp_delete_attachment( $old_thumb_id, true );
 		}
 
 		return true;

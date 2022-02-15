@@ -71,6 +71,11 @@ class LBCG_Ajax {
 		// Save card data
 		LBCG_Helper::save_bingo_meta_fields( $bc_result['id'], $result['data'], $_POST['bingo_theme_id'] );
 		update_post_meta( $bc_result['id'], 'bingo_theme_id', $_POST['bingo_theme_id'] );
+        // Save thumbnail
+        if ( ! empty( $_POST['bc_thumbnail'] ) ) {
+	        $thumb_name = sanitize_file_name( $bc_result['title'] ) . '-' . wp_generate_password( 12, false );
+	        LBCG_Helper::set_as_featured_image( $_POST['bc_thumbnail'], $bc_result['id'], $thumb_name . '.png' );
+        }
 		print_r( json_encode( [
 			'success'    => true,
 			'errors'     => [],
@@ -110,6 +115,7 @@ class LBCG_Ajax {
 				die();
 			}
 			$bingo_card = $bc_posts[0];
+            // Get thumbnail
 			if ( ! empty( $_POST['bingo_card_thumb'] ) ) {
 				$thumbnail_base64 = $_POST['bingo_card_thumb'];
 			} else {

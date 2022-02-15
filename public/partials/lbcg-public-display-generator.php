@@ -174,6 +174,7 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                             <input type="hidden" name="bingo_theme_id" value="<?php echo $current_id; ?>">
                             <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
                             <input type="hidden" name="lbcg_font_size" value="<?php echo LBCG_Helper::$font_size; ?>">
+                            <input type="hidden" name="bc_thumbnail" value="">
 	                        <?php if ( ! empty( $public_instance->get_dev_mode_card_id() ) && ! empty( $_GET['bc'] ) ): ?>
                                 <input type="hidden" name="bc" value="<?php echo $_GET['bc']; ?>">
 	                        <?php endif; ?>
@@ -619,6 +620,11 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                     </div>
                     <div class="lbcg-content-right">
                         <div class="lbcg-card-wrap">
+                            <div class="lbcg-card-preview">
+                                <div class="lbcg-card-preview-hover"></div>
+                                <div class="lbcg-card-preview-hover-text">Tap to start</div>
+                                <img src="<?php echo get_the_post_thumbnail_url($public_instance->get_dev_mode_card_id() ? : null); ?>" alt="<?php echo get_the_title( $public_instance->get_dev_mode_card_id() ?: null ); ?>">
+                            </div>
                             <div class="lbcg-card">
                                 <div class="lbcg-card-header-holder">
                                     <div class="lbcg-card-header">

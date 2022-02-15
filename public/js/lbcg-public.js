@@ -108,6 +108,9 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 sidebarHeader.classList.add('collapsed');
             }
+        } else if (event.target.matches('.lbcg-card-preview-hover') || event.target.matches('.lbcg-card-preview-hover-text')) {
+            // Remove preview image
+            event.target.parentNode.remove();
         }
     });
 
@@ -229,27 +232,36 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.matches('#lbcg-bc-generation')) {
             // On card generation button click
             event.preventDefault();
-            toggleLoading(true);
-            const words_count_message = checkWordsCount();
-            if (words_count_message !== '') {
-                alert(words_count_message);
-                return false;
-            }
-            const data = new FormData(event.target);
-            const request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (request.readyState !== 4 || request.status !== 200) return;
-                // On success
-                const resData = JSON.parse(request.responseText);
-                if (resData.success === true) {
-                    location.replace(resData.redirectTo);
-                } else {
-                    alert(resData.errors.join("\n"));
-                    toggleLoading(false);
+            const submitButtons = [...document.querySelectorAll('#lbcg-bc-generation button[type="submit"]')];
+            submitButtons.forEach(el => el.disabled = true);
+            // Remove checked square classes
+            [...document.getElementsByClassName('lbcg-card-col-checked')].forEach(el => el.classList.remove('lbcg-card-col-checked'));
+            html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
+                // Get card image
+                document.getElementsByName('bc_thumbnail')[0].value = canvas.toDataURL();
+                toggleLoading(true);
+                submitButtons.forEach(el => el.disabled = false);
+                const words_count_message = checkWordsCount();
+                if (words_count_message !== '') {
+                    alert(words_count_message);
+                    return false;
                 }
-            }
-            request.open(event.target.method, LBCG['ajaxUrl'], true);
-            request.send(data);
+                const data = new FormData(event.target);
+                const request = new XMLHttpRequest();
+                request.onreadystatechange = function () {
+                    if (request.readyState !== 4 || request.status !== 200) return;
+                    // On success
+                    const resData = JSON.parse(request.responseText);
+                    if (resData.success === true) {
+                        location.replace(resData.redirectTo);
+                    } else {
+                        alert(resData.errors.join("\n"));
+                        toggleLoading(false);
+                    }
+                }
+                request.open(event.target.method, LBCG['ajaxUrl'], true);
+                request.send(data);
+            });
         } else if (event.target.matches('#lbcg-bc-invitation')) {
             // On card invite button click
             event.preventDefault();

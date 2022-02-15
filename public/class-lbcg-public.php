@@ -94,7 +94,7 @@ class LBCG_Public {
 	public function enqueue_scripts_and_styles() {
 		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) || is_tax( 'ubud-category' ) ) {
 			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
-            if ( is_singular( 'bingo_theme' ) && preg_match( '/bingo-cards\/([^\/]+)\/invitation\/\?bc=([a-zA-z0-9]+)$/', $_SERVER['REQUEST_URI'] ) ) {
+            if ( is_singular( 'bingo_theme' ) ) {
 	            wp_enqueue_script( 'html2canvas-js', $this->attributes['includes_url'] . 'js/html2canvas.min.js', [], $this->attributes['plugin_version'] );
             }
 			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js', [], $this->attributes['plugin_version'] );
