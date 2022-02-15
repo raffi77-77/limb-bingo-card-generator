@@ -110,6 +110,16 @@ class LBCG_Ajax {
 				die();
 			}
 			$bingo_card = $bc_posts[0];
+			if ( ! empty( $_POST['bingo_card_thumb'] ) ) {
+				$thumbnail_base64 = $_POST['bingo_card_thumb'];
+			} else {
+				$thumbnail_base64 = '';
+			}
+			// Set card thumbnail
+			if ( ! empty( $thumbnail_base64 ) ) {
+	            $thumb_name = sanitize_file_name( $bingo_card->post_title ) . '-' . wp_generate_password( 12, false );
+	            LBCG_Helper::set_as_featured_image( $thumbnail_base64, $bingo_card->ID, $thumb_name . '.png' );
+            }
 			// Get emails
 			$author_email  = trim( $_POST['author_email'] );
 			$invite_emails = preg_split( '/\r\n|\r|\n/', $_POST['invite_emails'] );
@@ -146,7 +156,7 @@ class LBCG_Ajax {
 				$author_message = '';
 			}
 			// Create bingo cards and invite
-			$result = LBCG_Helper::invite_emails( $bingo_card->ID, $author_email, $invite_emails, $author_message );
+			$result = LBCG_Helper::invite_emails( $bingo_card->ID, $thumbnail_base64, $author_email, $invite_emails, $author_message );
 			if ( $result['success'] === false ) {
 				print_r( json_encode( [
 					'success'       => false,

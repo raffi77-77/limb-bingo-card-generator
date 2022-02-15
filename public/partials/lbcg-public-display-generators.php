@@ -33,7 +33,6 @@ if ( ! empty( $attributes ) ) {
 	$ubud_cats = get_terms( $term_args );
     // Show terms
 	?>
-    <p>Welcome to the Bingo Card Generator.</p>
     <div class="lbcg-tcs">
 		<?php foreach ( $ubud_cats as $cat ): ?>
             <div class="lbcg-tcs-single">

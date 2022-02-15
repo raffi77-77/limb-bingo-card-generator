@@ -17,7 +17,8 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 	get_header();
 }
 $current_id       = get_the_ID();
-$data             = LBCG_Public::get_instance()->get_post_data();
+$public_instance  = LBCG_Public::get_instance();
+$data             = $public_instance->get_post_data();
 $bingo_card_type  = ! empty( $data['bingo_card_type'][0] ) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size  = ! empty( $data['bingo_grid_size'][0] ) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : '';
@@ -173,9 +174,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                             <input type="hidden" name="bingo_theme_id" value="<?php echo $current_id; ?>">
                             <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
                             <input type="hidden" name="lbcg_font_size" value="<?php echo LBCG_Helper::$font_size; ?>">
-							<?php if ( ! empty( $bc_posts[0]->ID ) ): ?>
+	                        <?php if ( ! empty( $public_instance->get_dev_mode_card_id() ) && ! empty( $_GET['bc'] ) ): ?>
                                 <input type="hidden" name="bc" value="<?php echo $_GET['bc']; ?>">
-							<?php endif; ?>
+	                        <?php endif; ?>
                             <div class="lbcg-content-form">
                                 <div class="lbcg-input-wrap">
                                     <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo Cards</button>

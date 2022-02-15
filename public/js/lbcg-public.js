@@ -253,26 +253,35 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (event.target.matches('#lbcg-bc-invitation')) {
             // On card invite button click
             event.preventDefault();
-            toggleLoading(true);
-            const data = new FormData(event.target);
-            const request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (request.readyState !== 4 || request.status !== 200) return;
-                // On success
-                const resData = JSON.parse(request.responseText);
-                if (resData.success === true) {
-                    if (resData.failedInvites.length > 0) {
-                        alert('Invitation finished. Failed to invite them: ' + resData.failedInvites.join(', ') + '.');
+            const submitButton = document.querySelector('#lbcg-bc-invitation button[type="submit"]');
+            submitButton.disabled = true;
+            // Remove checked square classes
+            [...document.getElementsByClassName('lbcg-card-col-checked')].forEach(el => el.classList.remove('lbcg-card-col-checked'));
+            html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
+                // Get card image
+                document.getElementsByName('bingo_card_thumb')[0].value = canvas.toDataURL();
+                toggleLoading(true);
+                submitButton.disabled = false;
+                const data = new FormData(event.target);
+                const request = new XMLHttpRequest();
+                request.onreadystatechange = function () {
+                    if (request.readyState !== 4 || request.status !== 200) return;
+                    // On success
+                    const resData = JSON.parse(request.responseText);
+                    if (resData.success === true) {
+                        if (resData.failedInvites.length > 0) {
+                            alert('Invitation finished. Failed to invite them: ' + resData.failedInvites.join(', ') + '.');
+                        } else {
+                            alert('Invitation finished successfully.');
+                        }
                     } else {
-                        alert('Invitation finished successfully.');
+                        alert(resData.errors.join("\n"));
                     }
-                } else {
-                    alert(resData.errors.join("\n"));
+                    toggleLoading(false);
                 }
-                toggleLoading(false);
-            }
-            request.open(event.target.method, LBCG['ajaxUrl'], true);
-            request.send(data);
+                request.open(event.target.method, LBCG['ajaxUrl'], true);
+                request.send(data);
+            });
         }
     });
 

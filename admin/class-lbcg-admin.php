@@ -243,7 +243,7 @@ class LBCG_Admin {
 		$post_type = get_post_type();
 		if ( $post_type === 'bingo_theme' || $post_type === 'bingo_card' ) {
 			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
-			wp_enqueue_script( 'html2canvas-js', $this->attributes['admin_url'] . 'js/html2canvas.min.js', [], $this->attributes['plugin_version'] );
+			wp_enqueue_script( 'html2canvas-js', $this->attributes['includes_url'] . 'js/html2canvas.min.js', [], $this->attributes['plugin_version'] );
 			if ( ! did_action( 'wp_enqueue_media' ) ) {
 				wp_enqueue_media();
 			}

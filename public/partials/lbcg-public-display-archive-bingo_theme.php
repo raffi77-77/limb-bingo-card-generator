@@ -5,7 +5,17 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-$custom_content          = do_shortcode( '[lbcg-ubud-categories slugs=""]' );
+$the_page       = get_posts( [
+	'name'        => 'bingo-cards',
+	'post_type'   => 'page',
+	'post_status' => 'public',
+	'numberposts' => 1
+] );
+if ( isset( $the_page[0] ) && $the_page[0] instanceof WP_Post ) {
+	$the_content = apply_filters( 'the_content', $the_page[0]->post_content );
+} else {
+	$the_content = '';
+}
 $lbcg_current_theme_name = wp_get_theme()->get( 'Name' );
 if ( $lbcg_current_theme_name === 'BNBS' ) {
 	// For BNBS theme header
@@ -24,10 +34,10 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 //	require( get_template_directory() . '/variables/' . $lyt . '.php' );
 	$schema_type             = 'Article';
 	$sch_page_url            = home_url( $page_config ) . '/';
-	$sch_headline            = 'Bingo Card Generator';
-	$sch_alternativeHeadline = 'Bingo Card Generator';
-	$sch_description         = 'Welcome to Bingo Card Generator.';
-	$sch_articleBody         = $custom_content;
+	$sch_headline            = 'Bingo Card Generators';
+	$sch_alternativeHeadline = 'Bingo Card Generators';
+	$sch_description         = $the_content;
+	$sch_articleBody         = $the_content;
 	// Breadcrumbs
 	$breadcrumbs      = array( 'Home' => SITEURL . '/', $sch_headline => '' );
 	$articleSection   = '';
@@ -66,17 +76,17 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
             <div class="layout--container mt-4">
 				<?php require( get_template_directory() . '/layouts/comp/breadcrumbs.php' ); ?>
                 <div class="layout--row">
-                    <div class="main layout--col pt-0 pt-4">
+                    <article class="main layout--col pt-0 pt-4">
                         <div class="pt-4 px-4">
                             <div class="title--head">
-                                <h1>Bingo Card Generator</h1>
+                                <h1>Bingo Card Generators</h1>
                             </div>
                         </div>
                         <hr>
                         <div class="wysiwyg theme theme-light py-4 px-4">
-							<?php echo $custom_content; ?>
+							<?php echo $the_content; ?>
                         </div>
-                    </div>
+                    </article>
 					<?php require( THEMEPATH . '/layouts/sidebar/sidebar.php' ); ?>
                 </div>
             </div>

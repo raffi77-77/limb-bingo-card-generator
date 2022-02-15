@@ -67,7 +67,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
     <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
-			<?php LBCG_Helper::show_breadcrumb( $lbcg_current_theme_name, get_the_ID(), 'bingo_theme' ); ?>
+			<?php LBCG_Helper::show_breadcrumb( $lbcg_current_theme_name, get_the_ID(), 'bingo_theme', 'invitation', $_GET['bc'] ); ?>
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>
@@ -167,6 +167,7 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                               method="post">
                             <input type="hidden" name="action" value="lbcg_bc_invitation">
                             <input type="hidden" name="bingo_card_uid" value="<?php echo $_GET['bc']; ?>">
+                            <input type="hidden" name="bingo_card_thumb" value="">
                             <div class="lbcg-content-form">
                                 <div class="lbcg-input-wrap">
                                     <h3 class="lbcg-input-wrap-head">Invite through email</h3>
