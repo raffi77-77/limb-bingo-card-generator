@@ -459,7 +459,7 @@ class LBCG_Helper {
 		if ( ! empty( $data['bingo_card_thumbnail'] ) ) {
 			if ( ! is_numeric( $data['bingo_card_thumbnail'] ) ) {
 				if ( isset( $title ) ) {
-					$thumb_name = str_replace( ' ', '-', $title ) . '-' . wp_generate_password( 12, false );
+					$thumb_name = sanitize_file_name( $title ) . '-' . wp_generate_password( 12, false );
 				} else {
 					$thumb_name = 'lbcg-thumb-name-' . wp_generate_password( 12, false );
 				}
@@ -574,13 +574,14 @@ class LBCG_Helper {
 	 * Invite emails
 	 *
 	 * @param   int     $bingo_card_id
+	 * @param   string  $thumb_base64
 	 * @param   string  $author_email
 	 * @param   array   $invite_emails
 	 * @param   string  $author_message
 	 *
 	 * @return array
 	 */
-	public static function invite_emails( $bingo_card_id, $author_email, $invite_emails, $author_message ) {
+	public static function invite_emails( $bingo_card_id, $thumb_base64, $author_email, $invite_emails, $author_message ) {
 		$data = get_post_meta( $bingo_card_id );
 		// Save card content
 		if ( $data['bingo_card_type'][0] === '1-75' ) {
@@ -615,17 +616,22 @@ class LBCG_Helper {
 		$invite_subject   = "Get Your New Bingo Card";
 		foreach ( $invite_emails as $user_email ) {
 			// Create new child bingo card
-			$new_bc_id = self::create_child_bingo_card( $bingo_card_id, $data, $user_email );
-			if ( $new_bc_id === false ) {
+			$new_bc = self::create_child_bingo_card( $bingo_card_id, $data, $user_email );
+			if ( $new_bc === false ) {
 				$failed_to_invite[] = $user_email;
 				continue;
 			}
+            // Set thumbnail
+            if ( ! empty( $thumb_base64 ) ) {
+	            $thumb_name = sanitize_file_name( $new_bc['title'] ) . '-' . wp_generate_password( 12, false );
+	            LBCG_Helper::set_as_featured_image( $thumb_base64, $new_bc['id'], $thumb_name . '.png' );
+            }
 			// Get email content
-			$email_content = self::get_new_bingo_email_content( $invite_subject, $author_email, $new_bc_id, $author_message );
+			$email_content = self::get_new_bingo_email_content( $invite_subject, $author_email, $new_bc['id'], $author_message );
 			$sent          = mail( $user_email, $invite_subject, $email_content, $headers );
 			if ( ! $sent ) {
 				// Delete not used bingo card
-				wp_delete_post( $new_bc_id );
+				wp_delete_post( $new_bc['id'] );
 				$failed_to_invite[] = $user_email;
 			}
 		}
@@ -694,7 +700,7 @@ class LBCG_Helper {
 	 * @param   array   $parent_bc_meta_data
 	 * @param   string  $user_email
 	 *
-	 * @return false|int
+	 * @return false|array
 	 */
 	public static function create_child_bingo_card( $parent_bc_id, $parent_bc_meta_data, $user_email ) {
 		// Collect data
@@ -725,7 +731,7 @@ class LBCG_Helper {
 		update_post_meta( $bc_result['id'], 'parent_bingo_card_id', $parent_bc_id );
 		update_post_meta( $bc_result['id'], 'author_email', $user_email );
 
-		return $bc_result['id'];
+		return $bc_result;
 	}
 
 	/**
@@ -770,7 +776,8 @@ class LBCG_Helper {
 
 		return [
 			'id'      => $id,
-			'uniq_id' => $uniq_string
+			'uniq_id' => $uniq_string,
+			'title'   => $title
 		];
 	}
 
@@ -821,26 +828,33 @@ class LBCG_Helper {
 	 *
 	 * @param   string       $wp_theme_name
 	 * @param   int|WP_Term  $data
-	 * @param   string       $type
+	 * @param   string       $post_type
+	 * @param   null|string  $post_type
+	 * @param   null|string  $bc
 	 *
 	 * @return void
 	 */
-	public static function show_breadcrumb( $wp_theme_name, $data, $type ) {
+	public static function show_breadcrumb( $wp_theme_name, $data, $post_type, $page = null, $bc = null ) {
 		if ( ! function_exists( 'link_trk' ) || $wp_theme_name !== 'BNBS' ) {
 			return;
 		}
-		if ( $type === 'bingo_theme' ) {
+		if ( $post_type === 'bingo_theme' ) {
 			$current_bt_category = get_the_terms( $data, 'ubud-category' );
 			$bt_post_title       = get_the_title( $data );
 			$links               = [
-				'Home'                        => SITEURL,
-				'Bingo Card Generators'       => SITEURL . '/bingo-cards/'
+				'Home'                  => SITEURL,
+				'Bingo Card Generators' => SITEURL . '/bingo-cards/'
 			];
-            if ( isset( $current_bt_category[0] ) ) {
-	            $links[$current_bt_category[0]->name] = SITEURL . '/bingo-cards/category/' . $current_bt_category[0]->slug . '/';
-            }
-			$links[$bt_post_title] = '';
-		} elseif ( $type === 'ubud_category' ) {
+			if ( isset( $current_bt_category[0] ) ) {
+				$links[ $current_bt_category[0]->name ] = SITEURL . '/bingo-cards/category/' . $current_bt_category[0]->slug . '/';
+			}
+			if ( $page === 'invitation' && ! empty( $bc ) ) {
+				$links[ $bt_post_title ] = get_permalink( $data ) . '?bc=' . $bc;
+				$links['Invitation']     = '';
+			} else {
+				$links[ $bt_post_title ] = '';
+			}
+		} elseif ( $post_type === 'ubud_category' ) {
 			$links = [
 				'Home'                  => SITEURL,
 				'Bingo Card Generators' => SITEURL . '/bingo-cards/',
