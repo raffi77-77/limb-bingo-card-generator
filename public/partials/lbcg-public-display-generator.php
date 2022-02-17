@@ -19,6 +19,7 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 $current_id       = get_the_ID();
 $public_instance  = LBCG_Public::get_instance();
 $data             = $public_instance->get_post_data();
+$dev_mode_card_id = $public_instance->get_dev_mode_card_id() ?: null;
 $bingo_card_type  = ! empty( $data['bingo_card_type'][0] ) ? $data['bingo_card_type'][0] : 'generic';
 $bingo_grid_size  = ! empty( $data['bingo_grid_size'][0] ) ? $data['bingo_grid_size'][0] : '3x3';
 $bingo_card_title = ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : '';
@@ -175,7 +176,7 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                             <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
                             <input type="hidden" name="lbcg_font_size" value="<?php echo LBCG_Helper::$font_size; ?>">
                             <input type="hidden" name="bc_thumbnail" value="">
-	                        <?php if ( ! empty( $public_instance->get_dev_mode_card_id() ) && ! empty( $_GET['bc'] ) ): ?>
+	                        <?php if ( ! empty( $dev_mode_card_id ) && ! empty( $_GET['bc'] ) ): ?>
                                 <input type="hidden" name="bc" value="<?php echo $_GET['bc']; ?>">
 	                        <?php endif; ?>
                             <div class="lbcg-content-form">
@@ -623,7 +624,8 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                             <div class="lbcg-card-preview">
                                 <div class="lbcg-card-preview-hover"></div>
                                 <div class="lbcg-card-preview-hover-text">Tap to start</div>
-                                <img src="<?php echo get_the_post_thumbnail_url($public_instance->get_dev_mode_card_id() ? : null); ?>" alt="<?php echo get_the_title( $public_instance->get_dev_mode_card_id() ?: null ); ?>">
+                                <img width="350px" src="<?php echo get_the_post_thumbnail_url( $dev_mode_card_id ); ?>"
+                                     alt="<?php echo apply_filters( 'the_title', get_the_title( $dev_mode_card_id ), ( $dev_mode_card_id ) ); ?>">
                             </div>
                             <div class="lbcg-card">
                                 <div class="lbcg-card-header-holder">
