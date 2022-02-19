@@ -59,7 +59,7 @@ class LBCG_Admin {
 		add_action( 'post_updated_messages', array( $this, 'show_editor_message' ) );
 		add_action( 'ubud-category_add_form_fields', array( $this, 'add_taxonomy_custom_content' ) );
 		add_action( 'ubud-category_edit_form_fields', array( $this, 'edit_taxonomy_custom_content' ), 10, 2 );
-		add_action( 'edited_ubud-category', array( $this, 'save_taxonomy_image' ) );
+		add_action( 'edited_ubud-category', array( $this, 'save_taxonomy_custom_fields' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
 		add_action( 'admin_head', array( $this, 'add_custom_css' ) );
 		$this->disable_emojy_print();
@@ -221,19 +221,22 @@ class LBCG_Admin {
 	}
 
 	/**
-	 * Save taxonomy image id
+	 * Save taxonomy custom fields
 	 *
 	 * @param   int  $term_id
 	 *
 	 * @return void
 	 */
-	public function save_taxonomy_image( $term_id ) {
+	public function save_taxonomy_custom_fields( $term_id ) {
 		if ( isset( $_POST['lbcg_uc_image'] ) ) {
 			update_term_meta( $term_id, '_lbcg_thumbnail_id', is_numeric( $_POST['lbcg_uc_image'] ) ? (int) $_POST['lbcg_uc_image'] : 0 );
 		}
 		if ( isset( $_POST['lbcg_uc_intro_text'] ) ) {
 			update_term_meta( $term_id, 'lbcg_intro_text', trim( $_POST['lbcg_uc_intro_text'] ) );
 		}
+        if ( empty( get_term_meta( $term_id, '_lbcg_created_at', true ) ) ) {
+            update_term_meta( $term_id, '_lbcg_created_at', time() );
+        }
 	}
 
 	/**

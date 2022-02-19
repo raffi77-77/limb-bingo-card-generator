@@ -67,6 +67,7 @@ class LBCG_Public {
 		add_filter( 'taxonomy_template', array( $this, 'get_custom_taxonomy_template' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 		add_action( 'wp_head', array( $this, 'add_custom_css' ) );
+		add_action( 'terms_clauses', array( $this, 'custom_terms_clauses' ), 15, 3 );
 	}
 
 	/**
@@ -225,4 +226,25 @@ class LBCG_Public {
 			<?php
 		}
 	}
+
+	/**
+     * Set terms custom clauses
+     *
+	 * @param string[] $clauses
+	 * @param string[] $taxonomies
+	 * @param array $args
+	 *
+	 * @return string[]
+	 */
+    public function custom_terms_clauses( $clauses, $taxonomies, $args ) {
+        // If is the custom taxonomy
+        if ( $taxonomies === [ 'ubud-category' ] ) {
+            // If set custom order by field
+	        if ( isset( $args['orderby'] ) && $args['orderby'] === '_lc_meta_value' ) {
+                // Set own order
+		        $clauses['orderby'] = ' ORDER BY wp_termmeta.meta_value ';
+	        }
+        }
+        return $clauses;
+    }
 }

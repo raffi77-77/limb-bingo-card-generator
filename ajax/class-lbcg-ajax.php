@@ -30,8 +30,7 @@ class LBCG_Ajax {
 		add_action( 'wp_ajax_lbcg_bc_invitation', array( $this, 'invitation' ) );
 		add_action( 'wp_ajax_nopriv_lbcg_get_card_content', array( $this, 'get_card_content' ) );
 		add_action( 'wp_ajax_lbcg_get_card_content', array( $this, 'get_card_content' ) );
-		$admin_instance = LBCG_Admin::get_instance( $this->attributes );
-		add_action( 'created_ubud-category', array( $admin_instance, 'save_taxonomy_image' ) );
+		add_action( 'created_ubud-category', array( $this, 'save_taxonomy_custom_fields' ) );
 	}
 
 	/**
@@ -189,6 +188,19 @@ class LBCG_Ajax {
 			] ) );
 			die();
 		}
+	}
+
+	/**
+	 * Save taxonomy image id
+	 *
+	 * @param   int  $term_id
+	 *
+	 * @return void
+	 */
+	public function save_taxonomy_custom_fields( $term_id ) {
+		update_term_meta( $term_id, '_lbcg_created_at', time() );
+		$admin_instance = LBCG_Admin::get_instance( $this->attributes );
+		$admin_instance->save_taxonomy_custom_fields( $term_id );
 	}
 
 	/**
