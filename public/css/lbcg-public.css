@@ -430,6 +430,9 @@
       text-decoration: underline; }
       .lbcg-parent .lbcg-post-content a:hover {
         color: #59359a; }
+    .lbcg-parent .lbcg-post-content * {
+      max-width: 100%;
+      height: auto; }
   .lbcg-parent .lbcg-generators-row-2 {
     width: calc(700px - 2rem);
     display: -ms-grid;
@@ -1078,7 +1081,7 @@
           -ms-user-select: none; }
   .lbcg-parent .lbcg-card-preview {
     position: absolute;
-    z-index: 10;
+    z-index: 5;
     text-align: center;
     cursor: pointer; }
     .lbcg-parent .lbcg-card-preview-hover {

@@ -22,12 +22,12 @@ if ( ! empty( $attributes ) ) {
 	$offset        = ! empty( $_GET['tab'] ) && $_GET['tab'] <= $max_num_pages ? $_GET['tab'] - 1 : 0;
 	$term_args     = [
 		'taxonomy'   => 'ubud-category',
-		'orderby'    => '_lc_meta_value', // Custom orderby field
-		'order'      => 'DESC',
+//		'orderby'    => '_lc_meta_value', // Custom orderby field
+//		'order'      => 'DESC',
 		'number'     => $number,
 		'offset'     => $offset,
 		'hide_empty' => false,
-        'meta_query' => [ [ 'key' => '_lbcg_created_at', 'type' => 'NUMERIC' ] ],
+//        'meta_query' => [ [ 'key' => '_lbcg_created_at', 'type' => 'NUMERIC' ] ],
 	];
 	if ( ! empty( $term_slugs ) ) {
 		$term_args['slug'] = $term_slugs;
