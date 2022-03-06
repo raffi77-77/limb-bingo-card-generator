@@ -355,11 +355,7 @@ class LBCG_Admin {
 			include_once $this->attributes['public_templates_path'] . '/lbcg-public-properties.php';
 			// Load custom css
 			if ( ! empty( $this->data['bingo_card_custom_css'][0] ) ) {
-				?>
-                <style type="text/css">
-                    <?php echo trim( wp_strip_all_tags( $this->data['bingo_card_custom_css'][0] ) ); ?>
-                </style>
-				<?php
+				echo trim( strip_tags( $this->data['bingo_card_custom_css'][0], '<style><link>' ) );
 			}
 		}
 	}

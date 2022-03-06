@@ -86,19 +86,21 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.matches('#bc-custom-css')) {
             event.preventDefault();
             // On custom CSS change
-            let styleEl = document.getElementById('lbcg-custom-css');
-            if (styleEl === null) {
-                styleEl = document.createElement('style');
-                styleEl.setAttribute('id', 'lbcg-custom-css');
-                styleEl.setAttribute('type', 'text/css');
-                const head = document.head || document.getElementsByTagName('head')[0];
-                head.appendChild(styleEl);
-            }
-            if (styleEl.styleSheet) {
-                styleEl.styleSheet.cssText = event.target.value;
-            } else {
-                styleEl.innerHTML = event.target.value;
-            }
+            // let styleEl = document.getElementById('lbcg-custom-css');
+            // if (styleEl === null) {
+            //     styleEl = document.createElement('style');
+            //     styleEl.setAttribute('id', 'lbcg-custom-css');
+            //     styleEl.setAttribute('type', 'text/css');
+            //     const head = document.head || document.getElementsByTagName('head')[0];
+            //     head.appendChild(styleEl);
+            // }
+            // if (styleEl.styleSheet) {
+            //     styleEl.styleSheet.cssText = event.target.value;
+            // } else {
+            //     styleEl.innerHTML = event.target.value;
+            // }
+            const head = document.head || document.getElementsByTagName('head')[0];
+            head.innerHTML = head.innerHTML + event.target.value;
         } else if (event.target.matches('#lbcg-bc-type')) {
             event.preventDefault();
             // On card type change

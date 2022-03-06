@@ -219,11 +219,7 @@ class LBCG_Public {
 			$data        = $this->data;
 			include_once $this->attributes['public_templates_path'] . '/lbcg-public-properties.php';
 			// Load custom css
-			?>
-            <style type="text/css">
-                <?php echo trim( wp_strip_all_tags( $this->data['bingo_card_custom_css'][0] ) ); ?>
-            </style>
-			<?php
+			echo trim( strip_tags( $this->data['bingo_card_custom_css'][0], '<style><link>' ) );
 		}
 	}
 

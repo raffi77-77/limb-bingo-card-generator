@@ -211,7 +211,7 @@ class LBCG_Ajax {
 	public function get_card_content() {
 		$type                 = $_POST['card_type'];
 		$title                = $_POST['card_title'];
-		$spec_title           = ! empty( $_POST['spec_title'] ) ? str_split( $_POST['spec_title'] ) : [];
+		$spec_title           = ! empty( $_POST['spec_title'] ) ? str_split( $_POST['spec_title'] ) : [ 'B', 'I', 'N', 'G', 'O' ];
 		$additional_spec_part = '';
 		switch ( count( $spec_title ) ) {
 			case 4:
@@ -229,14 +229,12 @@ class LBCG_Ajax {
             <div class="lbcg-card-header">
                 <span class="lbcg-card-header-text"><?php echo $title; ?></span>
             </div>
-			<?php if ( $type === '1-75' ): ?>
-                <div class="lbcg-card-subtitle">
-                    <span class="lbcg-card-subtitle-text"><?php
-	                    echo $additional_spec_part;
-	                    echo ! empty( $spec_title ) ? '<span>' . implode( '</span><span>', $spec_title ) . '</span>' : '';
-	                    echo $additional_spec_part; ?></span>
-                </div>
-			<?php endif; ?>
+            <div class="lbcg-card-subtitle" style="<?php echo $type !== '1-75' ? 'display: none;' : ''; ?>">
+                <span class="lbcg-card-subtitle-text"><?php
+                    echo $additional_spec_part;
+                    echo ! empty( $spec_title ) ? '<span>' . implode( '</span><span>', $spec_title ) . '</span>' : '';
+                    echo $additional_spec_part; ?></span>
+            </div>
         </div>
         <div class="lbcg-card-body">
 			<?php
@@ -276,15 +274,20 @@ class LBCG_Ajax {
                 <div class="lbcg-card-body-grid lbcg-grid-<?php echo $size[0]; ?>">
 					<?php
 					$grid_sq_count = $size ** 2;
-					for ( $i = 1; $i <= $grid_sq_count; $i ++ ): ?>
-                        <div class="lbcg-card-col">
-                        <span class="lbcg-card-text"><?php
-	                        if ( (int) ceil( $grid_sq_count / 2 ) === $i && $bingo_grid_free_square ) {
-		                        echo LBCG_Helper::$free_space_word;
-	                        } else {
-		                        echo $bingo_card_words[ $i - 1 ];
-	                        }
-	                        ?></span>
+					for ( $i = 1; $i <= $grid_sq_count; $i ++ ):
+						if ( (int) ceil( $grid_sq_count / 2 ) === $i && $bingo_grid_free_square ) {
+							$is_free_space = true;
+						} else {
+							$is_free_space = false;
+						} ?>
+                        <div class="lbcg-card-col<?php echo $is_free_space ? ' lbcg-free-space' : ''; ?>">
+                            <span class="lbcg-card-text"><?php
+                                if ( $is_free_space ) {
+                                    echo LBCG_Helper::$free_space_word;
+                                } else {
+                                    echo $bingo_card_words[ $i - 1 ];
+                                }
+                                ?></span>
                         </div>
 					<?php endfor; ?>
                 </div>

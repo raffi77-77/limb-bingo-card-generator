@@ -63,9 +63,11 @@ document.addEventListener('DOMContentLoaded', function () {
             index = Math.round(gridItems.length / 2) - 1;
         if (add) {
             gridItems[index].innerHTML = LBCG['freeSquareWord'];
+            gridItems[index].parentNode.classList.add('lbcg-free-space');
         } else {
             const words = document.getElementById('lbcg-body-content').value.split("\n");
             gridItems[index].innerHTML = document.getElementsByName('bingo_card_type')[0].value === '1-75' ? 33 : words[index];
+            gridItems[index].parentNode.classList.remove('lbcg-free-space');
         }
     }
 
@@ -374,11 +376,21 @@ function checkSmallWordInGrid(spans) {
     let madeChange = false,
         fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
         lineHeight = spans[0].parentNode.offsetHeight,
-        maxFontSize = lineHeight * 0.71;
+        maxFontSize = lineHeight * 0.71,
+        prevEOH = -1,
+        prevESW = -1;
     fontSize = parseFloat(fontSize.split('px')[0]);
     while (spans[maxLengthIndex].offsetHeight <= spans[maxLengthIndex].parentNode.offsetHeight && spans[maxLengthIndex].scrollWidth <= spans[maxLengthIndex].offsetWidth && fontSize < maxFontSize && fontSize < lbcgFontSize) {
-        madeChange = true;
+        // Save previous result
+        prevEOH = spans[maxLengthIndex].offsetHeight;
+        prevESW = spans[maxLengthIndex].scrollWidth;
+        //
         document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize += 0.5) + 'px');
+        madeChange = true;
+        if (prevEOH === spans[maxLengthIndex].offsetHeight && prevESW === spans[maxLengthIndex].scrollWidth || fontSize < 0) {
+            document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
+            break; // Infinite loop detection
+        }
     }
     if (madeChange) {
         document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize - 0.5) + 'px');
@@ -420,12 +432,21 @@ function checkWrapWordInGrid(spans, checkSmallResult) {
         let madeChange = false,
             fontSize = getComputedStyle(document.documentElement).getPropertyValue('--lbcg-grid-font-size'),
             lineHeight = spans[0].parentNode.offsetHeight,
-            maxFontSize = lineHeight * 0.71;
+            maxFontSize = lineHeight * 0.71,
+            prevEOH, prevESW;
         fontSize = parseFloat(fontSize.split('px')[0]);
         for (let i = 0; i < spans.length; i++) {
             while (spans[i].offsetHeight > spans[i].parentNode.offsetHeight || spans[i].scrollWidth > spans[i].offsetWidth || fontSize > maxFontSize) {
+                // Save previous result
+                prevEOH = spans[i].offsetHeight;
+                prevESW = spans[i].scrollWidth;
+                //
                 document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
                 madeChange = true;
+                if (prevEOH === spans[i].offsetHeight && prevESW === spans[i].scrollWidth || fontSize < 0) {
+                    document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize += 0.5) + 'px');
+                    break; // Infinite loop detection
+                }
             }
             while (wrapWords && isSingleWordWrapped(spans[i], fontSize)) {
                 document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
@@ -434,8 +455,16 @@ function checkWrapWordInGrid(spans, checkSmallResult) {
             // Wait for new changes
             setTimeout(() => {
                 while (spans[i].offsetHeight > spans[i].parentNode.offsetHeight || spans[i].scrollWidth > spans[i].offsetWidth || fontSize > maxFontSize) {
+                    // Save previous result
+                    prevEOH = spans[i].offsetHeight;
+                    prevESW = spans[i].scrollWidth;
+                    //
                     document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');
                     madeChange = true;
+                    if (prevEOH === spans[i].offsetHeight && prevESW === spans[i].scrollWidth || fontSize < 0) {
+                        document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize += 0.5) + 'px');
+                        break; // Infinite loop detection
+                    }
                 }
                 while (wrapWords && isSingleWordWrapped(spans[i], fontSize)) {
                     document.documentElement.style.setProperty('--lbcg-grid-font-size', (fontSize -= 0.5) + 'px');

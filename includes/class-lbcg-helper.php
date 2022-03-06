@@ -547,7 +547,7 @@ class LBCG_Helper {
 		// Free square
 		update_post_meta( $post_id, 'bingo_card_free_square', ! empty( $data['bingo_card_free_square'] ) && $data['bingo_grid_size'] !== '4x4' && $data['bingo_card_type'] !== '1-90' ? 'on' : 'off' );
 		// Custom CSS
-		update_post_meta( $post_id, 'bingo_card_custom_css', isset( $data['bingo_card_custom_css'] ) ? trim( wp_strip_all_tags( $data['bingo_card_custom_css'] ) ) : '' );
+		update_post_meta( $post_id, 'bingo_card_custom_css', isset( $data['bingo_card_custom_css'] ) ? trim( strip_tags( $data['bingo_card_custom_css'], '<style><link>' ) ) : '' );
 	}
 
 	/**
