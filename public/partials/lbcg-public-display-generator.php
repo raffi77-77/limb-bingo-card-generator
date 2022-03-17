@@ -115,7 +115,12 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>
-			<?php if ( ! empty( $data['bt_intro_text'][0] ) ): ?>
+            <div class="lbcg-social-content desktop-version">
+		        <?php $share_url = get_permalink( $current_id ) . ( ! empty( $_GET['bc'] ) ? '?bc=' . $_GET['bc'] : '' );
+		        $share_media_url = get_the_post_thumbnail_url( $dev_mode_card_id );
+		        $public_instance->show_social_container( $share_url, $share_media_url ); ?>
+            </div>
+            <?php if ( ! empty( $data['bt_intro_text'][0] ) ): ?>
                 <div class="lbcg-post-content lbcg-intro-text"><?php echo $data['bt_intro_text'][0]; ?></div>
 			<?php endif; ?>
             <div class="lbcg-main">
@@ -621,6 +626,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                     </div>
                     <div class="lbcg-content-right">
                         <div class="lbcg-card-wrap">
+                            <div class="lbcg-social-content mobile-version">
+		                        <?php $public_instance->show_social_container( $share_url, $share_media_url ); ?>
+                            </div>
                             <div class="lbcg-card-preview">
                                 <div class="lbcg-card-preview-hover"></div>
                                 <div class="lbcg-card-preview-hover-text">Tap to start</div>

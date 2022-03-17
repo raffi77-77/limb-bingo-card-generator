@@ -73,6 +73,11 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
             <div class="lbcg-post-header">
                 <h1><?php the_title(); ?></h1>
             </div>
+            <div class="lbcg-social-content">
+		        <?php $share_url = get_permalink( get_the_ID() ) . 'invitation/' . ( ! empty( $_GET['bc'] ) ? '?bc=' . $_GET['bc'] : '' );
+		        $share_media_url = get_the_post_thumbnail_url( $card_id );
+		        $public_instance->show_social_container( $share_url, $share_media_url ); ?>
+            </div>
             <div class="lbcg-invitation">
                 <section class="lbcg-content">
                     <div class="lbcg-content-right">
@@ -140,10 +145,10 @@ if ( $card_id = $public_instance->get_dev_mode_card_id() ) {
                             <div class="lbcg-input-wrap">
                                 <label for="lbcg-cards-count" class="lbcg-label">How many cards would you like to print?</label>
                                 <select name="bcc" id="lbcg-cards-count" class="lbcg-select">
-                                    <option value="30" selected>30 cards</option>
-                                    <option value="100">100 cards</option>
-                                    <option value="250">250 cards</option>
-                                    <option value="500">500 cards</option>
+                                    <option value="5" selected>5 cards</option>
+                                    <option value="10">10 cards</option>
+                                    <option value="15">15 cards</option>
+                                    <option value="20">20 cards</option>
                                 </select>
                             </div>
                             <div class="lbcg-input-wrap">

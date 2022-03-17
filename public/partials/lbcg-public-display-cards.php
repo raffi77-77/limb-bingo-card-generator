@@ -22,8 +22,16 @@ $title             = $data['bingo_card_title'][0];
 $type              = $data['bingo_card_type'][0];
 $single_page_count = isset( $_GET['bcs'] ) && $type !== '1-90' ? (int) $_GET['bcs'] : 2;
 $cards_count       = (int) $_GET['bcc'];
+// If put valid params
+if ( $cards_count < 1 || $cards_count > 500 || ! in_array( $single_page_count, [ 1, 2, 4 ] ) ) {
+	global $wp_query;
+	$wp_query->set_404();
+	status_header( 404 );
+	get_template_part( 404 );
+	exit();
+}
 // Get generated contents
-$all = LBCG_Helper::generate_all_content_info( $post->ID, 500, $cards_count, $data );
+$all = LBCG_Helper::generate_all_content_info( get_the_ID(), 500, $cards_count, $data );
 //$needed_contents = array_slice( $all, 0, $cards_count );
 if ( $type === '1-75' ) {
 	$spec_title           = ! empty( $data['bingo_card_spec_title'][0] ) ? str_split( $data['bingo_card_spec_title'][0] ) : [];
@@ -67,7 +75,6 @@ ob_start();
 <?php
 $card_header_html = ob_get_clean();
 ?>
-
     <style type="text/css" media="print">
         @page {
             size: <?php echo $single_page_count === 2 && $type !== '1-90' ? 'A4 landscape' : 'A4 portrait'; ?>;
@@ -76,7 +83,14 @@ $card_header_html = ob_get_clean();
     <input type="hidden" name="bingo_card_type" value="<?php echo $type; ?>">
     <div class="lbcg-custom-container">
         <main class="lbcg-parent lbcg-loading">
-			<?php
+            <div class="lbcg-social-content print-version">
+		        <?php $share_url = add_query_arg( [
+			        'bcc' => $single_page_count,
+			        'bcs' => $cards_count,
+		        ], get_permalink( get_the_ID() ) . 'all' );
+		        LBCG_Public::get_instance()->show_social_container( $share_url ); ?>
+            </div>
+            <?php
 			$all_k = 0;
 			while ( $all_k < $cards_count ): ?>
                 <div class="lbcg-print-wrap lbcg-print-wrap-<?php echo $single_page_count; ?>">

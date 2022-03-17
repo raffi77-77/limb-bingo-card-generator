@@ -660,6 +660,50 @@
     }
   }
 
+  .lbcg-social-content {
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+
+    &.print-version {
+      padding-top: 1rem;
+    }
+    &.desktop-version {
+      display: block;
+    }
+    &.mobile-version {
+      display: none;
+    }
+
+    a {
+      text-decoration: none;
+      margin-right: .5rem;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    @media all and (max-width: 680px) {
+      &.desktop-version {
+        display: none;
+      }
+      &.mobile-version {
+        display: block;
+      }
+    }
+
+    @media print {
+      &.print-version {
+        display: none;
+      }
+    }
+  }
+
   @import "sidebar";
 
   @import "forms";

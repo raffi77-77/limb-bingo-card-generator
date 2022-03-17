@@ -502,6 +502,31 @@
       text-decoration: underline; }
       .lbcg-parent .lbcg-generators-content a:hover {
         color: #59359a; }
+  .lbcg-parent .lbcg-social-content {
+    margin-bottom: 1rem;
+    padding: 0 1rem; }
+    .lbcg-parent .lbcg-social-content.print-version {
+      padding-top: 1rem; }
+    .lbcg-parent .lbcg-social-content.desktop-version {
+      display: block; }
+    .lbcg-parent .lbcg-social-content.mobile-version {
+      display: none; }
+    .lbcg-parent .lbcg-social-content a {
+      text-decoration: none;
+      margin-right: .5rem; }
+      .lbcg-parent .lbcg-social-content a:last-of-type {
+        margin-right: 0; }
+    .lbcg-parent .lbcg-social-content svg {
+      width: 20px;
+      height: 20px; }
+    @media all and (max-width: 680px) {
+      .lbcg-parent .lbcg-social-content.desktop-version {
+        display: none; }
+      .lbcg-parent .lbcg-social-content.mobile-version {
+        display: block; } }
+    @media print {
+      .lbcg-parent .lbcg-social-content.print-version {
+        display: none; } }
   .lbcg-parent .lbcg-sidebar {
     position: sticky;
     top: 0;

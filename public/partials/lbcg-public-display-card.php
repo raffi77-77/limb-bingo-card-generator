@@ -16,7 +16,8 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 } else {
 	get_header();
 }
-$data = LBCG_Public::get_instance()->get_post_data();
+$public_instance = LBCG_Public::get_instance();
+$data = $public_instance->get_post_data();
 if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 	// Type, size, title
 	$bingo_card_type  = $data['bingo_card_type'][0];
@@ -56,6 +57,11 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
         <main class="lbcg-parent lbcg-loading">
             <div class="lbcg-card-view">
                 <div class="lbcg-card-wrap">
+                    <div class="lbcg-social-content">
+		                <?php $share_url = get_permalink( get_the_ID() );
+		                $share_media_url = get_the_post_thumbnail_url( get_the_ID() );
+                        $public_instance->show_social_container( $share_url, $share_media_url ); ?>
+                    </div>
                     <div class="lbcg-card">
                         <div class="lbcg-card-header-holder">
                             <div class="lbcg-card-header">

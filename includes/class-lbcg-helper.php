@@ -794,7 +794,10 @@ class LBCG_Helper {
 	 */
 	public static function generate_all_content_info( $post_id, $count, $wanted_count, $data ) {
 		if ( ! empty( $data['all_content'][0] ) ) {
-			return explode( '|', $data['all_content'][0] );
+            // If is valid content
+			if ( substr( $data['all_content'][0], 0, 25 ) !== '|||||||||||||||||||||||||' ) {
+				return explode( '|', $data['all_content'][0] );
+			}
 		}
 		$all = [];
 		if ( $data['bingo_card_type'][0] === '1-75' ) {
