@@ -51,6 +51,8 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 	}
 	// If include free space
 	$bingo_grid_free_square = $bingo_grid_size !== '4x4' && $bingo_card_type !== '1-90' && $data['bingo_card_free_square'][0] === 'on';
+    // Card
+	$card = get_post( get_the_ID() );
 	?>
     <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
     <div class="lbcg-custom-container">
@@ -58,11 +60,12 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
             <div class="lbcg-card-view">
                 <div class="lbcg-card-wrap">
                     <div class="lbcg-social-content">
-		                <?php $share_url = get_permalink( get_the_ID() );
-		                $share_media_url = get_the_post_thumbnail_url( get_the_ID() );
+		                <?php $share_url = get_permalink( $card->ID );
+		                $share_media_url = get_the_post_thumbnail_url( $card->ID );
                         $public_instance->show_social_container( $share_url, $share_media_url ); ?>
                     </div>
                     <div class="lbcg-card">
+                        <input type="hidden" id="bc-pn" value="<?php echo $card->post_name; ?>">
                         <div class="lbcg-card-header-holder">
                             <div class="lbcg-card-header">
                                 <span class="lbcg-card-header-text"><?php echo $bingo_card_title; ?></span>
@@ -76,11 +79,12 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
                         </div>
                         <div class="lbcg-card-body">
 							<?php if ( $bingo_card_type === '1-90' ) {
+                                $i = 1;
 								foreach ( $bingo_card_words as $single_card_words ) { ?>
                                     <div class="lbcg-card-body-grid lbcg-grid-9">
 										<?php
-										foreach ( $single_card_words as $number ) { ?>
-                                            <div class="lbcg-card-col">
+										foreach ( $single_card_words as $key => $number ) { ?>
+                                            <div class="lbcg-card-col" data-key="<?php echo $i++; ?>">
                                                 <span class="lbcg-card-text"><?php echo $number; ?></span>
                                             </div>
 										<?php } ?>
@@ -97,7 +101,7 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 										} else {
 											$is_free_space = false;
 										} ?>
-                                        <div class="lbcg-card-col<?php echo $is_free_space ? ' lbcg-free-space' : ''; ?>">
+                                        <div class="lbcg-card-col<?php echo $is_free_space ? ' lbcg-free-space' : ''; ?>" data-key="<?php echo $i; ?>">
                                             <span class="lbcg-card-text"><?php
                                                 if ( $is_free_space ) {
                                                     echo LBCG_Helper::$free_space_word;

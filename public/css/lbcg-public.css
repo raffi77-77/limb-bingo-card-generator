@@ -3,12 +3,26 @@
   header, footer {
     display: none !important; }
 
-  *:not(.lbcg-parent),
-  *:not(.lbcg-parent *) {
+  .cookies {
+    visibility: hidden; }
+
+  *:not(.lbcg-parent):not(.lbcg-parent *):not(html) {
     font-size: 0 !important;
     line-height: 0 !important;
     padding: 0 !important;
     margin: 0 !important; }
+
+  .lbcg-print-wrap {
+    display: table !important;
+    width: 100% !important; }
+    .lbcg-print-wrap-in {
+      float: left;
+      display: table-cell !important;
+      width: 50% !important;
+      max-width: 50% !important;
+      margin-bottom: 100px !important; }
+    .lbcg-print-wrap-card-holder {
+      width: 100%; }
 
   .lbcg-print-wrap, .lbcg-print-wrap-in {
     page-break-after: always; } }

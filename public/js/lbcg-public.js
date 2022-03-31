@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return "";
     }
 
-    toggleLoading(true);
+    checkGridFontSize();
+    setCardCheckedState();
 
     /**
      * Draw new grid
@@ -97,10 +98,24 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (event.target.matches('span.lbcg-card-text img')) {
                 el = el.parentNode.parentNode;
             }
+            // Toggle element
+            let stateValue = false;
             if (el.classList.contains('lbcg-card-col-checked')) {
                 el.classList.remove('lbcg-card-col-checked');
             } else if (el.children[0].hasChildNodes()) {
                 el.classList.add('lbcg-card-col-checked');
+                stateValue = true;
+            }
+            // Card post name input
+            const postNameEl = document.getElementById('bc-pn');
+            // Save state
+            if (postNameEl) {
+                const data = JSON.parse(localStorage.getItem('pn-' + postNameEl.value)) || [],
+                    key = parseInt(el.getAttribute('data-key'));
+                if (!isNaN(key)) {
+                    data[key] = stateValue;
+                }
+                localStorage.setItem('pn-' + postNameEl.value, JSON.stringify(data));
             }
         } else if (event.target.matches('span.lbcg-sidebar-arrow')) {
             // On sidebar arrow clock
@@ -357,6 +372,24 @@ function toggleLoading(show) {
 }
 
 /**
+ * Set checked squares
+ */
+function setCardCheckedState() {
+    // Card post name input
+    const postNameEl = document.getElementById('bc-pn');
+    // Set state
+    if (postNameEl) {
+        const data = JSON.parse(localStorage.getItem('pn-' + postNameEl.value)) || [];
+        for (const i in data) {
+            const el = document.querySelector('div.lbcg-card-col[data-key="' + i + '"]');
+            if (el && data[i]) {
+                el.classList.add('lbcg-card-col-checked');
+            }
+        }
+    }
+}
+
+/**
  * Check small words and make bigger
  *
  * @param spans
@@ -520,5 +553,3 @@ function checkGridFontSize() {
     }
     toggleLoading(false);
 }
-
-window.onload = checkGridFontSize;
