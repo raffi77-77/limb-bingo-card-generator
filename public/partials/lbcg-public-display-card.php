@@ -24,9 +24,9 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 	$bingo_grid_size  = $data['bingo_grid_size'][0];
 	$bingo_card_title = $data['bingo_card_title'][0];
 	// Special title
+	$additional_spec_part  = '';
 	if ( $bingo_card_type === '1-75' ) {
 		$bingo_card_spec_title = ! empty( $data['bingo_card_spec_title'][0] ) ? str_split( $data['bingo_card_spec_title'][0] ) : [];
-		$additional_spec_part  = '';
 		switch ( count( $bingo_card_spec_title ) ) {
 			case 4:
 			case 3:

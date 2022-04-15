@@ -73,7 +73,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.addEventListener('click', function (event) {
-        if (event.target.matches('.remove-bc-image')) {
+        if (event.target.matches('.bc-font-color')) {
+            // On font color change
+            const hsl = checkLFromHEX(event.target.value);
+            if (hsl.l < 24) {
+                event.target.value = HSLToHex(hsl.h, hsl.s, 120);
+            }
+        } else if (event.target.matches('.bc-border-color')) {
+            // On grid border color change
+            const hsl = checkLFromHEX(event.target.value);
+            if (hsl.l < 24) {
+                event.target.value = HSLToHex(hsl.h, hsl.s, 120);
+            }
+        } else if (event.target.matches('.bc-color')) {
+            // On color change
+            const hsl = checkLFromHEX(event.target.value);
+            if (hsl.l < 24) {
+                event.target.value = HSLToHex(hsl.h, hsl.s, 120);
+            }
+        } else if (event.target.matches('.remove-bc-image')) {
             // On remove image button click
             event.preventDefault();
             const type = event.target.getAttribute('data-bct');
@@ -552,4 +570,89 @@ function checkGridFontSize() {
         }
     }
     toggleLoading(false);
+}
+
+function checkLFromHEX(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    r = parseInt(result[1], 16) / 255;
+    g = parseInt(result[2], 16) / 255;
+    b = parseInt(result[3], 16) / 255;
+    const max = Math.max(r, g, b),
+        min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    if (max === min) {
+        h = s = 0; // achromatic
+    } else {
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h /= 6;
+    }
+    return {
+        h: Math.round(h * 240),
+        s: Math.round(s * 240),
+        l: Math.round(l * 240)
+    };
+}
+
+function HSLToHex(h, s, l) {
+    s /= 240;
+    l /= 240;
+
+    let c = (1 - Math.abs(2 * l - 1)) * s,
+        x = c * (1 - Math.abs((h / 40) % 2 - 1)),
+        m = l - c / 2,
+        r = 0,
+        g = 0,
+        b = 0;
+
+    if (0 <= h && h < 40) {
+        r = c;
+        g = x;
+        b = 0;
+    } else if (40 <= h && h < 80) {
+        r = x;
+        g = c;
+        b = 0;
+    } else if (80 <= h && h < 120) {
+        r = 0;
+        g = c;
+        b = x;
+    } else if (120 <= h && h < 160) {
+        r = 0;
+        g = x;
+        b = c;
+    } else if (160 <= h && h < 200) {
+        r = x;
+        g = 0;
+        b = c;
+    } else if (200 <= h && h <= 240) {
+        r = c;
+        g = 0;
+        b = x;
+    }
+    // Having obtained RGB, convert channels to hex
+    r = Math.round((r + m) * 255).toString(16);
+    g = Math.round((g + m) * 255).toString(16);
+    b = Math.round((b + m) * 255).toString(16);
+
+    // Prepend 0s, if necessary
+    if (r.length === 1)
+        r = "0" + r;
+    if (g.length === 1)
+        g = "0" + g;
+    if (b.length === 1)
+        b = "0" + b;
+
+    return "#" + r + g + b;
 }
