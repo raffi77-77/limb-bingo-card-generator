@@ -89,6 +89,7 @@
 
   &-body {
     overflow: hidden;
+    overflow-y: auto;
     max-height: 0;
     transition: max-height .3s;
   }

@@ -64,6 +64,10 @@ if ( ! empty( $data['bingo_card_own_content'][0] ) ) {
 		                $share_media_url = get_the_post_thumbnail_url( $card->ID );
                         $public_instance->show_social_container( $share_url, $share_media_url ); ?>
                     </div>
+                    <div class="lbcg-input-wrap lbcg-buttons-wrap">
+                        <a class="lbcg-btn lbcg-btn--lg lbcg-btn--main lbcg-custom-btn" role="button"
+                           href="<?php echo home_url( 'bingo-cards' ); ?>">See All Bingo Cards</a>
+                    </div>
                     <div class="lbcg-card">
                         <input type="hidden" id="bc-pn" value="<?php echo $card->post_name; ?>">
                         <div class="lbcg-card-header-holder">

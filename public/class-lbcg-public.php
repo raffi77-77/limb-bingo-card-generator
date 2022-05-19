@@ -33,6 +33,13 @@ class LBCG_Public {
 	private $dev_mode_card_id = 0;
 
 	/**
+     * Bingo theme archive posts per page count
+     *
+	 * @var int $bta_per_page Per page count
+	 */
+    private $bta_per_page = 10;
+
+	/**
 	 * Get instance
 	 *
 	 * @param $attributes
@@ -65,6 +72,7 @@ class LBCG_Public {
 		add_filter( 'single_template', array( $this, 'get_custom_post_type_template' ) );
 		add_filter( 'template_include', array( $this, 'get_custom_template' ) );
 		add_filter( 'taxonomy_template', array( $this, 'get_custom_taxonomy_template' ) );
+		add_action( 'pre_get_posts', array( $this, 'pre_get_posts_args' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 		add_action( 'wp_head', array( $this, 'add_custom_css' ) );
 		add_action( 'terms_clauses', array( $this, 'custom_terms_clauses' ), 15, 3 );
@@ -147,10 +155,32 @@ class LBCG_Public {
 	 */
 	public function get_custom_template( $template ) {
 		if ( is_post_type_archive( 'bingo_theme' ) ) {
+			global $lc_max_page_numbers;
+			$total_count   = (int) wp_count_terms( [ 'taxonomy' => 'ubud-category', 'hide_empty' => false ] );
+			$lc_max_page_numbers = ceil( $total_count / $this->bta_per_page );
 			$template = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive-bingo_theme.php';
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Set custom get posts params
+	 *
+	 * @param WP_Query $query The WP_Query instance
+	 *
+	 * @return void
+	 */
+	public function pre_get_posts_args( $query ) {
+		if ( ! is_admin() && $query->is_main_query() ) {
+            if ( is_tax( 'ubud-category' ) ) {
+	            $query->set( 'posts_per_page', 6 );
+            }
+            if ( is_post_type_archive( 'bingo_theme' ) ) {
+	            $query->set( 'taxonomy', 'ubud-category' );
+	            $query->set( 'posts_per_page', $this->bta_per_page );
+            }
+		}
 	}
 
 	/**
@@ -162,6 +192,8 @@ class LBCG_Public {
 	 */
 	public function get_custom_taxonomy_template( $template ) {
 		if ( is_tax( 'ubud-category' ) ) {
+            global $wp_query, $lc_max_page_numbers;
+			$lc_max_page_numbers = $wp_query->max_num_pages;
 			$template = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive.php';
 		}
 

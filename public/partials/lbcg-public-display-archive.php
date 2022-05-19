@@ -63,7 +63,8 @@ $the_term = get_queried_object();
 								<?php
 								foreach ( $menu_item as $bingo_theme ) {
 									?>
-                                    <a href="<?php echo esc_url( get_permalink( $bingo_theme->ID ) ); ?>" class="lbcg-sidebar-link"><?php echo $bingo_theme->post_title; ?></a>
+                                    <a href="<?php echo esc_url( get_permalink( $bingo_theme->ID ) ); ?>"
+                                       class="lbcg-sidebar-link"><?php echo $bingo_theme->post_title; ?></a>
 									<?php
 								}
 								?>
@@ -75,13 +76,15 @@ $the_term = get_queried_object();
                 </aside>
                 <section class="lbcg-generators">
 					<?php
+					$paged                = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+					$posts_per_page       = get_query_var( 'posts_per_page' ) ? get_query_var( 'posts_per_page' ) : 6; // 6 - Also please check in `pre_get_posts_args` method of the public class
 					$bingo_themes         = new WP_Query( array(
 						'post_type'      => 'bingo_theme',
 						'post_status'    => 'publish',
 						'orderby'        => 'post_title',
 						'order'          => 'ASC',
-						'posts_per_page' => 6,
-						'paged'          => isset( $_GET['tab'] ) ? $_GET['tab'] : 1,
+						'posts_per_page' => $posts_per_page,
+						'paged'          => $paged,
 						'tax_query'      => array(
 							array(
 								'taxonomy' => 'ubud-category',
@@ -115,7 +118,8 @@ $the_term = get_queried_object();
 							?>
                             <div class="lbcg-generators-single">
                                 <div class="lbcg-generators-image">
-                                    <img src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>" alt="<?php echo $bingo_theme->post_title; ?>">
+                                    <img src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>"
+                                         alt="<?php echo $bingo_theme->post_title; ?>">
                                 </div>
                                 <div class="lbcg-generators-title">
                                     <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>"><?php echo $bingo_theme->post_title; ?></a>
@@ -137,39 +141,11 @@ $the_term = get_queried_object();
                         </div>
 						<?php
 					}
-					$max_num_pages = $bingo_themes->max_num_pages;
-					$paged         = $bingo_themes->query_vars['paged'];
-					if ( $max_num_pages > 1 ) {
-						if ( $paged > 1 ) {
-							$page_items = [ $paged - 1, $paged ];
-							$last_item  = $paged;
-						} else {
-							$page_items = [ $paged, $paged + 1 ];
-							$last_item  = $paged + 1;
-						}
-						if ( $max_num_pages > $last_item ) {
-							$page_items[] = $last_item + 1;
-						} elseif ( $paged > 1 ) {
-							array_unshift( $page_items, $page_items[0] - 1 );
-						}
+					global $wp_query;
+					if ( $wp_query->max_num_pages > 1 ) {
 						?>
                         <div class="lbcg-pagination">
-                            <ul>
-                                <li class="page-item <?php echo $paged < 2 ? 'disabled' : ''; ?>">
-                                    <a href="?tab=<?php echo $paged > 1 ? $paged - 1 : 1; ?>" class="page-link"><</a>
-                                </li>
-								<?php
-								foreach ( $page_items as $item ) { ?>
-                                    <li class="page-item <?php echo $item === $paged ? 'active' : ''; ?>">
-                                        <a href="?tab=<?php echo $item; ?>" class="page-link"><?php echo $item; ?></a>
-                                    </li>
-									<?php
-								}
-								?>
-                                <li class="page-item <?php echo $paged >= $max_num_pages ? 'disabled' : ''; ?>">
-                                    <a href="?tab=<?php echo $paged < $max_num_pages ? $paged + 1 : $max_num_pages; ?>" class="page-link">></a>
-                                </li>
-                            </ul>
+							<?php pagination( $wp_query->max_num_pages ); ?>
                         </div>
 						<?php
 					}
