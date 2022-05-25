@@ -488,13 +488,6 @@ $special_types = array( '1-75', '1-90' );
     </main>
 </div>
 <?php if ( get_post_type() === 'bingo_theme' ):
-    $privacy_message = get_option( 'lbcg_privacy_message' );
-    ?>
-    <div class="lbcg-wp-editor">
-        <label for="lbcg-privacy-message">Privacy Message</label>
-        <input type="text" name="bt_privacy_message" id="lbcg-privacy-message" class="lbcg-input-field" value="<?php echo $privacy_message; ?>">
-    </div>
-    <?php
 	ob_start();
 	wp_editor( isset( $data['bt_intro_text'] ) ? $data['bt_intro_text'][0] : '', 'intro-text', [
 		'wpautop'       => false,

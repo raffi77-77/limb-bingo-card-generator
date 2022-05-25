@@ -62,6 +62,7 @@ class LBCG_Admin {
 		add_action( 'edited_ubud-category', array( $this, 'save_taxonomy_custom_fields' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
 		add_action( 'admin_head', array( $this, 'add_custom_css' ) );
+		add_action( 'admin_init', array( $this, 'add_custom_general_settings' ) );
 		$this->disable_emojy_print();
 	}
 
@@ -288,6 +289,26 @@ class LBCG_Admin {
 	public function get_post_data() {
 		return $this->data;
 	}
+
+	/**
+	 * Add general settings
+	 */
+    public function add_custom_general_settings() {
+	    add_settings_field( 'lbcg-privacy-message-field', __( 'UBUD Bingo Cards Generator: Privacy Message' ), array(
+		    $this,
+		    'privacy_message_field_callback'
+	    ), 'general', 'default', array( 'label_for' => 'lbcg-privacy-message-field' ) );
+	    register_setting( 'general', 'lbcg_privacy_message', 'esc_html' );
+    }
+
+	/**
+	 * Show privacy message setting content
+	 */
+    public function privacy_message_field_callback() {
+	    ?>
+        <textarea name="lbcg_privacy_message" id="lbcg-privacy-message-field" class="large-text code" rows="3" placeholder="Privacy message..."><?php echo get_option( 'lbcg_privacy_message' ); ?></textarea>
+	    <?php
+    }
 
 	/**
 	 * Add custom css
