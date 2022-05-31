@@ -20,9 +20,10 @@ switch ( count( $bingo_card_spec_title ) ) {
 		$additional_spec_part = '<span></span><span></span>';
 		break;
 }
-// Bingo card words
-$words_count        = 25;
-$bingo_card_content = "1\n16\n31\n46\n61\n2\n17\n32\n47\n62\n3\n18\n33\n48\n63\n4\n19\n34\n49\n64\n5\n20\n35\n50\n65";
+// Bingo card words/percents
+$bingo_card_words_percents = [];
+$words_count               = 25;
+$bingo_card_content        = "1\n16\n31\n46\n61\n2\n17\n32\n47\n62\n3\n18\n33\n48\n63\n4\n19\n34\n49\n64\n5\n20\n35\n50\n65";
 if ( $bingo_card_type === '1-75' ) {
 	$bingo_card_words = LBCG_Helper::get_1_75_bingo_card_numbers();
 } elseif ( $bingo_card_type === '1-90' ) {
@@ -40,7 +41,8 @@ if ( $bingo_card_type === '1-75' ) {
 	} else {
 		$bingo_card_words = explode( "\n", $bingo_card_content );
 	}
-	$words_count = count( $bingo_card_words );
+	$words_count               = count( $bingo_card_words );
+	$bingo_card_words_percents = ! empty( $data['bcc_words_percents'][0] ) ? unserialize( $data['bcc_words_percents'][0] ) : [];
 }
 // Need words count
 if ( $bingo_grid_size === '3x3' ) {
@@ -99,6 +101,8 @@ if ( ! empty( $data['bc_card'][0] ) ) {
 }
 // Wrap words
 $bingo_card_wrap_words = ! empty( $data['bingo_card_wrap_words'][0] ) && $data['bingo_card_wrap_words'][0] === 'on' ? true : false;
+// Even distribution
+$bingo_card_even_distribution = ! empty( $data['bingo_card_even_distribution'][0] ) && $data['bingo_card_even_distribution'][0] === 'on' ? true : false;
 // If include free space
 if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_square'][0] === 'on' && $bingo_grid_size !== '4x4' && $bingo_card_type !== '1-90' ) {
 	$bingo_grid_free_square = true;
@@ -148,7 +152,29 @@ $special_types = array( '1-75', '1-90' );
                             <label for="lbcg-subtitle" class="lbcg-label">Enter a Subtitle</label>
                             <input class="lbcg-input" id="lbcg-subtitle" type="text" name="bingo_card_spec_title" maxlength="5" value="<?php echo implode( '', $bingo_card_spec_title ); ?>"/>
                         </div>
-                        <div class="lbcg-input-wrap" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;' : ''; ?>>
+                        <div id="lbcg-even-distribution-content"
+                             class="lbcg-input-wrap" <?php echo ( $bingo_card_type === '1-75' || $bingo_card_type === '1-90' || ! $bingo_card_even_distribution ) ? 'style="display: none;"' : ''; ?>>
+                            <label class="lbcg-label">Enter frequency of words/emojis or numbers with
+                                precents (0 to 100)</label>
+		                    <?php if ( $bingo_card_even_distribution ):
+			                    foreach ( $bingo_card_words as $key => $word ): ?>
+                                    <div class="lbcg-input-wrap-in lbcg-input-wrap--words-distribution">
+                                        <label class="lbcg-label lbcg-label--single">
+                                            <input class="lbcg-input"
+                                                   type="text" value="<?php echo $word; ?>" readonly/>
+                                        </label>
+                                        <label class="lbcg-label lbcg-label--single">
+                                            <input class="lbcg-input lbcg-word-percent"
+                                                   name="bcc_words_percents[]" type="number" min="0" max="100"
+                                                   step="0.01"
+                                                   value="<?php echo $bingo_card_words_percents[ $key ] ?? 0; ?>"
+                                                   data-wpi="<?php echo $key; ?>"/>
+                                        </label>
+                                    </div>
+			                    <?php endforeach;
+		                    endif; ?>
+                        </div>
+                        <div id="lbcg-cards-words-content" class="lbcg-input-wrap" <?php echo $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ? 'style="display: none;' : ''; ?>>
                             <label for="lbcg-body-content" class="lbcg-label">Enter words/emojis or numbers</label>
                             <p>Note: Please fill minimum <span id="content-items-count"><?php echo $min_words_count; ?></span> words/emojis or numbers, each in new line.</p>
                             <textarea class="lbcg-input" id="lbcg-body-content" name="bingo_card_content" cols="" rows="11"><?php echo $bingo_card_content; ?></textarea>
@@ -161,6 +187,13 @@ $special_types = array( '1-75', '1-90' );
 										echo $font['name']; ?></option>
 								<?php endforeach; ?>
                             </select>
+                        </div>
+                        <div class="lbcg-input-wrap" <?php echo ( $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ) ? 'style="display: none;"' : ''; ?>>
+                            <input type="checkbox" class="lbcg-checkbox" id="lbcg-even-distribution-check"
+                                   name="bingo_card_even_distribution"
+                                   hidden <?php echo $bingo_card_even_distribution ? 'checked' : ''; ?>/>
+                            <label for="lbcg-even-distribution-check" class="lbcg-checkbox-holder"></label>
+                            <label for="lbcg-even-distribution-check" class="lbcg-label">Even distribution</label>
                         </div>
                         <div class="lbcg-input-wrap" <?php echo ( $bingo_card_type === '1-75' || $bingo_card_type === '1-90' ) ? 'style="display: none;"' : ''; ?>>
                             <input type="checkbox" class="lbcg-checkbox" id="lbcg-wrap-words-check"

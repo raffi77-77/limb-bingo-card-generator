@@ -1,3 +1,13 @@
+/**
+ * Conversion of string to HTML entities
+ */
+String.prototype.lcToHtmlEntities = function() {
+    return this.replace(/./gm, function(s) {
+        // return "&#" + s.charCodeAt(0) + ";";
+        return (s.match(/[a-z0-9\s]+/i)) ? s : "&#" + s.charCodeAt(0) + ";";
+    });
+};
+
 document.addEventListener('DOMContentLoaded', function () {
     /**
      * Check words count in container
@@ -260,6 +270,21 @@ document.addEventListener('DOMContentLoaded', function () {
             document.documentElement.style.setProperty('--lbcg-grid-line-height', lineHeight);
             // document.documentElement.style.setProperty('--lbcg-grid-wrap-words', event.target.checked ? 'break-word' : 'anywhere');
             checkGridFontSize();
+        } else if (event.target.matches('#lbcg-even-distribution-check')) {
+            // On even distribution checkbox change
+            if (event.target.checked) {
+                const result = setEvenDistributionContent();
+                if (result) {
+                    document.getElementById('lbcg-cards-words-content').style.display = 'none';
+                    document.getElementById('lbcg-even-distribution-content').style.display = 'flex';
+                }
+            } else {
+                const result = setWordsFromEvenDistributionContent();
+                if (result) {
+                    document.getElementById('lbcg-even-distribution-content').style.display = 'none';
+                    document.getElementById('lbcg-cards-words-content').style.display = 'flex';
+                }
+            }
         }
     });
 
@@ -371,6 +396,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.documentElement.style.setProperty('--lbcg-' + type + '-bg-opacity', event.target.value / 100);
         }
     });
+    // Add words percents input events
+    addEventsForWordsPercentsInputs();
 });
 
 /**
@@ -655,4 +682,83 @@ function HSLToHex(h, s, l) {
         b = "0" + b;
 
     return "#" + r + g + b;
+}
+
+function addEventsForWordsPercentsInputs() {
+    document.querySelectorAll('.lbcg-word-percent').forEach(inputEl => {
+        inputEl.addEventListener('focus', function (event) {
+            event.target.oldValue = event.target.value;
+        });
+        inputEl.addEventListener('blur', function (event) {
+            if (typeof event.target.oldValue !== 'undefined') {
+                try {
+                    if (event.target.value > 100) {
+                        event.target.value = 100;
+                    } else if (event.target.value < 0) {
+                        event.target.value = 0;
+                    }
+                    const diff = event.target.oldValue - event.target.value;
+                    event.target.value = parseFloat(event.target.value).toFixed(2);
+                    if (diff !== 0) {
+                        const index = event.target.getAttribute('data-wpi'),
+                            percentsElements = document.querySelectorAll('input.lbcg-word-percent:not([data-wpi="' + index + '"])'),
+                            percents = [...percentsElements].map(e => parseFloat(e.value)),
+                            sum = percents.reduce((accumulator, value) => accumulator + value, 0);
+                        if (sum !== 0) {
+                            percentsElements.forEach(e => {
+                                e.value = (e.value * (1 + diff / sum)).toFixed(2);
+                            });
+                        }
+                    }
+                } catch (e) {
+                    event.target.value = event.target.oldValue;
+                }
+            }
+        });
+    });
+}
+
+function setEvenDistributionContent() {
+    try {
+        // Remove old input data
+        const percentsElements = document.querySelectorAll('#lbcg-even-distribution-content .lbcg-word-percent');
+        let percents = [];
+        if (percentsElements.length) {
+            percents = [...percentsElements].map(e => e.value);
+        }
+        const wordsRows = document.querySelectorAll('#lbcg-even-distribution-content .lbcg-input-wrap--words-distribution')
+        if (wordsRows.length) {
+            [...wordsRows].map(e => e.remove());
+        }
+        // Create new inputs content
+        const words = document.getElementById('lbcg-body-content').value.split("\n").filter(w => w),
+            percent = (100 / words.length).toFixed(2); // name="bingo_card_content_words[${i}][value]"
+        const content = words.map((w, i) => `<div class="lbcg-input-wrap-in lbcg-input-wrap--words-distribution">
+    <label class="lbcg-label lbcg-label--single">
+        <input class="lbcg-input" type="text" value="${w.lcToHtmlEntities()}" readonly/>
+    </label>
+    <label class="lbcg-label lbcg-label--single">
+        <input class="lbcg-input lbcg-word-percent" name="bcc_words_percents[]" type="number" min="0" max="100" step="0.01" value="${percents.length ? percents[i] : percent}" data-wpi="${i}"/>
+    </label>
+</div>`).join('');
+        // Add percents inputs content
+        const contentEl = document.getElementById('lbcg-even-distribution-content');
+        contentEl.innerHTML = contentEl.innerHTML + content;
+        // Add percents inputs events
+        addEventsForWordsPercentsInputs();
+        return true;
+    } catch (e) {
+        console.error(e.message);
+        return false;
+    }
+}
+
+function setWordsFromEvenDistributionContent() {
+    try {
+        // document.getElementById('lbcg-body-content').value = [...document.querySelectorAll('.lbcg-input-wrap--words-distribution input[type="text"]')].map(e => e.value).join("\n");
+        return true;
+    } catch (e) {
+        console.error(e.message);
+        return false;
+    }
 }

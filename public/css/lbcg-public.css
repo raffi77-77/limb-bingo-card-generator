@@ -910,6 +910,14 @@
 .lbcg-parent .lbcg-input-wrap--subtitle .lbcg-input {
   text-align: center;
 }
+.lbcg-parent .lbcg-input-wrap--words-distribution .lbcg-label:first-of-type {
+  width: 75%;
+  min-width: 30px;
+}
+.lbcg-parent .lbcg-input-wrap--words-distribution .lbcg-label:last-of-type {
+  width: 24%;
+  min-width: 30px;
+}
 .lbcg-parent .lbcg-input-wrap-head {
   font-weight: 500;
   color: #000;
@@ -943,6 +951,24 @@
   margin-left: 0 !important;
   margin-bottom: 1rem !important;
   font-size: 16px !important;
+}
+.lbcg-parent .lbcg-input-wrap .h1-text {
+  font-size: var(--h1-size, 2rem) !important;
+}
+.lbcg-parent .lbcg-input-wrap .h2-text {
+  font-size: var(--h2-size, 1.8rem) !important;
+}
+.lbcg-parent .lbcg-input-wrap .h3-text {
+  font-size: var(--h3-size, 1.2rem) !important;
+}
+.lbcg-parent .lbcg-input-wrap .h4-text {
+  font-size: var(--h4-size, 1rem) !important;
+}
+.lbcg-parent .lbcg-input-wrap .h5-text {
+  font-size: var(--h5-size, 1rem) !important;
+}
+.lbcg-parent .lbcg-input-wrap .h6-text {
+  font-size: var(--h6-size, 1rem) !important;
 }
 .lbcg-parent .lbcg-label {
   display: block;
