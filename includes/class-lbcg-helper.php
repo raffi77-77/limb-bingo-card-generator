@@ -399,20 +399,22 @@ class LBCG_Helper {
 		}
 		// Collect data
 		$card_data = [
-			'bingo_card_type'        => '',
-			'bingo_grid_size'        => '',
-			'bingo_card_title'       => '',
-			'lbcg_font_size'         => '',
-			'bingo_card_spec_title'  => '',
-			'bingo_card_content'     => '',
-			'grid_square'            => '',
-			'bc_header'              => '',
-			'bc_grid'                => '',
-			'bc_card'                => '',
-			'bingo_card_font'        => '',
-			'bingo_card_wrap_words'  => '',
-			'bingo_card_free_square' => '',
-			'bingo_card_custom_css'  => ''
+			'bingo_card_type'              => '',
+			'bingo_grid_size'              => '',
+			'bingo_card_title'             => '',
+			'lbcg_font_size'               => '',
+			'bingo_card_spec_title'        => '',
+			'bingo_card_content'           => '',
+			'bcc_words_percents'           => '',
+			'grid_square'                  => '',
+			'bc_header'                    => '',
+			'bc_grid'                      => '',
+			'bc_card'                      => '',
+			'bingo_card_font'              => '',
+			'bingo_card_wrap_words'        => '',
+			'bingo_card_even_distribution' => '',
+			'bingo_card_free_square'       => '',
+			'bingo_card_custom_css'        => ''
 		];
 		foreach ( $card_data as $key => $value ) {
 			if ( ! empty( $data[ $key ] ) || ( $from_meta && ! empty( $data[ $key ][0] ) ) ) {
@@ -472,10 +474,22 @@ class LBCG_Helper {
 				update_post_meta( $post_id, 'bingo_card_spec_title', $data['bingo_card_spec_title'] );
 			}
 		}
+		// If card Words/emojis/numbers updated in generators page
+		$content_updated = false;
 		// Words/emojis or numbers
 		if ( ! in_array( $data['bingo_card_type'], $special_cards ) && ! empty( $data['bingo_card_content'] ) ) {
 			$data['bingo_card_content'] = preg_replace( "/(\r?\n){2,}/", "\r\n", $data['bingo_card_content'] );
-			update_post_meta( $post_id, 'bingo_card_content', trim( wp_strip_all_tags( $data['bingo_card_content'] ) ) );
+			$content                    = trim( wp_strip_all_tags( $data['bingo_card_content'] ) );
+			if ( ! empty( $theme_meta_data['bingo_card_content'][0] ) && $theme_meta_data['bingo_card_content'][0] !== $content ) {
+				$content_updated = true;
+			}
+			update_post_meta( $post_id, 'bingo_card_content', $content );
+		}
+		// Words percents
+		if ( isset( $data['bcc_words_percents'] ) && is_array( $data['bcc_words_percents'] ) ) {
+			update_post_meta( $post_id, 'bcc_words_percents', $data['bcc_words_percents'] );
+		} else if ( isset( $theme_meta_data ) && ! empty( $theme_meta_data['bcc_words_percents'][0] ) ) {
+			update_post_meta( $post_id, 'bcc_words_percents', maybe_unserialize( $theme_meta_data['bcc_words_percents'][0] ) );
 		}
 		// Square style on click
 		if ( ! empty( $data['grid_square'] ) ) {
@@ -544,10 +558,20 @@ class LBCG_Helper {
 		}
 		// Word wrap
 		update_post_meta( $post_id, 'bingo_card_wrap_words', empty( $data['bingo_card_wrap_words'] ) ? 'off' : 'on' );
+		// Even distribution
+		if ( isset( $theme_meta_data ) && ! empty( $theme_meta_data['bingo_card_even_distribution'][0] ) ) {
+			update_post_meta( $post_id, 'bingo_card_even_distribution', $content_updated ? 'off' : $theme_meta_data['bingo_card_even_distribution'][0] );
+		} else {
+			update_post_meta( $post_id, 'bingo_card_even_distribution', empty( $data['bingo_card_even_distribution'] ) ? 'off' : 'on' );
+		}
 		// Free square
 		update_post_meta( $post_id, 'bingo_card_free_square', ! empty( $data['bingo_card_free_square'] ) && $data['bingo_grid_size'] !== '4x4' && $data['bingo_card_type'] !== '1-90' ? $data['bingo_card_free_square'] : 'off' );
 		// Custom CSS
 		update_post_meta( $post_id, 'bingo_card_custom_css', isset( $data['bingo_card_custom_css'] ) ? trim( strip_tags( $data['bingo_card_custom_css'], '<style><link>' ) ) : '' );
+		// Remove generated content when post updated
+		if ( $post_type === 'bingo_card' ) {
+			delete_post_meta( $post_id, 'all_content' );
+		}
 	}
 
 	/**
@@ -687,8 +711,7 @@ class LBCG_Helper {
 			}
 
 			return '';
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			return '';
 		}
 	}
@@ -783,6 +806,95 @@ class LBCG_Helper {
 	}
 
 	/**
+	 * Get unique items from an array of indexes
+	 *
+	 * @param array $indexes Array of indexes
+	 * @param int $count Required count of unique items
+	 *
+	 * @return array
+	 */
+	private static function get_unique_items_from_indexes( $indexes, $count ) {
+		try {
+			$unique_array = array_unique( $indexes );
+			if ( count( $unique_array ) > $count ) {
+				shuffle( $indexes );
+				$u_indexes = array_unique( array_slice( $indexes, 0, $count ) );
+				$diff      = $count - count( $u_indexes );
+				if ( $diff === 0 ) {
+					return $u_indexes;
+				}
+				while ( $diff ) {
+					$key = array_rand( $indexes );
+					if ( ! in_array( $indexes[ $key ], $u_indexes ) ) {
+						$u_indexes[] = $indexes[ $key ];
+						-- $diff;
+					}
+				}
+
+				return $u_indexes;
+			} else if ( count( $unique_array ) < $count ) {
+				return [];
+			} else if ( count( $unique_array ) === $count ) {
+				return $unique_array;
+			}
+
+			return [];
+		} catch ( \Exception $e ) {
+			return [];
+		}
+	}
+
+	/**
+	 * Generate bingo cards content info (except 1-75 and 1-90 bingo types)
+	 *
+	 * @param int $count Generates cards count
+	 * @param array $data Bingo card meta
+	 *
+	 * @return array
+	 */
+	private static function generate_not_specific_bingo_content_info( $count, $data ) {
+		try {
+			$all         = [];
+			$items_count = $data['bingo_grid_size'][0][0] ** 2;
+			if ( ! empty( $data['bingo_card_even_distribution'][0] ) && $data['bingo_card_even_distribution'][0] === 'on' ) {
+				$percents = unserialize( $data['bcc_words_percents'][0] );
+				$min      = max( $percents );
+				foreach ( $percents as $percent ) {
+					if ( $percent < $min && $percent > 0 ) {
+						$min = $percent;
+					}
+				}
+				if ( ! $min ) {
+					return [];
+				}
+				$indexes_counts = array_map( function ( $percent ) use ( $min ) {
+					return round( $percent / $min );
+				}, $percents );
+				$word_indexes   = [];
+				foreach ( $indexes_counts as $key => $index_count ) {
+					for ( $i = 0; $i < $index_count; $i ++ ) {
+						$word_indexes[] = $key;
+					}
+				}
+				for ( $i = 0; $i < $count; $i ++ ) {
+					$all[] = implode( ';', self::get_unique_items_from_indexes( $word_indexes, $items_count ) );
+				}
+			} else {
+				$content_items = explode( "\r\n", $data['bingo_card_content'][0] );
+				$indexes       = array_keys( $content_items );
+				for ( $i = 0; $i < $count; $i ++ ) {
+					shuffle( $indexes );
+					$all[] = implode( ';', array_slice( $indexes, 0, $items_count ) );
+				}
+			}
+
+			return $all;
+		} catch ( \Exception $e ) {
+			return [];
+		}
+	}
+
+	/**
 	 * Generate all contents
 	 *
 	 * @param   int    $post_id
@@ -814,13 +926,7 @@ class LBCG_Helper {
 				$all[] = implode( ':', $content_items );
 			}
 		} else {
-			$items_count   = $data['bingo_grid_size'][0][0] ** 2;
-			$content_items = explode( "\r\n", $data['bingo_card_content'][0] );
-			$indexes       = array_keys( $content_items );
-			for ( $i = 0; $i < $count; $i ++ ) {
-				shuffle( $indexes );
-				$all[] = implode( ';', array_slice( $indexes, 0, $items_count ) );
-			}
+			$all = self::generate_not_specific_bingo_content_info( $count, $data );
 		}
 		update_post_meta( $post_id, 'all_content', implode( '|', $all ) );
 

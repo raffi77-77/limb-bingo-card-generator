@@ -53,7 +53,7 @@ if ( $bingo_card_type === '1-75' ) {
 		$result             = LBCG_Helper::get_bg_default_content( $bingo_grid_size );
 		$bingo_card_content = $result['words'];
 	}
-	$bingo_card_words = explode( "\r\n", $bingo_card_content );
+	$bingo_card_words          = explode( "\r\n", $bingo_card_content );
 }
 // Grid square checked style
 if ( ! empty( $data['grid_square'] ) ) {
@@ -116,11 +116,11 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                 <h1><?php the_title(); ?></h1>
             </div>
             <div class="lbcg-social-content desktop-version">
-		        <?php $share_url = get_permalink( $current_id ) . ( ! empty( $_GET['bc'] ) ? '?bc=' . $_GET['bc'] : '' );
-		        $share_media_url = get_the_post_thumbnail_url( $dev_mode_card_id );
-		        $public_instance->show_social_container( $share_url, $share_media_url ); ?>
+				<?php $share_url = get_permalink( $current_id ) . ( ! empty( $_GET['bc'] ) ? '?bc=' . $_GET['bc'] : '' );
+				$share_media_url = get_the_post_thumbnail_url( $dev_mode_card_id );
+				$public_instance->show_social_container( $share_url, $share_media_url ); ?>
             </div>
-            <?php if ( ! empty( $data['bt_intro_text'][0] ) ): ?>
+			<?php if ( ! empty( $data['bt_intro_text'][0] ) ): ?>
                 <div class="lbcg-post-content lbcg-intro-text"><?php echo $data['bt_intro_text'][0]; ?></div>
 			<?php endif; ?>
             <div class="lbcg-main">
@@ -153,7 +153,8 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
 						?>
                         <div class="lbcg-sidebar-in <?php echo $current_term_id === $cur_term_id ? 'collapsed' : ''; ?>">
                             <div class="lbcg-sidebar-header">
-                                <a href="<?php echo get_term_link( $cur_term_id ); ?>" class="lbcg-sidebar-btn"><?php echo $taxonomies[ $cur_term_id ]->name; ?></a>
+                                <a href="<?php echo get_term_link( $cur_term_id ); ?>"
+                                   class="lbcg-sidebar-btn"><?php echo $taxonomies[ $cur_term_id ]->name; ?></a>
                                 <span class="lbcg-sidebar-arrow"></span>
                             </div>
                             <div class="lbcg-sidebar-body">
@@ -181,15 +182,17 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                             <input type="hidden" name="bingo_card_type" value="<?php echo $bingo_card_type; ?>">
                             <input type="hidden" name="lbcg_font_size" value="<?php echo LBCG_Helper::$font_size; ?>">
                             <input type="hidden" name="bc_thumbnail" value="">
-	                        <?php if ( ! empty( $dev_mode_card_id ) && ! empty( $_GET['bc'] ) ): ?>
+							<?php if ( ! empty( $dev_mode_card_id ) && ! empty( $_GET['bc'] ) ): ?>
                                 <input type="hidden" name="bc" value="<?php echo $_GET['bc']; ?>">
-	                        <?php endif; ?>
+							<?php endif; ?>
                             <div class="lbcg-content-form">
                                 <div class="lbcg-input-wrap">
-                                    <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo Cards</button>
+                                    <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo
+                                        Cards
+                                    </button>
                                 </div>
                                 <div class="lbcg-input-wrap">
-                                    <h3>Customise Your Card</h3>
+                                    <h2 class="h3-text">Customise Your Card</h2>
                                 </div>
                                 <div class="lbcg-input-wrap">
                                     <label for="lbcg-title" class="lbcg-label">Enter a Title</label>
@@ -198,7 +201,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                 </div>
                                 <div class="lbcg-input-wrap" <?php echo ! ( ! empty( $data['bingo_card_type'][0] ) && $data['bingo_card_type'][0] === '1-75' ) ? 'style="display: none;"' : ''; ?>>
                                     <label for="lbcg-subtitle" class="lbcg-label">Enter a Subtitle</label>
-                                    <input class="lbcg-input" id="lbcg-subtitle" type="text" name="bingo_card_spec_title" maxlength="5" value="<?php echo implode( '', $bingo_card_spec_title ); ?>"/>
+                                    <input class="lbcg-input" id="lbcg-subtitle" type="text"
+                                           name="bingo_card_spec_title" maxlength="5"
+                                           value="<?php echo implode( '', $bingo_card_spec_title ); ?>"/>
                                 </div>
                                 <div class="lbcg-input-wrap" <?php echo ! ( ! empty( $data['bingo_card_type'][0] ) && $data['bingo_card_type'][0] !== '1-75' && $data['bingo_card_type'][0] !== '1-90' )
 									? 'style="display: none;' : ''; ?>>
@@ -212,13 +217,20 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                     <div class="lbcg-input-wrap">
                                         <label for="lbcg-grid-size" class="lbcg-label">Select Grid Size</label>
                                         <select name="bingo_grid_size" id="lbcg-grid-size" class="lbcg-select">
-                                            <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>3x3</option>
-                                            <option value="4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>4x4</option>
-                                            <option value="5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>5x5</option>
+                                            <option value="3x3" <?php echo $bingo_grid_size === '3x3' ? 'selected' : ''; ?>>
+                                                3x3
+                                            </option>
+                                            <option value="4x4" <?php echo $bingo_grid_size === '4x4' ? 'selected' : ''; ?>>
+                                                4x4
+                                            </option>
+                                            <option value="5x5" <?php echo $bingo_grid_size === '5x5' ? 'selected' : ''; ?>>
+                                                5x5
+                                            </option>
                                         </select>
                                     </div>
 								<?php else: ?>
-                                    <input type="hidden" id="lbcg-grid-size" name="bingo_grid_size" value="<?php echo $bingo_card_type === '1-75' ? '5x5' : '9x3' ?>">
+                                    <input type="hidden" id="lbcg-grid-size" name="bingo_grid_size"
+                                           value="<?php echo $bingo_card_type === '1-75' ? '5x5' : '9x3' ?>">
 								<?php endif; ?>
                                 <div class="lbcg-input-wrap">
                                     <label for="lbcg-font" class="lbcg-label">Select Font Family</label>
@@ -245,9 +257,11 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                     <label for="lbcg-free-space-check" class="lbcg-label">Include free space?</label>
                                 </div>
                                 <div class="lbcg-input-wrap">
-                                    <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse" id="lbcg-toggle-square-style-check" hidden/>
+                                    <input type="checkbox" class="lbcg-checkbox lbcg-checkbox--collapse"
+                                           id="lbcg-toggle-square-style-check" hidden/>
                                     <label for="lbcg-toggle-square-style-check" class="lbcg-checkbox-holder"></label>
-                                    <label for="lbcg-toggle-square-style-check" class="lbcg-label">Checked Square</label>
+                                    <label for="lbcg-toggle-square-style-check" class="lbcg-label">Checked
+                                        Square</label>
                                     <div class="lbcg-input-wrap-in lbcg-input-wrap--collapse">
                                         <div class="lbcg-input-wrap">
                                             <label for="grid-square-font-color" class="lbcg-label">Font Color</label>
@@ -257,9 +271,11 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                                    data-bct="grid-square">
                                         </div>
                                         <div class="lbcg-input-wrap">
-                                            <label for="grid-square-bg-color" class="lbcg-label">Background Color</label>
+                                            <label for="grid-square-bg-color" class="lbcg-label">Background
+                                                Color</label>
                                             <input type="color" id="grid-square-bg-color" class="bc-color lbcg-input"
-                                                   name="grid_square[color]" value="<?php echo $grid_square['color'] ?? '#000'; ?>"
+                                                   name="grid_square[color]"
+                                                   value="<?php echo $grid_square['color'] ?? '#000'; ?>"
                                                    data-bct="grid-square">
                                         </div>
                                     </div>
@@ -619,7 +635,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                     </div>
                                 </div>
                                 <div class="lbcg-input-wrap">
-                                    <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo Cards</button>
+                                    <button class="lbcg-btn lbcg-btn--lg lbcg-btn--main" type="submit">Generate Bingo
+                                        Cards
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -627,7 +645,7 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                     <div class="lbcg-content-right">
                         <div class="lbcg-card-wrap">
                             <div class="lbcg-social-content mobile-version">
-		                        <?php $public_instance->show_social_container( $share_url, $share_media_url ); ?>
+								<?php $public_instance->show_social_container( $share_url, $share_media_url ); ?>
                             </div>
                             <div class="lbcg-card-preview">
                                 <div class="lbcg-card-preview-hover"></div>
@@ -640,11 +658,12 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                     <div class="lbcg-card-header">
                                         <span class="lbcg-card-header-text"><?php echo ! empty( $data['bingo_card_title'][0] ) ? $data['bingo_card_title'][0] : ''; ?></span>
                                     </div>
-                                    <div class="lbcg-card-subtitle" style="<?php echo $bingo_card_type !== '1-75' ? 'display: none;' : ''; ?>">
+                                    <div class="lbcg-card-subtitle"
+                                         style="<?php echo $bingo_card_type !== '1-75' ? 'display: none;' : ''; ?>">
                                         <span class="lbcg-card-subtitle-text"><?php
-                                            echo $additional_spec_part;
-                                            echo ! empty( $bingo_card_spec_title ) ? '<span>' . implode( '</span><span>', $bingo_card_spec_title ) . '</span>' : '';
-                                            echo $additional_spec_part; ?></span>
+	                                        echo $additional_spec_part;
+	                                        echo ! empty( $bingo_card_spec_title ) ? '<span>' . implode( '</span><span>', $bingo_card_spec_title ) . '</span>' : '';
+	                                        echo $additional_spec_part; ?></span>
                                     </div>
                                 </div>
                                 <div class="lbcg-card-body">
@@ -666,18 +685,18 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
 											$grid_sq_count = $bingo_grid_size[0] ** 2;
 											for ( $i = 1; $i <= $grid_sq_count; $i ++ ):
 												if ( (int) ceil( $grid_sq_count / 2 ) === $i && $bingo_grid_free_square ) {
-                                                    $is_free_space = true;
-                                                } else {
+													$is_free_space = true;
+												} else {
 													$is_free_space = false;
-                                                } ?>
+												} ?>
                                                 <div class="lbcg-card-col<?php echo $is_free_space ? ' lbcg-free-space' : ''; ?>">
                                                     <span class="lbcg-card-text"><?php
-                                                        if ( $is_free_space ) {
-                                                            echo LBCG_Helper::$free_space_word;
-                                                        } else {
-                                                            echo $bingo_card_words[ $i - 1 ];
-                                                        }
-                                                        ?></span>
+	                                                    if ( $is_free_space ) {
+		                                                    echo LBCG_Helper::$free_space_word;
+	                                                    } else {
+		                                                    echo $bingo_card_words[ $i - 1 ];
+	                                                    }
+	                                                    ?></span>
                                                 </div>
 											<?php endfor; ?>
                                         </div>
