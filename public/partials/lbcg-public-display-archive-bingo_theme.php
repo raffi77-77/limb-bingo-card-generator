@@ -5,7 +5,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-$the_page       = get_posts( [
+$the_page = get_posts( [
 	'name'        => 'bingo-cards',
 	'post_type'   => 'page',
 	'post_status' => 'draft',
@@ -41,7 +41,7 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 	// Breadcrumbs
 	$breadcrumbs      = array( 'Home' => get_site_url() . '/', $sch_headline => '' );
 	$articleSection   = '';
-    $breadcrumb_items = '';
+	$breadcrumb_items = '';
 	$i                = 1;
 	foreach ( $breadcrumbs as $name => $link ) {
 		if ( $i == 1 ) {
@@ -74,7 +74,9 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
     <main class="order-containers d-flex flex-column">
         <div class="layout--container-fluid order-1">
             <div class="layout--container mt-4">
-				<?php require( get_template_directory() . '/layouts/comp/breadcrumbs.php' ); ?>
+				<?php if ( $lbcg_current_theme_name === 'BNBS' ) {
+					require( get_template_directory() . '/layouts/comp/breadcrumbs.php' );
+				} ?>
                 <div class="layout--row">
                     <article class="main layout--col pt-0 pt-4">
                         <div class="pt-4 px-4">
@@ -87,9 +89,9 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 							<?php echo $the_content; ?>
                         </div>
                     </article>
-	                <?php if ( $lbcg_current_theme_name === 'BNBS' ) {
-		                require( THEMEPATH . '/layouts/sidebar/sidebar.php' );
-	                } ?>
+					<?php if ( $lbcg_current_theme_name === 'BNBS' ) {
+						require( THEMEPATH . '/layouts/sidebar/sidebar.php' );
+					} ?>
                 </div>
             </div>
         </div>
