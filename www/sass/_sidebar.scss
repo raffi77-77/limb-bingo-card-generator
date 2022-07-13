@@ -47,9 +47,14 @@
     color: #FFF;
     transition: background-color .3s;
     margin-right: 38px;
+    text-decoration: none;
 
     &:hover, &.active {
       color: #fd477f;
+    }
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 

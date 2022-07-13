@@ -34,9 +34,13 @@
     page-break-after: always;
   }
 }
+.site-content {
+  -ms-flex-pack: center;
+      justify-content: center;
+}
+
 .lbcg-custom-container {
   padding: 10px 0;
-  background-color: #e4dcf3;
 }
 
 .lbcg-wp-editor {
@@ -737,9 +741,13 @@
   color: #FFF;
   transition: background-color 0.3s;
   margin-right: 38px;
+  text-decoration: none;
 }
 .lbcg-parent .lbcg-sidebar-btn:hover, .lbcg-parent .lbcg-sidebar-btn.active {
   color: #fd477f;
+}
+.lbcg-parent .lbcg-sidebar-btn:hover {
+  text-decoration: underline;
 }
 .lbcg-parent .lbcg-sidebar-arrow {
   position: absolute;
