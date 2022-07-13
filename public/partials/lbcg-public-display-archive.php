@@ -143,11 +143,21 @@ $the_term = get_queried_object();
 					}
 					global $wp_query;
 					if ( $wp_query->max_num_pages > 1 ) {
-						?>
-                        <div class="lbcg-pagination">
-							<?php pagination( $wp_query->max_num_pages ); ?>
-                        </div>
-						<?php
+						if ( $lbcg_current_theme_name === 'BNBS' && function_exists( 'pagination' ) ) {
+							?>
+                            <div class="lbcg-pagination">
+								<?php pagination( $wp_query->max_num_pages ); ?>
+                            </div>
+							<?php
+						} else {
+							?>
+                            <div class="lbcg-pagination">
+								<?php
+								LBCG_Helper::pagination( $paged, $wp_query->max_num_pages, $posts_per_page );
+								?>
+                            </div>
+							<?php
+						}
 					}
 					?>
                 </section>

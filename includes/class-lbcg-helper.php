@@ -1008,6 +1008,20 @@ class LBCG_Helper {
 	}
 
 	/**
+     * Show pagination
+     *
+	 * @param int $paged
+	 * @param int $total
+	 * @param int $post_per_page
+	 */
+	public static function pagination( $paged, $total, $post_per_page ) {
+		echo paginate_links( array(
+			'current' => max( 1, $paged ),
+			'total'   => ceil( $total / $post_per_page ),
+		) );
+	}
+
+	/**
 	 * Upload file
 	 *
 	 * @param   array  $file

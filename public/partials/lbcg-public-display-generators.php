@@ -61,12 +61,22 @@ if ( ! empty( $attributes ) ) {
 	<?php
 	// Pagination
 	if ( $lc_max_page_numbers > 1 ) {
-		?>
-        <div class="lbcg-pagination">
-			<?php
-			pagination( $lc_max_page_numbers );
+		if ( wp_get_theme()->get( 'Name' ) === 'BNBS' && function_exists( 'pagination' ) ) {
 			?>
-        </div>
-		<?php
+            <div class="lbcg-pagination">
+				<?php
+				pagination( $lc_max_page_numbers );
+				?>
+            </div>
+			<?php
+		} else {
+			?>
+            <div class="lbcg-pagination">
+				<?php
+				LBCG_Helper::pagination( $paged, $lc_max_page_numbers, $posts_per_page );
+				?>
+            </div>
+			<?php
+        }
 	}
 }
