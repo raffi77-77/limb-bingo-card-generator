@@ -39,7 +39,7 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 	$sch_description         = $the_content;
 	$sch_articleBody         = $the_content;
 	// Breadcrumbs
-	$breadcrumbs      = array( 'Home' => SITEURL . '/', $sch_headline => '' );
+	$breadcrumbs      = array( 'Home' => get_site_url() . '/', $sch_headline => '' );
 	$articleSection   = '';
     $breadcrumb_items = '';
 	$i                = 1;
@@ -87,7 +87,9 @@ if ( $lbcg_current_theme_name === 'BNBS' ) {
 							<?php echo $the_content; ?>
                         </div>
                     </article>
-					<?php require( THEMEPATH . '/layouts/sidebar/sidebar.php' ); ?>
+	                <?php if ( $lbcg_current_theme_name === 'BNBS' ) {
+		                require( THEMEPATH . '/layouts/sidebar/sidebar.php' );
+	                } ?>
                 </div>
             </div>
         </div>

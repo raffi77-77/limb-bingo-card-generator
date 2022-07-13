@@ -948,15 +948,16 @@ class LBCG_Helper {
 		if ( ! function_exists( 'link_trk' ) || $wp_theme_name !== 'BNBS' ) {
 			return;
 		}
+		$site_url = get_site_url();
 		if ( $post_type === 'bingo_theme' ) {
 			$current_bt_category = get_the_terms( $data, 'ubud-category' );
 			$bt_post_title       = get_the_title( $data );
 			$links               = [
-				'Home'                  => SITEURL,
-				'Bingo Card Generators' => SITEURL . '/bingo-cards/'
+				'Home'                  => $site_url,
+				'Bingo Card Generators' => $site_url . '/bingo-cards/'
 			];
 			if ( isset( $current_bt_category[0] ) ) {
-				$links[ $current_bt_category[0]->name ] = SITEURL . '/bingo-cards/category/' . $current_bt_category[0]->slug . '/';
+				$links[ $current_bt_category[0]->name ] = $site_url . '/bingo-cards/category/' . $current_bt_category[0]->slug . '/';
 			}
 			if ( $page === 'invitation' && ! empty( $bc ) ) {
 				$links[ $bt_post_title ] = get_permalink( $data ) . '?bc=' . $bc;
@@ -966,14 +967,14 @@ class LBCG_Helper {
 			}
 		} elseif ( $post_type === 'ubud_category' ) {
 			$links = [
-				'Home'                  => SITEURL,
-				'Bingo Card Generators' => SITEURL . '/bingo-cards/',
+				'Home'                  => $site_url,
+				'Bingo Card Generators' => $site_url . '/bingo-cards/',
 				$data->name             => ''
 			];
 		} else {
 			$links = [
-				'Home'                  => SITEURL,
-				'Bingo Card Generators' => SITEURL . '/bingo-cards/'
+				'Home'                  => $site_url,
+				'Bingo Card Generators' => $site_url . '/bingo-cards/'
 			];
 		}
 		?>
