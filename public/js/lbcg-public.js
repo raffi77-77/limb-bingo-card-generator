@@ -390,6 +390,14 @@ document.addEventListener('DOMContentLoaded', function () {
             // On size change
             const type = event.target.getAttribute('data-bct');
             document.documentElement.style.setProperty('--lbcg-' + type + '-bg-size', event.target.value);
+            // Remove 'Background repeat' box unless 'Contain' option is selected in 'Background size' box
+            const bcRepeatEl = event.target.parentNode.parentNode.parentNode.getElementsByClassName('bc-repeat')[0];
+            if (event.target.value === 'contain') {
+                bcRepeatEl.parentNode.parentNode.style.display = 'flex';
+            } else {
+                bcRepeatEl.parentNode.parentNode.style.display = 'none';
+                bcRepeatEl.value = 'no-repeat';
+            }
         } else if (event.target.matches('.bc-opacity')) {
             // On opacity change
             const type = event.target.getAttribute('data-bct');

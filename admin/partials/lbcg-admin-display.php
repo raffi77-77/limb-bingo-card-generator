@@ -282,15 +282,15 @@ $special_types = array( '1-75', '1-90' );
                                         </select>
                                     </label>
                                 </div>
-                                <div class="lbcg-input-wrap">
+                                <div class="lbcg-input-wrap"<?php echo isset( $bc_header['bg_size'] ) && $bc_header['bg_size'] !== 'contain' ? ' style="display: none;"' : ''; ?>>
                                     <label class="lbcg-label">
                                         <select name="bc_header[repeat]" class="bc-repeat lbcg-select"
                                                 data-bct="header">
                                             <option value="no-repeat" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
-                                            <option value="repeat" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
-                                            <option value="repeat-x" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
-                                            <option value="repeat-y" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
-                                            <option value="no-repeat" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+                                            <option value="repeat" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat: The background image is repeated both vertically and horizontally. The last image will be clipped if it does not fit. This is default</option>
+                                            <option value="repeat-x" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X: The background image is repeated only horizontally</option>
+                                            <option value="repeat-y" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y: The background image is repeated only vertically</option>
+                                            <option value="no-repeat" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat: The background-image is not repeated. The image will only be shown once</option>
                                         </select>
                                     </label>
                                 </div>
@@ -366,15 +366,15 @@ $special_types = array( '1-75', '1-90' );
                                         </select>
                                     </label>
                                 </div>
-                                <div class="lbcg-input-wrap">
+                                <div class="lbcg-input-wrap"<?php echo isset( $bc_grid['bg_size'] ) && $bc_grid['bg_size'] !== 'contain' ? ' style="display: none;"' : ''; ?>>
                                     <label class="lbcg-label">
                                         <select name="bc_grid[repeat]" class="bc-repeat lbcg-select"
                                                 data-bct="grid">
                                             <option value="no-repeat" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
-                                            <option value="repeat" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
-                                            <option value="repeat-x" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
-                                            <option value="repeat-y" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
-                                            <option value="no-repeat" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+                                            <option value="repeat" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat: The background image is repeated both vertically and horizontally. The last image will be clipped if it does not fit. This is default</option>
+                                            <option value="repeat-x" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X: The background image is repeated only horizontally</option>
+                                            <option value="repeat-y" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y: The background image is repeated only vertically</option>
+                                            <option value="no-repeat" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat: The background-image is not repeated. The image will only be shown once</option>
                                         </select>
                                     </label>
                                 </div>
@@ -436,15 +436,15 @@ $special_types = array( '1-75', '1-90' );
                                         </select>
                                     </label>
                                 </div>
-                                <div class="lbcg-input-wrap">
+                                <div class="lbcg-input-wrap"<?php echo isset( $bc_card['bg_size'] ) && $bc_card['bg_size'] !== 'contain' ? ' style="display: none;"' : ''; ?>>
                                     <label class="lbcg-label">
                                         <select name="bc_card[repeat]" class="bc-repeat lbcg-select"
                                                 data-bct="card">
                                             <option value="no-repeat" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>Background Repeat</option>
-                                            <option value="repeat" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat</option>
-                                            <option value="repeat-x" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X</option>
-                                            <option value="repeat-y" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y</option>
-                                            <option value="no-repeat" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat</option>
+                                            <option value="repeat" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat' ? 'selected' : ''; ?>>Repeat: The background image is repeated both vertically and horizontally. The last image will be clipped if it does not fit. This is default</option>
+                                            <option value="repeat-x" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>Repeat X: The background image is repeated only horizontally</option>
+                                            <option value="repeat-y" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat-y' ? 'selected' : ''; ?>>Repeat Y: The background image is repeated only vertically</option>
+                                            <option value="no-repeat" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>No Repeat: The background-image is not repeated. The image will only be shown once</option>
                                         </select>
                                     </label>
                                 </div>
