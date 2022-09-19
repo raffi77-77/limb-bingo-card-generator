@@ -53,7 +53,7 @@ if ( $bingo_card_type === '1-75' ) {
 		$result             = LBCG_Helper::get_bg_default_content( $bingo_grid_size );
 		$bingo_card_content = $result['words'];
 	}
-	$bingo_card_words          = explode( "\r\n", $bingo_card_content );
+	$bingo_card_words = explode( "\r\n", $bingo_card_content );
 }
 // Grid square checked style
 if ( ! empty( $data['grid_square'] ) ) {
@@ -363,7 +363,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                                         Background Repeat
                                                     </option>
                                                     <option value="repeat" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat' ? 'selected' : ''; ?>>
-                                                        Repeat: The background image is repeated both vertically and horizontally. The last image will be clipped if it does not fit. This is default
+                                                        Repeat: The background image is repeated both vertically and
+                                                        horizontally. The last image will be clipped if it does not fit.
+                                                        This is default
                                                     </option>
                                                     <option value="repeat-x" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>
                                                         Repeat X: The background image is repeated only horizontally
@@ -372,7 +374,8 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                                         Repeat Y: The background image is repeated only vertically
                                                     </option>
                                                     <option value="no-repeat" <?php echo ! empty( $bc_header['repeat'] ) && $bc_header['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>
-                                                        No Repeat: The background-image is not repeated. The image will only be shown once
+                                                        No Repeat: The background-image is not repeated. The image will
+                                                        only be shown once
                                                     </option>
                                                 </select>
                                             </label>
@@ -488,7 +491,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                                         Background Repeat
                                                     </option>
                                                     <option value="repeat" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat' ? 'selected' : ''; ?>>
-                                                        Repeat: The background image is repeated both vertically and horizontally. The last image will be clipped if it does not fit. This is default
+                                                        Repeat: The background image is repeated both vertically and
+                                                        horizontally. The last image will be clipped if it does not fit.
+                                                        This is default
                                                     </option>
                                                     <option value="repeat-x" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>
                                                         Repeat X: The background image is repeated only horizontally
@@ -497,7 +502,8 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                                         Repeat Y: The background image is repeated only vertically
                                                     </option>
                                                     <option value="no-repeat" <?php echo ! empty( $bc_grid['repeat'] ) && $bc_grid['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>
-                                                        No Repeat: The background-image is not repeated. The image will only be shown once
+                                                        No Repeat: The background-image is not repeated. The image will
+                                                        only be shown once
                                                     </option>
                                                 </select>
                                             </label>
@@ -599,7 +605,9 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                                         Background Repeat
                                                     </option>
                                                     <option value="repeat" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat' ? 'selected' : ''; ?>>
-                                                        Repeat: The background image is repeated both vertically and horizontally. The last image will be clipped if it does not fit. This is default
+                                                        Repeat: The background image is repeated both vertically and
+                                                        horizontally. The last image will be clipped if it does not fit.
+                                                        This is default
                                                     </option>
                                                     <option value="repeat-x" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'repeat-x' ? 'selected' : ''; ?>>
                                                         Repeat X: The background image is repeated only horizontally
@@ -608,7 +616,8 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                                                         Repeat Y: The background image is repeated only vertically
                                                     </option>
                                                     <option value="no-repeat" <?php echo ! empty( $bc_card['repeat'] ) && $bc_card['repeat'] === 'no-repeat' ? 'selected' : ''; ?>>
-                                                        No Repeat: The background-image is not repeated. The image will only be shown once
+                                                        No Repeat: The background-image is not repeated. The image will
+                                                        only be shown once
                                                     </option>
                                                 </select>
                                             </label>
@@ -709,7 +718,18 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
             </div>
 			<?php if ( $the_content = get_the_content() ): ?>
                 <div class="lbcg-post-content"><?php the_content(); ?></div>
-			<?php endif; ?>
+			<?php endif;
+			if ( $lbcg_current_theme_name === 'BNBS' ) {
+				$schema_author = get_field( 'schema_author' );
+				if ( ! empty( $schema_author ) && ! empty( $schema_author['ID'] ) ) {
+					$author_id = $schema_author['ID'];
+					?>
+                    <div class="px-4 pb-4">
+						<?php require( get_template_directory() . '/layouts/comp/article-author-new.php' ); ?>
+                    </div>
+					<?php
+				}
+			} ?>
         </main>
     </div>
 <?php

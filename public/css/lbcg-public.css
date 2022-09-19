@@ -38,6 +38,9 @@
   padding: 10px 0;
   background-color: #e4dcf3;
 }
+.lbcg-custom-container .author-card {
+  padding: 1rem;
+}
 
 .lbcg-wp-editor {
   margin-top: 15px;
