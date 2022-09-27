@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
             [...document.getElementsByClassName('lbcg-card-col-checked')].forEach(el => el.classList.remove('lbcg-card-col-checked'));
             html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
                 // Get card image
-                document.getElementsByName('bc_thumbnail')[0].value = canvas.toDataURL();
+                document.getElementsByName('bc_thumbnail')[0].value = canvas.toDataURL('image/webp');
                 toggleLoading(true);
                 submitButtons.forEach(el => el.disabled = false);
                 const words_count_message = checkWordsCount();
@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function () {
             [...document.getElementsByClassName('lbcg-card-col-checked')].forEach(el => el.classList.remove('lbcg-card-col-checked'));
             html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
                 // Get card image
-                document.getElementsByName('bingo_card_thumb')[0].value = canvas.toDataURL();
+                document.getElementsByName('bingo_card_thumb')[0].value = canvas.toDataURL('image/webp');
                 toggleLoading(true);
                 submitButton.disabled = false;
                 const data = new FormData(event.target);

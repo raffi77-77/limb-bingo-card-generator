@@ -246,13 +246,12 @@ class LBCG_Admin {
 	public function enqueue_admin_script_and_styles() {
 		$post_type = get_post_type();
 		if ( $post_type === 'bingo_theme' || $post_type === 'bingo_card' ) {
-			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
-			wp_enqueue_script( 'html2canvas-js', $this->attributes['includes_url'] . 'js/html2canvas.min.js', [], $this->attributes['plugin_version'] );
+			wp_enqueue_script( 'html2canvas-js', $this->attributes['includes_url'] . 'js/html2canvas.min.js#deferload', [], $this->attributes['plugin_version'], true );
 			if ( ! did_action( 'wp_enqueue_media' ) ) {
 				wp_enqueue_media();
 			}
-			wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.min.js', [], $this->attributes['plugin_version'] );
-			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js', [], $this->attributes['plugin_version'] );
+			wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.min.js#deferload', [], $this->attributes['plugin_version'], true );
+			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js#deferload', [], $this->attributes['plugin_version'], true );
 			wp_localize_script( 'lbcg-public-js', 'LBCG', [
 				'fonts'          => LBCG_Helper::$fonts,
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
@@ -266,7 +265,7 @@ class LBCG_Admin {
 				if ( ! did_action( 'wp_enqueue_media' ) ) {
 					wp_enqueue_media();
 				}
-				wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.min.js', [], $this->attributes['plugin_version'] );
+				wp_enqueue_script( 'lbcg-admin-js', $this->attributes['admin_url'] . 'js/lbcg-admin.min.js', [], $this->attributes['plugin_version'], true );
 			}
 		}
 	}
@@ -316,13 +315,6 @@ class LBCG_Admin {
 	public function add_custom_css() {
 		$post_type = get_post_type();
 		if ( $post_type === 'bingo_theme' || $post_type === 'bingo_card' ) {
-			// Load google fonts
-			?>
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-			<?php foreach ( LBCG_Helper::$fonts as $font ): ?>
-                <link href="<?php echo $font['url'] ?>" rel="stylesheet">
-			<?php endforeach;
 			$this->data = get_post_meta( get_the_ID() );
 			// Load attributes
 			if ( ! empty( $this->data['grid_square'] ) ) {

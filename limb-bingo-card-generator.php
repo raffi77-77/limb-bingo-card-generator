@@ -2,7 +2,7 @@
 /**
  * Plugin Name: UBUD Bingo Cards Generator
  * Description: Generate, share or print bingo cards
- * Version: 1.4.2
+ * Version: 1.4.4
  * Author: UBUD
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -11,7 +11,7 @@ function run_lbcg() {
 	$plugin_dir = plugin_dir_path( __FILE__ );
 	$plugin_url = plugin_dir_url( __FILE__ );
 	require_once $plugin_dir . 'includes/class-lbcg.php';
-	LBCG::get_instance( '1.4.2', $plugin_dir, $plugin_url );
+	LBCG::get_instance( '1.4.4', $plugin_dir, $plugin_url );
 }
 
 add_action( 'init', 'lbcg_register_custom_post_types', 0 );

@@ -465,7 +465,7 @@ class LBCG_Helper {
 				} else {
 					$thumb_name = 'lbcg-thumb-name-' . wp_generate_password( 12, false );
 				}
-				self::set_as_featured_image( $data['bingo_card_thumbnail'], $post_id, $thumb_name . '.png' );
+				self::set_as_featured_image( $data['bingo_card_thumbnail'], $post_id, $thumb_name . '.webp' );
 			}
 		}
 		// 1-75 special title
@@ -648,7 +648,7 @@ class LBCG_Helper {
 			// Set thumbnail
 			if ( ! empty( $thumb_base64 ) ) {
 				$thumb_name = sanitize_file_name( $new_bc['title'] ) . '-' . wp_generate_password( 12, false );
-				LBCG_Helper::set_as_featured_image( $thumb_base64, $new_bc['id'], $thumb_name . '.png' );
+				LBCG_Helper::set_as_featured_image( $thumb_base64, $new_bc['id'], $thumb_name . '.webp' );
 			}
 			// Get email content
 			$email_content = self::get_new_bingo_email_content( $invite_subject, $author_email, $new_bc['id'], $author_message );
@@ -1071,7 +1071,7 @@ class LBCG_Helper {
 		}
 		$upload_dir  = wp_upload_dir();
 		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
-		$img         = str_replace( 'data:image/png;base64,', '', $base64 );
+		$img         = str_replace( 'data:image/webp;base64,', '', $base64 );
 		$img         = str_replace( ' ', '+', $img );
 		$decoded     = base64_decode( $img );
 		$path_info   = pathinfo( $filename );
