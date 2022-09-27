@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 [...document.getElementsByClassName('lbcg-card-col-checked')].forEach(el => el.classList.remove('lbcg-card-col-checked'));
                 // Get image of card
                 html2canvas(document.getElementsByClassName('lbcg-card')[0]).then(function (canvas) {
-                    thumbEl.value = canvas.toDataURL();
+                    thumbEl.value = canvas.toDataURL('image/webp');
                     event.target.classList.remove('disabled');
                     event.target.click();
                 });

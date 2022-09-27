@@ -73,7 +73,7 @@ class LBCG_Ajax {
         // Save thumbnail
         if ( ! empty( $_POST['bc_thumbnail'] ) ) {
 	        $thumb_name = sanitize_file_name( $bc_result['title'] ) . '-' . wp_generate_password( 12, false );
-	        LBCG_Helper::set_as_featured_image( $_POST['bc_thumbnail'], $bc_result['id'], $thumb_name . '.png' );
+	        LBCG_Helper::set_as_featured_image( $_POST['bc_thumbnail'], $bc_result['id'], $thumb_name . '.webp' );
         }
 		print_r( json_encode( [
 			'success'    => true,
@@ -123,7 +123,7 @@ class LBCG_Ajax {
 			// Set card thumbnail
 			if ( ! empty( $thumbnail_base64 ) ) {
 	            $thumb_name = sanitize_file_name( $bingo_card->post_title ) . '-' . wp_generate_password( 12, false );
-	            LBCG_Helper::set_as_featured_image( $thumbnail_base64, $bingo_card->ID, $thumb_name . '.png' );
+	            LBCG_Helper::set_as_featured_image( $thumbnail_base64, $bingo_card->ID, $thumb_name . '.webp' );
             }
 			// Get emails
 			$author_email  = trim( $_POST['author_email'] );

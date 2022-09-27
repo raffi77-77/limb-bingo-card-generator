@@ -118,8 +118,9 @@ $the_term = get_queried_object();
 							?>
                             <div class="lbcg-generators-single">
                                 <div class="lbcg-generators-image">
-                                    <img src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>"
-                                         alt="<?php echo $bingo_theme->post_title; ?>">
+                                    <img width="auto" height="300px"
+                                         src="<?php echo esc_url( wp_get_attachment_image_url( get_post_thumbnail_id( $bingo_theme->ID ), 'medium' ) ); ?>"
+                                         alt="<?php echo $bingo_theme->post_title; ?>" loading="lazy">
                                 </div>
                                 <div class="lbcg-generators-title">
                                     <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>"><?php echo $bingo_theme->post_title; ?></a>

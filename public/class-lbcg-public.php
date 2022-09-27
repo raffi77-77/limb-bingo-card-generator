@@ -33,11 +33,11 @@ class LBCG_Public {
 	private $dev_mode_card_id = 0;
 
 	/**
-     * Bingo theme archive posts per page count
-     *
+	 * Bingo theme archive posts per page count
+	 *
 	 * @var int $bta_per_page Per page count
 	 */
-    private $bta_per_page = 10;
+	private $bta_per_page = 10;
 
 	/**
 	 * Get instance
@@ -58,7 +58,7 @@ class LBCG_Public {
 	/**
 	 * Construct Bingo Card Public object
 	 *
-	 * @param   array  $attributes
+	 * @param array $attributes
 	 */
 	private function __construct( $attributes ) {
 		$this->attributes = $attributes;
@@ -83,9 +83,9 @@ class LBCG_Public {
 	/**
 	 * Show UBUD Categories
 	 *
-	 * @param   array   $atts
-	 * @param   string  $content
-	 * @param   string  $tag
+	 * @param array $atts
+	 * @param string $content
+	 * @param string $tag
 	 *
 	 * @return string
 	 */
@@ -104,11 +104,10 @@ class LBCG_Public {
 	 */
 	public function enqueue_scripts_and_styles() {
 		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) || is_tax( 'ubud-category' ) ) {
-			wp_enqueue_script( 'lbcg-vanilla-js', $this->attributes['includes_url'] . 'js/vanilla.js' );
-            if ( is_singular( 'bingo_theme' ) ) {
-	            wp_enqueue_script( 'html2canvas-js', $this->attributes['includes_url'] . 'js/html2canvas.min.js', [], $this->attributes['plugin_version'] );
-            }
-			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js', [], $this->attributes['plugin_version'] );
+			if ( is_singular( 'bingo_theme' ) ) {
+				wp_enqueue_script( 'html2canvas-js', $this->attributes['includes_url'] . 'js/html2canvas.min.js#deferload', [], $this->attributes['plugin_version'], true );
+			}
+			wp_enqueue_script( 'lbcg-public-js', $this->attributes['public_url'] . 'js/lbcg-public.min.js#deferload', [], $this->attributes['plugin_version'], true );
 			wp_localize_script( 'lbcg-public-js', 'LBCG', [
 				'fonts'          => LBCG_Helper::$fonts,
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
@@ -124,7 +123,7 @@ class LBCG_Public {
 	/**
 	 * Get custom post type template
 	 *
-	 * @param   string  $single_template
+	 * @param string $single_template
 	 *
 	 * @return string
 	 */
@@ -149,16 +148,16 @@ class LBCG_Public {
 	/**
 	 * Get custom template
 	 *
-	 * @param   string  $template
+	 * @param string $template
 	 *
 	 * @return string
 	 */
 	public function get_custom_template( $template ) {
 		if ( is_post_type_archive( 'bingo_theme' ) ) {
 			global $lc_max_page_numbers;
-			$total_count   = (int) wp_count_terms( [ 'taxonomy' => 'ubud-category', 'hide_empty' => false ] );
+			$total_count         = (int) wp_count_terms( [ 'taxonomy' => 'ubud-category', 'hide_empty' => false ] );
 			$lc_max_page_numbers = ceil( $total_count / $this->bta_per_page );
-			$template = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive-bingo_theme.php';
+			$template            = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive-bingo_theme.php';
 		}
 
 		return $template;
@@ -173,28 +172,28 @@ class LBCG_Public {
 	 */
 	public function pre_get_posts_args( $query ) {
 		if ( ! is_admin() && $query->is_main_query() ) {
-            if ( is_tax( 'ubud-category' ) ) {
-	            $query->set( 'posts_per_page', 6 );
-            }
-            if ( is_post_type_archive( 'bingo_theme' ) ) {
-	            $query->set( 'taxonomy', 'ubud-category' );
-	            $query->set( 'posts_per_page', $this->bta_per_page );
-            }
+			if ( is_tax( 'ubud-category' ) ) {
+				$query->set( 'posts_per_page', 6 );
+			}
+			if ( is_post_type_archive( 'bingo_theme' ) ) {
+				$query->set( 'taxonomy', 'ubud-category' );
+				$query->set( 'posts_per_page', $this->bta_per_page );
+			}
 		}
 	}
 
 	/**
 	 * Get custom taxonomy template
 	 *
-	 * @param   string  $template
+	 * @param string $template
 	 *
 	 * @return string
 	 */
 	public function get_custom_taxonomy_template( $template ) {
 		if ( is_tax( 'ubud-category' ) ) {
-            global $wp_query, $lc_max_page_numbers;
+			global $wp_query, $lc_max_page_numbers;
 			$lc_max_page_numbers = $wp_query->max_num_pages;
-			$template = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive.php';
+			$template            = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive.php';
 		}
 
 		return $template;
@@ -223,13 +222,6 @@ class LBCG_Public {
 	 */
 	public function add_custom_css() {
 		if ( is_singular( [ 'bingo_theme', 'bingo_card' ] ) ) {
-			// Load google fonts
-			?>
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-			<?php foreach ( LBCG_Helper::$fonts as $font ): ?>
-                <link href="<?php echo $font['url'] ?>" rel="stylesheet">
-			<?php endforeach;
 			if ( ! empty( $_GET['bc'] ) && empty( $this->dev_mode_card_id ) ) {
 				$bc_posts = get_posts( [
 					'name'           => $_GET['bc'],
@@ -258,28 +250,29 @@ class LBCG_Public {
 	}
 
 	/**
-     * Set terms custom clauses
-     *
+	 * Set terms custom clauses
+	 *
 	 * @param string[] $clauses
 	 * @param string[] $taxonomies
 	 * @param array $args
 	 *
 	 * @return string[]
 	 */
-    public function custom_terms_clauses( $clauses, $taxonomies, $args ) {
-        // If is the custom taxonomy
-        if ( $taxonomies === [ 'ubud-category' ] ) {
-            // If set custom order by field
-	        if ( isset( $args['orderby'] ) && $args['orderby'] === '_lc_meta_value' ) {
-                // Set own order
-		        $clauses['orderby'] = ' ORDER BY wp_termmeta.meta_value ';
-	        }
-        }
-        return $clauses;
-    }
+	public function custom_terms_clauses( $clauses, $taxonomies, $args ) {
+		// If is the custom taxonomy
+		if ( $taxonomies === [ 'ubud-category' ] ) {
+			// If set custom order by field
+			if ( isset( $args['orderby'] ) && $args['orderby'] === '_lc_meta_value' ) {
+				// Set own order
+				$clauses['orderby'] = ' ORDER BY wp_termmeta.meta_value ';
+			}
+		}
+
+		return $clauses;
+	}
 
 	/**
-     * Change the OpenGraph image.
+	 * Change the OpenGraph image.
 	 *
 	 * @param string $attachment_url The image we are about to add.
 	 *
@@ -310,7 +303,7 @@ class LBCG_Public {
 
 	/**
 	 * Show social share buttons
-     * Facebook, Twitter, Pinterest, Reddit, WhatsApp and Email
+	 * Facebook, Twitter, Pinterest, Reddit, WhatsApp and Email
 	 *
 	 * @param string $url
 	 * @param string|null $media_url
