@@ -359,7 +359,7 @@ class LBCG_Public {
 		if ( ! empty( $text ) ) {
 			$args['text'] = $text . ' ' . $args['text'];
 		}
-		$whatsapp_url = add_query_arg( $args, 'https://wa.me' );
+		$whatsapp_url = add_query_arg( $args, 'https://api.whatsapp.com/send/' );
 		// Email
 		$args      = [
 			'subject' => ! empty( $text ) ? $text : '',
