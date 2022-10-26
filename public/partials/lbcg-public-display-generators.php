@@ -43,9 +43,11 @@ if ( ! empty( $attributes ) ) {
 		<?php foreach ( $ubud_cats as $cat ): ?>
             <div class="lbcg-tcs-single">
                 <div class="lbcg-tcs-thumb">
-					<?php $thumb_id = get_term_meta( $cat->term_id, '_lbcg_thumbnail_id', true ); ?>
-                    <img src="<?php echo esc_url( wp_get_attachment_image_url( $thumb_id, 'medium' ) ); ?>"
-                         alt="<?php echo $cat->name; ?>" loading="lazy">
+		            <?php $thumb_id = get_term_meta( $cat->term_id, '_lbcg_thumbnail_id', true );
+		            echo wp_get_attachment_image( $thumb_id, 'medium', false, [
+			            'loading' => 'lazy',
+			            'alt'     => $cat->name,
+		            ] ); ?>
                 </div>
                 <div class="lbcg-tcs-content">
                     <h2 class="lbcg-tcs-content-header">

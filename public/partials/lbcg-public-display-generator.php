@@ -659,8 +659,10 @@ if ( ! empty( $data['bingo_card_free_square'][0] ) && $data['bingo_card_free_squ
                             <div class="lbcg-card-preview">
                                 <div class="lbcg-card-preview-hover"></div>
                                 <div class="lbcg-card-preview-hover-text">Tap to start</div>
-                                <img width="350px" height="auto" src="<?php echo get_the_post_thumbnail_url( $dev_mode_card_id ); ?>" loading="lazy"
-                                     alt="<?php echo apply_filters( 'the_title', get_the_title( $dev_mode_card_id ), ( $dev_mode_card_id ) ); ?>">
+	                            <?php echo get_the_post_thumbnail( $dev_mode_card_id, [ 350, null ], [
+		                            'loading' => 'lazy',
+		                            'alt'     => apply_filters( 'the_title', get_the_title( $dev_mode_card_id ), $dev_mode_card_id ),
+	                            ] ); ?>
                             </div>
                             <div class="lbcg-card">
                                 <div class="lbcg-card-header-holder">
