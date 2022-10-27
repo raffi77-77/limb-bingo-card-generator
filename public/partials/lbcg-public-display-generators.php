@@ -17,7 +17,7 @@ if ( ! empty( $attributes ) ) {
 	}
 	// Get generators
 	$paged          = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-	$posts_per_page = get_query_var( 'posts_per_page' ) ? get_query_var( 'posts_per_page' ) : 10; // 10 - Also please check $bta_per_page property of the public class
+	$posts_per_page = get_query_var( 'posts_per_page' ) ? get_query_var( 'posts_per_page' ) : get_option( 'lbcg_archive_categories_count', LBCG_Public::$bta_per_page );
 	$offset         = ( $paged - 1 ) * $posts_per_page;
 	global $lc_max_page_numbers;
 	if ( ! $lc_max_page_numbers ) {

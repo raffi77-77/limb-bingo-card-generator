@@ -37,7 +37,14 @@ class LBCG_Public {
 	 *
 	 * @var int $bta_per_page Per page count
 	 */
-	private $bta_per_page = 10;
+	public static $bta_per_page = 10;
+
+	/**
+	 * Bingo themes archive page posts per page count
+	 *
+	 * @var int $archive_posts_per_page Per page count
+	 */
+	public static $archive_posts_per_page = 6;
 
 	/**
 	 * Get instance
@@ -156,7 +163,7 @@ class LBCG_Public {
 		if ( is_post_type_archive( 'bingo_theme' ) ) {
 			global $lc_max_page_numbers;
 			$total_count         = (int) wp_count_terms( [ 'taxonomy' => 'ubud-category', 'hide_empty' => false ] );
-			$lc_max_page_numbers = ceil( $total_count / $this->bta_per_page );
+			$lc_max_page_numbers = ceil( $total_count / get_option( 'lbcg_archive_categories_count', self::$bta_per_page ) );
 			$template            = $this->attributes['public_templates_path'] . '/lbcg-public-display-archive-bingo_theme.php';
 		}
 
@@ -173,11 +180,11 @@ class LBCG_Public {
 	public function pre_get_posts_args( $query ) {
 		if ( ! is_admin() && $query->is_main_query() ) {
 			if ( is_tax( 'ubud-category' ) ) {
-				$query->set( 'posts_per_page', 6 );
+				$query->set( 'posts_per_page', get_option( 'lbcg_archive_posts_count', self::$archive_posts_per_page ) );
 			}
 			if ( is_post_type_archive( 'bingo_theme' ) ) {
 				$query->set( 'taxonomy', 'ubud-category' );
-				$query->set( 'posts_per_page', $this->bta_per_page );
+				$query->set( 'posts_per_page', get_option( 'lbcg_archive_categories_count', self::$bta_per_page ) );
 			}
 		}
 	}

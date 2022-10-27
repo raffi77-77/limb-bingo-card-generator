@@ -293,11 +293,33 @@ class LBCG_Admin {
 	 * Add general settings
 	 */
     public function add_custom_general_settings() {
+        // Privacy Message
 	    add_settings_field( 'lbcg-privacy-message-field', __( 'UBUD Bingo Cards Generator: Privacy Message' ), array(
 		    $this,
 		    'privacy_message_field_callback'
 	    ), 'general', 'default', array( 'label_for' => 'lbcg-privacy-message-field' ) );
-	    register_setting( 'general', 'lbcg_privacy_message', 'esc_html' );
+	    register_setting( 'general', 'lbcg_privacy_message', array(
+		    'type'              => 'string',
+		    'sanitize_callback' => 'esc_html',
+	    ) );
+        // Max posts count
+	    add_settings_field( 'lbcg-max-posts-count-field', __( 'UBUD Bingo Cards Generator: Maximum posts count in archive page' ), array(
+		    $this,
+		    'archive_posts_count_field_callback'
+	    ), 'general', 'default', array( 'label_for' => 'lbcg-max-posts-count-field' ) );
+	    register_setting( 'general', 'lbcg_archive_posts_count', array(
+		    'type'    => 'integer',
+		    'default' => 6,
+	    ) );
+        // Max categories count in bingo-cards page
+	    add_settings_field( 'lbcg-max-categories-count-field', __( 'UBUD Bingo Cards Generator: Maximum categories count in bingo-cards page' ), array(
+		    $this,
+		    'archive_categories_count_field_callback'
+	    ), 'general', 'default', array( 'label_for' => 'lbcg-max-categories-count-field' ) );
+	    register_setting( 'general', 'lbcg_archive_categories_count', array(
+		    'type'    => 'integer',
+		    'default' => 6,
+	    ) );
     }
 
 	/**
@@ -306,6 +328,24 @@ class LBCG_Admin {
     public function privacy_message_field_callback() {
 	    ?>
         <textarea name="lbcg_privacy_message" id="lbcg-privacy-message-field" class="large-text code" rows="3" placeholder="Privacy message..."><?php echo get_option( 'lbcg_privacy_message' ); ?></textarea>
+	    <?php
+    }
+
+	/**
+	 * Show archive posts count setting content
+	 */
+    public function archive_posts_count_field_callback() {
+	    ?>
+        <input name="lbcg_archive_posts_count" id="lbcg-max-posts-count-field" type="number" value="<?php echo get_option( 'lbcg_archive_posts_count', 6 ); ?>"/>
+	    <?php
+    }
+
+	/**
+	 * Show archive categories count setting content
+	 */
+    public function archive_categories_count_field_callback() {
+	    ?>
+        <input name="lbcg_archive_categories_count" id="lbcg-max-categories-count-field" type="number" value="<?php echo get_option( 'lbcg_archive_categories_count', 10 ); ?>"/>
 	    <?php
     }
 
