@@ -77,7 +77,7 @@ $the_term = get_queried_object();
                 <section class="lbcg-generators">
 					<?php
 					$paged                = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-					$posts_per_page       = get_query_var( 'posts_per_page' ) ? get_query_var( 'posts_per_page' ) : 6; // 6 - Also please check in `pre_get_posts_args` method of the public class
+					$posts_per_page       = get_query_var( 'posts_per_page' ) ? get_query_var( 'posts_per_page' ) : get_option( 'lbcg_archive_posts_count', LBCG_Public::$archive_posts_per_page );
 					$bingo_themes         = new WP_Query( array(
 						'post_type'      => 'bingo_theme',
 						'post_status'    => 'publish',
