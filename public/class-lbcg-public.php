@@ -83,8 +83,10 @@ class LBCG_Public {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 		add_action( 'wp_head', array( $this, 'add_custom_css' ) );
 		add_action( 'terms_clauses', array( $this, 'custom_terms_clauses' ), 15, 3 );
-		add_filter( "rank_math/opengraph/facebook/image", array( $this, 'custom_opengraph_image' ) );
-		add_filter( "rank_math/opengraph/twitter/image", array( $this, 'custom_opengraph_image' ) );
+		add_filter( 'rank_math/opengraph/facebook/image', array( $this, 'custom_opengraph_facebook_image' ) );
+		add_filter( 'rank_math/opengraph/facebook/og_image_type', array( $this, 'custom_og_image_type' ) );
+		add_filter( 'rank_math/opengraph/twitter/card_type', array( $this, 'custom_opengraph_twitter_card_type' ) );
+		add_filter( 'rank_math/opengraph/twitter/image', array( $this, 'custom_opengraph_twitter_image' ) );
 	}
 
 	/**
@@ -282,13 +284,17 @@ class LBCG_Public {
 	 * Change the OpenGraph image.
 	 *
 	 * @param string $attachment_url The image we are about to add.
+     * @param string $network The network name (facebook, twitter)
 	 *
 	 * @return string
 	 */
-	public function custom_opengraph_image( $attachment_url ) {
+	public function custom_opengraph_image( $attachment_url, $network ) {
 		if ( is_singular( 'bingo_theme' ) ) {
 			if ( ! empty( $this->dev_mode_card_id ) ) {
-				$new_url = get_the_post_thumbnail_url( $this->dev_mode_card_id );
+				$new_url = get_the_post_thumbnail_url( $this->dev_mode_card_id, $network === 'twitter' ? [
+					150,
+					150
+				] : 'full' );
 			} else if ( ! empty( $_GET['bc'] ) ) {
 				$bc_posts = get_posts( [
 					'name'           => $_GET['bc'],
@@ -301,11 +307,86 @@ class LBCG_Public {
 					$this->data             = get_post_meta( $bc_posts[0]->ID );
 				}
 
-				$new_url = get_the_post_thumbnail_url( $this->dev_mode_card_id );
-			}
+				$new_url = get_the_post_thumbnail_url( $this->dev_mode_card_id, $network === 'twitter' ? [
+					150,
+					150
+				] : 'full' );
+			} else {
+				$new_url = get_the_post_thumbnail_url( null, $network === 'twitter' ? [ 150, 150 ] : [ 350, null ] );
+            }
 		}
 
 		return ! empty( $new_url ) ? $new_url : $attachment_url;
+	}
+
+	/**
+	 * Change the facebook opengraph image.
+	 *
+	 * @param string $attachment_url
+	 *
+	 * @return string
+	 */
+	public function custom_opengraph_facebook_image( $attachment_url ) {
+		return $this->custom_opengraph_image( $attachment_url, 'facebook' );
+	}
+
+	/**
+	 * Change og:image:type meta content.
+	 *
+	 * @param string $content The content of the property.
+     *
+     * @return string
+	 */
+	public function custom_og_image_type( $content ) {
+		if ( is_singular( 'bingo_theme' ) ) {
+			if ( ! empty( $this->dev_mode_card_id ) ) {
+				$thumbnail_id = get_post_thumbnail_id( $this->dev_mode_card_id );
+			} else if ( ! empty( $_GET['bc'] ) ) {
+				$bc_posts = get_posts( [
+					'name'           => $_GET['bc'],
+					'post_type'      => 'bingo_card',
+					'posts_per_page' => 1,
+					'post_status'    => 'publish',
+				] );
+				if ( ! empty( $bc_posts[0]->ID ) ) {
+					$this->dev_mode_card_id = $bc_posts[0]->ID;
+					$this->data             = get_post_meta( $bc_posts[0]->ID );
+				}
+				$thumbnail_id = get_post_thumbnail_id( $this->dev_mode_card_id );
+			} else {
+				$thumbnail_id = get_post_thumbnail_id();
+			}
+			if ( $thumbnail_id ) {
+				$mime_type = get_post_mime_type( $thumbnail_id );
+				if ( $mime_type !== false ) {
+					return $mime_type;
+				}
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Change the Twitter Card type as output in the Twitter card.
+	 *
+	 * @param string $type
+	 *
+	 * @return string
+	 */
+	public function custom_opengraph_twitter_card_type( $type ) {
+		return 'summary';
+	}
+
+	/**
+	 * Change the twitter opengraph image.
+	 *
+	 * @param string $attachment_url
+	 *
+	 * @return string
+	 */
+	public function custom_opengraph_twitter_image( $attachment_url ) {
+		return $this->custom_opengraph_image( $attachment_url, 'twitter' );
 	}
 
 	/**

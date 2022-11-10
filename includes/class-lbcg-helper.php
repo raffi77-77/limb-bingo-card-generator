@@ -1092,11 +1092,16 @@ class LBCG_Helper {
 			'post_content'   => '',
 			'post_status'    => 'inherit'
 		);
-		$attach_id   = wp_insert_attachment( $attachment, wp_upload_dir()['path'] . '/' . $filename, $post_id );
-		$attach_data = wp_generate_attachment_metadata( $attach_id, wp_upload_dir()['path'] . '/' . $filename );
+		$attach_id   = wp_insert_attachment( $attachment, $upload_dir['path'] . '/' . $filename, $post_id );
+		// wp_generate_attachment_metadata() depends on it
+		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		// Generate the metadata for the attachment, and update the database record
+		$attach_data = wp_generate_attachment_metadata( $attach_id, $upload_dir['path'] . '/' . $filename );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
-		$old_thumb_id = get_post_thumbnail_id();
+		// Get old thumbnail
+        $old_thumb_id = get_post_thumbnail_id();
 		if ( set_post_thumbnail( $post_id, $attach_id ) === true ) {
+            // Remove old thumbnail
 			wp_delete_attachment( $old_thumb_id, true );
 		}
 
