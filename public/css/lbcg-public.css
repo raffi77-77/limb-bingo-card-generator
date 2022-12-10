@@ -649,7 +649,7 @@
 .lbcg-parent .lbcg-generators-title {
   text-align: center;
 }
-.lbcg-parent .lbcg-generators-title a {
+.lbcg-parent .lbcg-generators-title span {
   font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.35;

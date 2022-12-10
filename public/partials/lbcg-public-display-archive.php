@@ -116,17 +116,19 @@ $the_term = get_queried_object();
 							$descs_content .= ob_get_clean();
 							ob_start();
 							?>
-                            <div class="lbcg-generators-single">
-                                <div class="lbcg-generators-image">
-		                            <?php echo get_the_post_thumbnail( $bingo_theme->ID, [
-			                            null,
-			                            300,
-		                            ], [ 'loading' => 'lazy', 'alt' => $bingo_theme->post_title ] ); ?>
+                            <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>">
+                                <div class="lbcg-generators-single">
+                                    <div class="lbcg-generators-image">
+			                            <?php echo get_the_post_thumbnail( $bingo_theme->ID, [
+				                            null,
+				                            300,
+			                            ], [ 'loading' => 'lazy', 'alt' => $bingo_theme->post_title ] ); ?>
+                                    </div>
+                                    <div class="lbcg-generators-title">
+                                        <span><?php echo $bingo_theme->post_title; ?></span>
+                                    </div>
                                 </div>
-                                <div class="lbcg-generators-title">
-                                    <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>"><?php echo $bingo_theme->post_title; ?></a>
-                                </div>
-                            </div>
+                            </a>
 							<?php
 							$cards_content .= ob_get_clean();
 							if ( ++ $k >= count( $bingo_themes->posts ) ) {
