@@ -159,6 +159,27 @@
       }
     }
   }
+
+  &-posts {
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      @media all and (min-width: 414.98px) {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+      }
+
+      li {
+        padding: 5px 0;
+      }
+    }
+  }
 }
 
 .lbcg-pagination {

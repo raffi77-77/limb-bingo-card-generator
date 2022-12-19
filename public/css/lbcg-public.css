@@ -176,6 +176,24 @@
 .lbcg-tcs-content-body a:hover {
   color: #59359a;
 }
+.lbcg-tcs-posts {
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  grid-column-end: 3;
+}
+.lbcg-tcs-posts ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@media all and (min-width: 414.98px) {
+  .lbcg-tcs-posts ul {
+    column-count: 2;
+  }
+}
+.lbcg-tcs-posts ul li {
+  padding: 5px 0;
+}
 
 .lbcg-pagination {
   font-size: 1rem;
