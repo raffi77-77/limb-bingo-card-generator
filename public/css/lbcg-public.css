@@ -625,7 +625,7 @@
 .lbcg-parent .lbcg-post-content a:hover {
   color: #59359a;
 }
-.lbcg-parent .lbcg-post-content * {
+.lbcg-parent .lbcg-post-content *:not(iframe) {
   max-width: 100%;
   height: auto;
 }
