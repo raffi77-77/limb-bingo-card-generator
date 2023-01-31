@@ -122,10 +122,10 @@ class LBCG_Public {
 				'freeSquareWord' => LBCG_Helper::$free_space_word,
 				'ajaxUrl'        => admin_url( 'admin-ajax.php' )
 			] );
-			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css', [], $this->attributes['plugin_version'] );
+			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css', [], $this->attributes['plugin_version'] . '.' . filemtime( $this->attributes['public_path'] . '/css/lbcg-public.min.css' ) );
 		}
 		if ( is_page( 'bingo-cards' ) || is_post_type_archive( 'bingo_theme' ) ) {
-			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css', [], $this->attributes['plugin_version'] );
+			wp_enqueue_style( 'lbcg-public-css', $this->attributes['public_url'] . 'css/lbcg-public.min.css', [], $this->attributes['plugin_version'] . '.' . filemtime( $this->attributes['public_path'] . '/css/lbcg-public.min.css' ) );
 		}
 	}
 

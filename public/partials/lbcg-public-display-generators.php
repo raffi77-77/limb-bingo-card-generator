@@ -43,11 +43,11 @@ if ( ! empty( $attributes ) ) {
 		<?php foreach ( $ubud_cats as $cat ): ?>
             <div class="lbcg-tcs-single">
                 <div class="lbcg-tcs-thumb">
-		            <?php $thumb_id = get_term_meta( $cat->term_id, '_lbcg_thumbnail_id', true );
-		            echo wp_get_attachment_image( $thumb_id, 'medium', false, [
-			            'loading' => 'lazy',
-			            'alt'     => $cat->name,
-		            ] ); ?>
+					<?php $thumb_id = get_term_meta( $cat->term_id, '_lbcg_thumbnail_id', true );
+					echo wp_get_attachment_image( $thumb_id, 'medium', false, [
+						'loading' => 'lazy',
+						'alt'     => $cat->name,
+					] ); ?>
                 </div>
                 <div class="lbcg-tcs-content">
                     <h2 class="lbcg-tcs-content-header">
@@ -57,6 +57,40 @@ if ( ! empty( $attributes ) ) {
 						echo '<div class="lbcg-tcs-content-body">' . $intro_text . '</div>';
 					} ?>
                 </div>
+				<?php $bingo_themes = new WP_Query( array(
+					'post_type'      => 'bingo_theme',
+					'post_status'    => 'publish',
+					'orderby'        => 'modified',
+					'order'          => 'DESC',
+					'posts_per_page' => - 1,
+					'tax_query'      => array(
+						array(
+							'taxonomy' => 'ubud-category',
+							'field'    => 'term_id',
+							'terms'    => $cat->term_id
+						)
+					)
+				) );
+				if ( $bingo_themes->have_posts() ) {
+					?>
+                    <div class="lbcg-tcs-posts">
+                        <ul>
+							<?php while ( $bingo_themes->have_posts() ) {
+								$bingo_themes->the_post();
+								?>
+                                <li>
+                                    <a href="<?php echo get_the_permalink(); ?>">
+										<?php the_title(); ?>
+                                    </a>
+                                </li>
+								<?php
+							} ?>
+                        </ul>
+                    </div>
+					<?php
+				}
+				wp_reset_query();
+				?>
             </div>
 		<?php endforeach; ?>
     </div>
