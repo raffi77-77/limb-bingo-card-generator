@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $the_page = get_posts( [
 	'name'        => 'bingo-cards',
 	'post_type'   => 'page',
-	'post_status' => 'draft',
+	'post_status' => 'publish',
 	'numberposts' => 1
 ] );
 if ( isset( $the_page[0] ) && $the_page[0] instanceof WP_Post ) {
