@@ -141,7 +141,7 @@ class LBCG_Helper {
 			'show_ui'            => true,
 			'show_in_menu'       => true,
 			'capability_type'    => 'post',
-			'has_archive'        => true,
+			'has_archive'        => 'bingo-cards-archive',
 			'hierarchical'       => true,
 			'rewrite'            => array( 'slug' => 'bingo-cards' ),
 			'supports'           => array( 'title', 'editor', 'author' ),
