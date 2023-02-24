@@ -48,6 +48,12 @@
     transition: background-color .3s;
     margin-right: 38px;
 
+    &.just-link {
+      width: initial;
+      margin-right: 0;
+      padding: 0 10px;
+    }
+
     &:hover, &.active {
       color: #fd477f;
     }
