@@ -806,6 +806,11 @@
   margin-right: 38px;
   text-decoration: none;
 }
+.lbcg-parent .lbcg-sidebar-btn.just-link {
+  width: initial;
+  margin-right: 0;
+  padding: 0 10px;
+}
 .lbcg-parent .lbcg-sidebar-btn:hover, .lbcg-parent .lbcg-sidebar-btn.active {
   color: #fd477f;
 }

@@ -32,42 +32,17 @@ $the_term = get_queried_object();
             <div class="lbcg-main">
                 <aside class="lbcg-sidebar">
 					<?php
-					$all_bingo_themes = get_posts( [
-						'post_type'   => 'bingo_theme',
-						'post_status' => 'publish',
-						'numberposts' => - 1,
-						'orderby'     => 'post_title',
-						'order'       => 'ASC'
-					] );
-					$menu_items       = [];
-					$taxonomies       = [];
-					foreach ( $all_bingo_themes as $bingo_theme ) {
-						$bt_categories = get_the_terms( $bingo_theme->ID, 'ubud-category' );
-						if ( ! empty( $bt_categories[0] ) ) {
-							if ( ! isset( $taxonomies[ $bt_categories[0]->term_id ] ) ) {
-								$taxonomies[ $bt_categories[0]->term_id ] = $bt_categories[0];
-							}
-							$menu_items[ $bt_categories[0]->term_id ][] = $bingo_theme;
-						}
-					}
-					ksort( $menu_items );
-					foreach ( $menu_items as $cur_term_id => $menu_item ) {
+					$menu_items       = get_terms( array(
+						'post_type'  => 'bingo_theme',
+						'taxonomy'   => 'ubud-category',
+						'hide_empty' => false,
+					) );
+					foreach ( $menu_items as $ct ) {
 						?>
-                        <div class="lbcg-sidebar-in <?php echo $the_term->term_id === $cur_term_id ? 'collapsed' : ''; ?>">
+                        <div class="lbcg-sidebar-in">
                             <div class="lbcg-sidebar-header">
-                                <a href="<?php echo get_term_link( $cur_term_id ); ?>"
-                                   class="lbcg-sidebar-btn <?php echo $the_term->term_id === $cur_term_id ? 'active' : ''; ?>"><?php echo $taxonomies[ $cur_term_id ]->name; ?></a>
-                                <span class="lbcg-sidebar-arrow"></span>
-                            </div>
-                            <div class="lbcg-sidebar-body">
-								<?php
-								foreach ( $menu_item as $bingo_theme ) {
-									?>
-                                    <a href="<?php echo esc_url( get_permalink( $bingo_theme->ID ) ); ?>"
-                                       class="lbcg-sidebar-link"><?php echo $bingo_theme->post_title; ?></a>
-									<?php
-								}
-								?>
+                                <a href="<?php echo get_term_link( $ct->term_id ); ?>"
+                                   class="lbcg-sidebar-btn just-link <?php echo $the_term->term_id === $ct->term_id ? 'active' : ''; ?>"><?php echo $ct->name; ?></a>
                             </div>
                         </div>
 						<?php
@@ -119,10 +94,10 @@ $the_term = get_queried_object();
                             <a href="<?php echo get_permalink( $bingo_theme->ID ); ?>">
                                 <div class="lbcg-generators-single">
                                     <div class="lbcg-generators-image">
-			                            <?php echo get_the_post_thumbnail( $bingo_theme->ID, [
-				                            null,
-				                            300,
-			                            ], [ 'loading' => 'lazy', 'alt' => $bingo_theme->post_title ] ); ?>
+										<?php echo get_the_post_thumbnail( $bingo_theme->ID, [
+											null,
+											300,
+										], [ 'loading' => 'lazy', 'alt' => $bingo_theme->post_title ] ); ?>
                                     </div>
                                     <div class="lbcg-generators-title">
                                         <span><?php echo $bingo_theme->post_title; ?></span>

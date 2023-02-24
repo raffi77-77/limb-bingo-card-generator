@@ -49,6 +49,12 @@
     margin-right: 38px;
     text-decoration: none;
 
+    &.just-link {
+      width: initial;
+      margin-right: 0;
+      padding: 0 10px;
+    }
+
     &:hover, &.active {
       color: #fd477f;
     }
