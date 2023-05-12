@@ -981,25 +981,29 @@ class LBCG_Helper {
         <nav aria-label="lbcg-breadcrumb">
             <ol class="lbcg-breadcrumb">
 				<?php
-				$i   = 1;
-				$cnt = count( $links );
-				foreach ( $links as $name => $link ) {
-					if ( $i === $cnt ) {
-						echo '<li class="breadcrumb-item active" aria-current="page">' . $name . '</li>';
-					} else {
-						$attributes = array(
-							"echo_title" => $name,
-							"class"      => '',
-							"link"       => $link,
-							"display"    => '',
-							"place"      => 'breadcrumbs',
-							"element"    => 'text',
-							"idx"        => - 1
-						);
-						$link_track = link_trk( $attributes );
-						echo '<li class="breadcrumb-item">' . $link_track . '</li>';
+				if ( function_exists( 'breadcrumbs' ) ) {
+					breadcrumbs( $links );
+				} else {
+					$i   = 1;
+					$cnt = count( $links );
+					foreach ( $links as $name => $link ) {
+						if ( $i === $cnt ) {
+							echo '<li class="breadcrumb-item active" aria-current="page">' . $name . '</li>';
+						} else {
+							$attributes = array(
+								"echo_title" => $name,
+								"class"      => '',
+								"link"       => $link,
+								"display"    => '',
+								"place"      => 'breadcrumbs',
+								"element"    => 'text',
+								"idx"        => - 1
+							);
+							$link_track = link_trk( $attributes );
+							echo '<li class="breadcrumb-item">' . $link_track . '</li>';
+						}
+						$i ++;
 					}
-					$i ++;
 				}
 				?>
             </ol>
