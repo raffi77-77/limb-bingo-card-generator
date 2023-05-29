@@ -96,6 +96,9 @@ class LBCG_Admin {
     public function bingo_cards_tools_page(){
         ?>
         <form class="wrap" method="post" action="<?= admin_url( 'admin-post.php' ); ?>">
+            <h1>Clear Database</h1>
+            <p>This button deletes all the Bingo Cards and all it's meta which can't be used</p>
+            <p class="small-text">This button deletes only 1000 posts at one time, please refresh the page until it redirects back</p>
             <button class="button action" name="delete_posts" >Clear Database</button>
             <input type="hidden" name="action" value="delete_unnecessary_posts">
             <?php wp_referer_field() ?>
