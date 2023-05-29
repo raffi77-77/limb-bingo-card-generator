@@ -63,6 +63,9 @@ class LBCG_Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script_and_styles' ), 11 );
 		add_action( 'admin_head', array( $this, 'add_custom_css' ) );
 		add_action( 'admin_init', array( $this, 'add_custom_general_settings' ) );
+        add_action( 'admin_menu', array($this, 'add_submenu_items'));
+        add_action( 'admin_post_delete_unnecessary_posts', array($this, 'delete_unnecessary_posts'));
+        add_action( 'admin_post_nopriv_delete_unnecessary_posts', array($this, 'delete_unnecessary_posts'));
 		$this->disable_emojy_print();
 	}
 
@@ -74,12 +77,31 @@ class LBCG_Admin {
 		add_meta_box( 'bingo-theme-custom-fields', 'Custom Fields', array( $this, 'get_bingo_card_custom_fields_template' ), 'bingo_card' );
 	}
 
+    public function add_submenu_items(){
+        add_submenu_page('edit.php?post_type=bingo_card', 'Tools', 'Tools', 'manage_options', 'bingo-cards-tools', array($this, 'bingo_cards_tools_page'));
+    }
+
 	/**
 	 * Get bingo theme custom fields template
 	 */
 	public function get_bingo_theme_custom_fields_template() {
 		include( $this->attributes['admin_templates_path'] . '/lbcg-admin-display.php' );
 	}
+
+	/**
+     * Bingo cards tools content
+     *
+	 * @return void
+	 */
+    public function bingo_cards_tools_page(){
+        ?>
+        <form class="wrap" method="post" action="<?= admin_url( 'admin-post.php' ); ?>">
+            <button class="button action" name="delete_posts" >Clear Database</button>
+            <input type="hidden" name="action" value="delete_unnecessary_posts">
+            <?php wp_referer_field() ?>
+        </form>
+	    <?php
+    }
 
 	/**
 	 * Get bingo card custom fields template
@@ -178,6 +200,31 @@ class LBCG_Admin {
 		<?php
 	}
 
+	/**
+     * Remove posts without meta_key 'bingo_card_own_content'
+     *
+	 * @return void
+	 */
+	public function delete_unnecessary_posts() {
+		if ( isset( $_POST['delete_posts'] ) ) {
+			global $wpdb;
+			$posts = $wpdb->get_col(
+				$wpdb->prepare(
+					"
+                            SELECT posts.ID FROM $wpdb->posts AS posts
+                            LEFT JOIN $wpdb->postmeta AS meta 
+                            ON (posts.ID = meta.post_id AND meta.meta_key = 'bingo_card_own_content')
+                            WHERE posts.post_type = 'bingo_card'
+                            AND meta.post_id IS NULL"
+				)
+			);
+			foreach ( $posts as $post ) {
+			    wp_delete_post($post);
+			}
+            $referer = wp_get_referer();
+            wp_redirect(get_home_url().$referer);
+		}
+	}
 	/**
 	 * Edit taxonomy custom content
 	 *
