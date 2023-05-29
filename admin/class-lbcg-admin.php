@@ -94,12 +94,23 @@ class LBCG_Admin {
 	 * @return void
 	 */
     public function bingo_cards_tools_page(){
+	    global $wpdb;
+	    $posts = $wpdb->get_col(
+		    $wpdb->prepare(
+			    "
+                            SELECT posts.ID FROM $wpdb->posts AS posts
+                            LEFT JOIN $wpdb->postmeta AS meta 
+                            ON (posts.ID = meta.post_id AND meta.meta_key = 'bingo_card_own_content')
+                            WHERE posts.post_type = 'bingo_card'
+                            AND meta.post_id IS NULL"
+		    )
+	    );
         ?>
         <form class="wrap" method="post" action="<?= admin_url( 'admin-post.php' ); ?>">
-            <h1>Clear Database</h1>
+            <h1>Clearss Database</h1>
             <p>This button deletes all the Bingo Cards and all it's meta which can't be used</p>
             <p class="small-text">This button deletes only 1000 posts at one time, please refresh the page until it redirects back</p>
-            <button class="button action" name="delete_posts" >Clear Database</button>
+            <button class="button action" name="delete_posts" >Clear Database (<?= count($posts) ?>) </button>
             <input type="hidden" name="action" value="delete_unnecessary_posts">
             <?php wp_referer_field() ?>
         </form>
