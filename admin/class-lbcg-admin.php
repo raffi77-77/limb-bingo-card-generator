@@ -107,10 +107,11 @@ class LBCG_Admin {
 	    );
         ?>
         <form class="wrap" method="post" action="<?= admin_url( 'admin-post.php' ); ?>">
-            <h1>Clearss Database</h1>
+            <h1>Clear Database</h1>
             <p>This button deletes all the Bingo Cards and all it's meta which can't be used</p>
-            <p class="small-text">This button deletes only 1000 posts at one time, please refresh the page until it redirects back</p>
-            <button class="button action" name="delete_posts" >Clear Database (<?= count($posts) ?>) </button>
+            <p class="small-text">This button deletes only 2000 posts at one time</p>
+            <p>(<?= count($posts) ?>) posts</p>
+            <button class="button delete_posts_button action" name="delete_posts" >Clear Database</button>
             <input type="hidden" name="action" value="delete_unnecessary_posts">
             <?php wp_referer_field() ?>
         </form>
@@ -225,15 +226,24 @@ class LBCG_Admin {
 			$posts = $wpdb->get_col(
 				$wpdb->prepare(
 					"
-                            SELECT posts.ID FROM $wpdb->posts AS posts
-                            LEFT JOIN $wpdb->postmeta AS meta 
-                            ON (posts.ID = meta.post_id AND meta.meta_key = 'bingo_card_own_content')
-                            WHERE posts.post_type = 'bingo_card'
-                            AND meta.post_id IS NULL"
+                        SELECT posts.ID FROM $wpdb->posts AS posts
+                        LEFT JOIN $wpdb->postmeta AS meta 
+                        ON (posts.ID = meta.post_id AND meta.meta_key = 'bingo_card_own_content')
+                        WHERE posts.post_type = 'bingo_card'
+                        AND meta.post_id IS NULL"
 				)
 			);
+            $limit = 2000;
 			foreach ( $posts as $post ) {
+                $attachment = get_post(array(
+                    'post_type'=>'attachment',
+                    'post_parent'=>$post,
+                ));
+                wp_delete_post($attachment->ID);
 			    wp_delete_post($post);
+                if ($limit == 0)
+                    break;
+                $limit--;
 			}
             $referer = wp_get_referer();
             wp_redirect(get_home_url().$referer);
@@ -306,6 +316,7 @@ class LBCG_Admin {
 	 */
 	public function enqueue_admin_script_and_styles() {
 		$post_type = get_post_type();
+        wp_enqueue_script('bingo_cards_tools_script', $this->attributes['admin_url'].'js/bingo_cards_tools.js',  array( 'jquery' ), $this->attributes['plugin_version'] );
 		if ( $post_type === 'bingo_theme' || $post_type === 'bingo_card' ) {
 			wp_enqueue_script( 'html2canvas-js', $this->attributes['includes_url'] . 'js/html2canvas.min.js#deferload', [], $this->attributes['plugin_version'], true );
 			if ( ! did_action( 'wp_enqueue_media' ) ) {
